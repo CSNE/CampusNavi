@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <meta charset="utf-8">
+    
+    <style>
+
+      #debugMsgBox{
+
+      }
+      .level1{
+        color:gray;
+      }.level2{
+        color:black;
+      }.level3{
+        color:green;
+      }.level4{
+        color:orange;
+      }.level5{
+        color:red;
+      }
+      
+      
+      #mapid { height: 720px; }
+    </style>
+    
+    <!-- leaflet.js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
+   integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+   crossorigin=""/>
+     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
+   integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
+   crossorigin=""></script>
+    
+  </head>
+
+  <body>
+     <div id="mapid"></div>
+
+    <p id="debugMsgBox"></p>
+    
+    
+    <script src="logging.js"></script>
+    <script src="coordinates.js"></script>
+    <script>
+      //Leaflet.js
+      var mymap = L.map('mapid').setView([37.565149, 126.938016], 16);
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoiY2hhbnNvbDk4IiwiYSI6ImNqZ25henV1dTJibjgycXBxeGczaWk2enMifQ.w474LPaUpTnZiQnw5E3Ujg'
+}).addTo(mymap);
+      L.marker([37.5602,126.9368]).addTo(mymap)
+    .bindPopup('Yonsei Univ.')
+    .openPopup();
+
+      
+      //Geolocation
+      function locationCallback(position){
+        print_verbose(position.coords.latitude+","+position.coords.longitude);
+      }function locationErrorCallback(positionError){
+        print_warning("Error Callback: "+positionError.code+" | "+positionError.message);
+      }
+
+      if ("geolocation" in navigator) {
+        print_info("Geolocation available.");
+
+        options = {
+          enableHighAccuracy: false,
+          timeout: 5000,
+          maximumAge: 0
+        };
+
+        var watchID = navigator.geolocation.watchPosition(locationCallback,locationErrorCallback,options);
+        print_debug("watchPosition done");
+      } else {
+        print_warning("Geolocation NOT available.");
+      }
+
+    </script>
+  </body>
+
+
+</html>
