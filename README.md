@@ -1,0 +1,2 @@
+# CampusNavi
+An assignment project.
