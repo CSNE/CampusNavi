@@ -6,21 +6,7 @@
     <meta charset="utf-8">
 
     <style>
-
-      #debugMsgBox{
-
-      }
-      .level1{
-        color:gray;
-      }.level2{
-        color:black;
-      }.level3{
-        color:green;
-      }.level4{
-        color:orange;
-      }.level5{
-        color:red;
-      }
+      
       #mapid { height: 480px; }
     </style>
 
@@ -37,12 +23,15 @@
   <body>
     <div id="mapid"></div>
 
-    <p id="debugMsgBox"></p>
+    <p id="debugMsgBox" style="height:240px"></p>
 
 
     <script src="logging.js"></script>
     <script src="coordinates.js"></script>
     <script>
+      Log.init(document.getElementById("debugMsgBox"));
+      Log.info("Log framework started");
+      
       //Leaflet.js
       var mymap = L.map('mapid').setView([37.565149, 126.938016], 16);
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -71,16 +60,16 @@
 
       //Geolocation
       function locationCallback(position){
-        print_verbose(position.coords.latitude+","+position.coords.longitude);
+        Log.verbose(position.coords.latitude+","+position.coords.longitude);
         
         var latlng=L.latLng(position.coords.latitude,position.coords.longitude);
         currentLocationMarker.setLatLng(latlng);
       }function locationErrorCallback(positionError){
-        print_warning("Error Callback: "+positionError.code+" | "+positionError.message);
+        Log.warning("Error Callback: "+positionError.code+" | "+positionError.message);
       }
 
       if ("geolocation" in navigator) {
-        print_info("Geolocation available.");
+        Log.info("Geolocation available.");
 
         options = {
           enableHighAccuracy: true,
@@ -89,14 +78,15 @@
         };
 
         var watchID = navigator.geolocation.watchPosition(locationCallback,locationErrorCallback,options);
-        print_debug("watchPosition done");
+        Log.debug("watchPosition done");
       } else {
-        print_warning("Geolocation NOT available.");
+        Log.warning("Geolocation NOT available.");
       }
       
-      
-      
-
+      //setInterval(function(){Log.verbose("yay");},1000);
+      //Log.debug("DB");
+      //Log.verbose("VB");
+      //Log.setVisibility({"level1":true,"level2":false,"level3":true,"level4":true,"level5":true})
     </script>
   </body>
 
