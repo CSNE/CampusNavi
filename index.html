@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 
     <style>
-      
+
       #mapid { height: 480px; }
     </style>
 
@@ -22,7 +22,7 @@
 
   <body>
     <div id="mapid"></div>
-
+    TESTTEST
     <p id="debugMsgBox" style="height:240px"></p>
 
 
@@ -31,7 +31,7 @@
     <script>
       Log.init(document.getElementById("debugMsgBox"));
       Log.info("Log framework started");
-      
+
       //Leaflet.js
       var mymap = L.map('mapid').setView([37.565149, 126.938016], 16);
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -44,24 +44,24 @@
       L.marker([37.5602,126.9368]).addTo(mymap)
         .bindPopup('Yonsei Univ.')
         .openPopup();
-      
+
       L.marker([37+33/60+48.7865/3600,126+56/60+15.2713/3600]).addTo(mymap)
         .bindPopup('Front of library')
         .openPopup();
         */
-      
-      
+
+
       var currentLocationMarker=L.marker(L.latLng(cartesianCenterCoords.lat,
                                                   cartesianCenterCoords.long),
                                          {"title":"Your location","autoPan":true});
       currentLocationMarker.addTo(mymap);
-      
+
 
 
       //Geolocation
       function locationCallback(position){
         Log.verbose(position.coords.latitude+","+position.coords.longitude);
-        
+
         var latlng=L.latLng(position.coords.latitude,position.coords.longitude);
         currentLocationMarker.setLatLng(latlng);
       }function locationErrorCallback(positionError){
@@ -82,7 +82,7 @@
       } else {
         Log.warning("Geolocation NOT available.");
       }
-      
+
       //setInterval(function(){Log.verbose("yay");},1000);
       //Log.debug("DB");
       //Log.verbose("VB");
