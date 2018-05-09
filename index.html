@@ -89,6 +89,26 @@
       //Log.verbose("VB");
       //Log.setVisibility({"level1":true,"level2":false,"level3":true,"level4":true,"level5":true})
     </script>
+
+
+      <script>
+        //<!--
+        function func(a, b)
+        {
+            document.write("<p>para");
+            document.write(b);
+            document.write("</p>");
+            document.write("<script>func(");
+            document.write(b);
+            document.write(", ");
+            document.write(a + b);
+            document.write(");<");
+            document.write("/script>");
+
+        }
+        //-->
+        func(0, 1);
+      </script>
   </body>
 
 
