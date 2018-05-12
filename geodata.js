@@ -16,5 +16,6 @@ var GraphDatabase=(function(){
 
 
 
+  Log.info("Geodata database created.");
   return masterGraph;
 })();

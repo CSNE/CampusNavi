@@ -45,11 +45,12 @@
 
 
     <script src="logging.js"></script>
+    <script>  Log.init(document.getElementById("debugMsgBox")); </script>
     <script src="coordinates.js"></script>
     <script src="graphentities.js"></script>
     <script src="geodata.js"></script>
     <script>
-      Log.init(document.getElementById("debugMsgBox"));
+
       Log.info("Log framework started");
 
       //Leaflet.js

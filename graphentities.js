@@ -10,7 +10,7 @@ function Graph(){
 
   this.addEdge=function(e){
     for(var i=0;i<this.edges.length;i++){
-      if (e.name===this.edges[i].name) throw "Duplicate edge?";
+      if (e.name===this.edges[i].name) Log.error("Duplicate edge. name="+e.name);
     }
     this.edges.push(e);
 
@@ -18,7 +18,7 @@ function Graph(){
 
   this.addVertex=function(v){
     for(var i=0;i<this.vertices.length;i++){
-      if (v.name===this.vertices[i].name) throw "Duplicate vertex?";
+      if (v.name===this.vertices[i].name) Log.error("Duplicate vertex. name="+v.name);
     }
     this.vertices.push(v);
   }
