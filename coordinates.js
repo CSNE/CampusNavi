@@ -38,7 +38,7 @@ var CoordinateConversions=(function(){
     return {"lat":lat,"long":long,"alt":alt};
   }
 
-  function CoordinateSystem(long,lat,alt){
+  function CoordinateSystem(lat,long,alt){
     var dat={"lat":lat,"long":long,"alt":alt};
     var cartesian=coordsToCartesian(dat);
 
