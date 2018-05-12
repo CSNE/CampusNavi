@@ -46,6 +46,8 @@
 
     <script src="logging.js"></script>
     <script src="coordinates.js"></script>
+    <script src="graphentities.js"></script>
+    <script src="geodata.js"></script>
     <script>
       Log.init(document.getElementById("debugMsgBox"));
       Log.info("Log framework started");
@@ -69,8 +71,8 @@
         */
 
 
-      var currentLocationMarker=L.marker(L.latLng(cartesianCenterCoords.lat,
-                                                  cartesianCenterCoords.long),
+      var currentLocationMarker=L.marker(L.latLng(CoordinateConversions.centerCoords.lat,
+                                                  CoordinateConversions.centerCoords.long),
                                          {"title":"Your location","autoPan":true});
       currentLocationMarker.addTo(mymap);
 
