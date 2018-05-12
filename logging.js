@@ -24,7 +24,8 @@ var Log=(function(){
   var currentVisibilityOptions;
 
   function init(displayElement){
-
+    if (display!=null) throw "Cannot initialize twice!";
+    
     var buttonsContainer=displayElement.ownerDocument.createElement("div");
     buttonsContainer.className+="loggingControls";
     displayElement.appendChild(buttonsContainer);
@@ -69,7 +70,7 @@ var Log=(function(){
 
   function timestamp(){
     var d=new Date();
-    
+
     var m=""+d.getMinutes();
     var s=""+d.getSeconds();
     var ms=""+d.getMilliseconds();
