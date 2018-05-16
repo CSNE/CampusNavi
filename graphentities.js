@@ -1,90 +1,7 @@
-// 그래프를 표현하는 클래스들.
-
-//elemenet: { w:..., v:..., p:..., s:... }
-//min w
-function Heap() {
-    this.buf = [];
-    this.n = 1;
-    this.isEmpty = function () {
-        return this.n == 1;
-    }
-    this.enqueue = function (e) {
-        var i = n++;
-        for (var j; this.cmp(this.buf[i], this.buf[j = i >> 1]) ; i = j) {
-            this.buf[i] = this.buf[j];
-        }
-        this.buf[i] = e;
-    }
-    this.dequeue = function () {
-        var i = 1;
-        var ret = this.buf[i];
-        for (; ;) {
-            var k = i;
-            var j = i << 1;
-            if (this.cmp(this.buf[j], this.buf[k])) {
-                k = j;
-            }
-            j++;
-            if (this.cmp(this.buf[j], this.buf[k])) {
-                k = j;
-            }
-            if (i == k)
-                break;
-            this.buf[i] = this.buf[k];
-            i = k;
-        }
-        this.buf[i] = this.buf[--n];
-        return ret;
-    }
-    this.peek = function () {
-        return this.buf[1];
-    }
-    this.cmp = function (a, b) {
-        return a.w < b.w;
-    }
-}
-//constants
-
-
+// 그래프를 표현하는데 필요한 클래스들.
 function Graph() {
     this.edges = [];
     this.vertices = [];
-
-    this.shortest_path = function (src, dst, pref) {
-        //src, dst는 각각 정점의 집합(배열) 또는 하나의 정점
-        //pref: preference, 뛰기, 실내 우선 등
-        //배열이 아닌 경우 src = [src], dst도
-
-        var ssrc = {}, sdst = {};
-        for (var i = 0; i < src.length; i++) {
-            ssrc[src[i].id] = 1;
-        }
-        for (var i = 0; i < dst.length; i++)
-        {
-            sdst[dst[i].id] = 1;
-        }
-
-        return this.shortest_path_id_set(ssrc, sdst, pref);
-    }
-
-    //returns: ret.p.p.p....p.v in src, p.p.....p.e: edge in path p.e: last edge
-    this.shortest_path_id_set = function (src, dst, pref)
-    {
-        var q = new Heap();
-        for (var k in src)
-            q.enqueue({ "w": 0, "v": this.vertices[k], "p": undefined, "e": undefined });
-        while (!q.isEmpty())
-        {
-            var p = q.dequeue();
-            if (dst[p.v.id])
-                p;
-            for (var i = 0; i < p.v.out_edges.length; i++)
-            {
-                var e = p.v.out_edges[i];
-                q.enqueue({ "w": p.w + e.timeRequired[pref.time_name], "v": e.vEnd, "p": p, "e": e });
-            }
-        }
-    }
 
     this.addEdge = function (e) {
         // 그래프에 간선을 더합니다.
@@ -130,9 +47,6 @@ function Edge(vStart, vEnd, id) {
     this.timeRequired.run = 0; //뛰기
     //방향에 따라 가중치가 다른 경우 digraph로 하는 것이 맞을 듯
     //데이터베이스상에는 edge별로 directed인지 포함하고 실제 로드된 데이터에는 undirected는 두 edge로
-
-    //간선의 길이 (자동으로 계산됨)
-    //this.distance=vStart.coordinates.getDistance(vEnd.coordinates);필요하지 않을 것 같음
 
     //간선의 특성, 실내 등
     this.flags = {};
