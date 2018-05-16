@@ -134,9 +134,8 @@ function Edge(vStart, vEnd, id) {
     //간선의 길이 (자동으로 계산됨)
     //this.distance=vStart.coordinates.getDistance(vEnd.coordinates);필요하지 않을 것 같음
 
-    //간선의 특성
+    //간선의 특성, 실내 등
     this.flags = {};
-    this.flags.outside = true;
 
     //간선의 이름
     this.name = "Unnamed edge";
