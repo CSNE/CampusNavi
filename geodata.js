@@ -20,13 +20,15 @@ var GraphDatabase=(function(){
   var shinchonStation_yonseiMainGate=new Edge(shinchonStation,yonseiMainGate);
   shinchonStation_yonseiMainGate.timeRequired.walk=7; //신촌역 -> 연대정문
   shinchonStation_yonseiMainGate.timeRequired.run=5; //신촌역 -> 연대정문 (뛸때)
-  shinchonStation_yonseiMainGate.timeRequired.walkR=7; //연대정문 -> 신촌역
-  shinchonStation_yonseiMainGate.timeRequired.runR=5; //연대정문 -> 신촌역 (뛸때)
+  shinchonStation_yonseiMainGate.timeRequiredReverse.walk=7; //연대정문 -> 신촌역
+  shinchonStation_yonseiMainGate.timeRequiredReverse.run=5; //연대정문 -> 신촌역 (뛸때)
   shinchonStation_yonseiMainGate.name="연세로"
   masterGraph.addEdge(shinchonStation_yonseiMainGate);
 
 
 
   Log.info("Geodata database created.");
-  return masterGraph;
+  return {
+    "graph":masterGraph
+  };
 })();

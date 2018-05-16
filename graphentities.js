@@ -1,11 +1,7 @@
-// 그래프.
+// 그래프를 표현하는 클래스들.
 function Graph(){
   this.edges=[];
   this.vertices=[];
-
-  this.dijkstra=function(src,dest){
-    // 누가 짜주세여
-  }
 
   this.addEdge=function(e){
     // 그래프에 간선을 더합니다.
@@ -35,10 +31,12 @@ function Edge(vStart,vEnd){
 
   //이 간선을 통과하는데 걸리는 시간
   this.timeRequired={};
-  this.timeRequired.walk=0; //걷기
-  this.timeRequired.run=0; //뛰기
-  this.timeRequired.walkR=0; //걷기 - 반대방향
-  this.timeRequired.runR=0; //뛰기 - 반대방향
+  this.timeRequired["walk"]=0; //걷기
+  this.timeRequired["run"]=0; //뛰기
+  
+  this.timeRequiredReverse={};
+  this.timeRequiredReverse["walk"]=0; //걷기 - 반대방향
+  this.timeRequiredReverse["run"]=0; //뛰기 - 반대방향
 
   //간선의 길이 (자동으로 계산됨)
   this.distance=vStart.coordinates.getDistance(vEnd.coordinates);
