@@ -23,6 +23,7 @@
     <style>
       html,body{
         height:100%;
+        overflow:hidden;
       }
       #mapid{
         height:70%;
@@ -73,10 +74,12 @@
 
       // 위치정보 업데이트 callback
       function locationCallback(position){
-        Log.verbose(position.coords.latitude+","+position.coords.longitude);
+        Log.verbose("LAT "+position.coords.latitude+" LONG "+position.coords.longitude+" ALT "+position.coords.altitude+" ACC "+position.coords.accuracy);
 
         var latlng=L.latLng(position.coords.latitude,position.coords.longitude);
         currentLocationMarker.setLatLng(latlng);
+
+        mymap.setView(latlng);
       }
       function locationErrorCallback(positionError){
         Log.warning("Error Callback: "+positionError.code+" | "+positionError.message);
