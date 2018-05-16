@@ -47,40 +47,42 @@ var CoordinateConversions=(function(){
         return {"lat":lat,"long":long,"alt":alt};
     }
 
-    // 위도-경도 좌표계와 XYZ 좌표계를 동시에 표현하는 클래스.
-    // 생성자에서는 위도, 경도, 고도를 받으며,
-    // 이후 lat, long, alt, x, y, z 변수에서 각 좌표를 얻을 수 있음.
-    // getDistance로 두 CoordinateSystem 사이의 거리를 얻을 수 있음.
-    function CoordinateSystem(lat,long,alt){
-        var dat={"lat":lat,"long":long,"alt":alt};
-        var cartesian=coordsToCartesian(dat);
 
-        this.lat=dat.lat;
-        this.long=dat.long;
-        this.alt=dat.long;
-        this.x=cartesian.x;
-        this.y=cartesian.y;
-        this.z=cartesian.z;
-
-        this.getCartesianDelta=function(othercoord){
-            var res={};
-            res.x=othercoord.x-this.x;
-            res.y=othercoord.y-this.y;
-            res.z=othercoord.z-this.z;
-            return res;
-        }
-        this.getDistance=function(othercoord){
-            var delta=this.getCartesianDelta(othercoord);
-            return Math.sqrt(delta.x*delta.x+delta.y*delta.y+delta.z*delta.z);
-        }
-
-
-    }
 
     return{
         "coordsToCartesian":coordsToCartesian,
         "cartesianToCoords":cartesianToCoords,
-        "CoordinateSystem":CoordinateSystem,
         "centerCoords":cartesianCenterCoords
     };
-})()
+})();
+
+// 위도-경도 좌표계와 XYZ 좌표계를 동시에 표현하는 클래스.
+// 생성자에서는 위도, 경도, 고도를 받으며,
+// 이후 lat, long, alt, x, y, z 변수에서 각 좌표를 얻을 수 있음.
+// getDistance로 두 CoordinateSystem 사이의 거리를 얻을 수 있음.
+function CoordinateSystem(lat,long,alt){
+    var dat={"lat":lat,"long":long,"alt":alt};
+    var cartesian=CoordinateConversions.coordsToCartesian(dat);
+
+    this.lat=dat.lat;
+    this.long=dat.long;
+    this.alt=dat.long;
+    this.x=cartesian.x;
+    this.y=cartesian.y;
+    this.z=cartesian.z;
+    this.timestamp=null;
+
+    this.getCartesianDelta=function(othercoord){
+        var res={};
+        res.x=othercoord.x-this.x;
+        res.y=othercoord.y-this.y;
+        res.z=othercoord.z-this.z;
+        return res;
+    }
+    this.getDistance=function(othercoord){
+        var delta=this.getCartesianDelta(othercoord);
+        return Math.sqrt(delta.x*delta.x+delta.y*delta.y+delta.z*delta.z);
+    }
+
+
+}
