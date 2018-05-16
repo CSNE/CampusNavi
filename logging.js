@@ -22,6 +22,9 @@ var Log=(function(){
     var buttonsList=[];
 
     var currentVisibilityOptions;
+    
+    var levelToName=["","Verbose","Debug","Info","Warning","Error"];
+    var levelToCharacter=["","V","D","I","W","E"];
 
     function init(displayElement){
         if (display!=null) throw "Cannot initialize twice!";
@@ -34,7 +37,8 @@ var Log=(function(){
         for(var i=0;i<5;i++){
             buttonsList[i]=displayElement.ownerDocument.createElement("input");
             buttonsList[i].type="checkbox";
-            if (i>1) buttonsList[i].checked=true;
+            //if (i>1) buttonsList[i].checked=true;
+            buttonsList[i].checked=true;
             buttonsList[i].addEventListener("change",getVisibilityFromButtonsAndSetVisibility);
             buttonsContainer.appendChild(buttonsList[i]);
             var label=displayElement.ownerDocument.createElement("label");
@@ -95,8 +99,8 @@ var Log=(function(){
 
             var elem=display.ownerDocument.createElement("span");
             elem.classList+="level"+level;
-            elem.innerHTML+=timestamp();
-            elem.innerHTML+=" | ";
+            elem.innerHTML+="["+levelToCharacter[level]+"|"+timestamp();
+            elem.innerHTML+="] ";
             elem.innerHTML+=message;
 
             if (currentVisibilityOptions[elem.classList[0]]) elem.style.display="inline";
