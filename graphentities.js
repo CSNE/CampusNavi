@@ -58,7 +58,7 @@ function Edge(vStart, vEnd, id) {
 function Vertex(lat, long, alt) {
     // 꼭짓점을 표현하는 클래스
     // 위도, 경도, 고도를 받음.
-    this.coordinates = new CoordinateConversions.CoordinateSystem(lat, long, alt);
+    this.coordinates = new CoordinateSystem(lat, long, alt);
 
     //이 꼭짓점에서 나가는 edges
     this.out_edges = [];
