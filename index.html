@@ -26,10 +26,17 @@
         overflow:hidden;
       }
       #mapid{
-        height:70%;
+        height:50%;
+      }
+      #uipanel{
+        height:30%;
+      }
+      #uipanel iframe{
+        width:100%;
+        height:100%;
       }
       #debugMsgBox{
-        height:30%;
+        height:20%;
       }
     </style>
 
@@ -39,6 +46,12 @@
     <!-- 지도 div -->
     <div id="mapid"></div>
 
+    <div id="uipanel">
+      <div id="uipanel_search">
+        
+      </div>
+    </div>
+
     <!-- Log div -->
     <div id="debugMsgBox"></div>
 
@@ -47,8 +60,12 @@
     <script src="logging.js"></script>
     <script> Log.init(document.getElementById("debugMsgBox"));</script>
     <script src="coordinates.js"></script>
+    <script src="gps.js"></script>
     <script src="graphentities.js"></script>
     <script src="geodata.js"></script>
+    <script src="timetable.js"></script>
+    <script src="userdata.js"></script>
+    <script src="weather.js"></script>
     <script>
       Log.info("Log framework started");
 
@@ -68,41 +85,17 @@
                                          {"title":"Your location","autoPan":true});
       currentLocationMarker.addTo(mymap);
 
-
-      var gpsEnabledButton=L.control();
-      gpsEnabledButton.addTo(mymap);
-
-      // 위치 탐색
-      // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
-
-      // 위치정보 업데이트 callback
-      function locationCallback(position){
-        Log.verbose("LAT "+position.coords.latitude+" LONG "+position.coords.longitude+" ALT "+position.coords.altitude+" ACC "+position.coords.accuracy);
-
-        var latlng=L.latLng(position.coords.latitude,position.coords.longitude);
+      GPS.startTracking();
+      //var gpsEnabledButton=L.control();
+      //gpsEnabledButton.addTo(mymap);
+      
+      GPS.addLocationListener(function(coords){
+        var latlng=L.latLng(coords.lat,coords.long);
         currentLocationMarker.setLatLng(latlng);
 
         mymap.setView(latlng);
-      }
-      function locationErrorCallback(positionError){
-        Log.warning("Error Callback: "+positionError.code+" | "+positionError.message);
-      }
-
-      // 위치정보 요청
-      if ("geolocation" in navigator) {
-        Log.info("Geolocation available.");
-
-        options = {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0
-        };
-
-        var watchID = navigator.geolocation.watchPosition(locationCallback,locationErrorCallback,options);
-        Log.debug("watchPosition done");
-      } else {
-        Log.error("Geolocation NOT available.");
-      }
+      });
+      
 
     </script>
 
