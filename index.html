@@ -75,7 +75,7 @@
       var mymap = L.map('mapid').setView([37.565149, 126.938016], 16);
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 18,
+        maxZoom: 20,
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1IjoiY2hhbnNvbDk4IiwiYSI6ImNqZ25henV1dTJibjgycXBxeGczaWk2enMifQ.w474LPaUpTnZiQnw5E3Ujg'
       }).addTo(mymap);
@@ -94,8 +94,11 @@
       GPS.addLocationListener(function(coords){
         var latlng=L.latLng(coords.lat,coords.long);
         currentLocationMarker.setLatLng(latlng);
-
-        mymap.setView(latlng);
+        //Log.debug(this);
+        if (!this.not_first) {
+            mymap.setView(latlng);
+            this.not_first = true;
+        }
       });
       
 
