@@ -148,10 +148,10 @@ var Log=(function(){
             var stacktrace=(new Error()).stack;
             var stacks=stacktrace.split("\n");
             var lastExternalCallLocation=stacks[3].trim();
-            var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(1,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
+            var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(0,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
             
             
-            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+lastExternalCallLocation+"] ";
+            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocationFormatted+"] ";
             elem.innerHTML+=message;
             
             
