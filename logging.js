@@ -110,11 +110,21 @@ var Log=(function(){
 
             var elem=display.ownerDocument.createElement("div");
             elem.classList.add("level" + level);
-            //alert(elem.classList);
-            elem.innerHTML+="["+levelToCharacter[level]+"|"+timestamp();
-            elem.innerHTML+="] ";
+            
+            //level & time
+            var levelChar=levelToCharacter[level];
+            //stack trace
+            var stacktrace=(new Error()).stack;
+            var stacks=stacktrace.split("\n");
+            var lastExternalCallLocation=stacks[3].trim();
+            var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(1,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
+            
+            
+            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocationFormatted+"] ";
             elem.innerHTML+=message;
-
+            
+            
+            //if current level is disabled, hide it.
             elem.style.display =
                 currentVisibilityOptions[level] ?
                 "inline" : "none";
