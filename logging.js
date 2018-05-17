@@ -28,18 +28,20 @@ var Log=(function(){
 
     var levelElements = [[], [], [], [], [], []];
 
-    function init(displayElement){
+    function init(logContainer){
         if (display!=null) throw "Cannot initialize twice!";
+        
+        logContainer.classList.add("loggingContainer");
 
-        var buttonsContainer=displayElement.ownerDocument.createElement("div");
+        var buttonsContainer=logContainer.ownerDocument.createElement("div");
         buttonsContainer.classList.add("loggingControls");
-        displayElement.appendChild(buttonsContainer);
+        logContainer.appendChild(buttonsContainer);
 
 
         for(var i = 1; i <= 5; i++){
-            var label = displayElement.ownerDocument.createElement("label");
+            var label = logContainer.ownerDocument.createElement("label");
 
-            var btn = displayElement.ownerDocument.createElement("input");
+            var btn = logContainer.ownerDocument.createElement("input");
             btn.type="checkbox";
             //if (i>1) buttonsList[i].checked=true;
             btn.checked=true;
@@ -47,7 +49,7 @@ var Log=(function(){
             buttonsList[i] = btn;
             label.appendChild(btn);
 
-            var span = displayElement.ownerDocument.createElement("span");
+            var span = logContainer.ownerDocument.createElement("span");
             span.innerHTML = levelToName[i];
             label.appendChild(span);
 
@@ -56,14 +58,15 @@ var Log=(function(){
         }
 
 
-        display=displayElement.ownerDocument.createElement("p");
+        display=logContainer.ownerDocument.createElement("p");
         display.classList.add("loggingDisplay");
-        displayElement.appendChild(display);
+        logContainer.appendChild(display);
 
 
-        var css = displayElement.ownerDocument.createElement("style");
+        var css = logContainer.ownerDocument.createElement("style");
         css.type = "text/css";
         var cssText="";
+        cssText+= ".loggingContainer {display:flex;flex-flow: column;}\n";
         cssText+= ".loggingDisplay .level1 {color:gray;}\n";
         cssText+= ".loggingDisplay .level2 {color:black;}\n";
         cssText+= ".loggingDisplay .level3 {color:green;}\n";
@@ -75,7 +78,7 @@ var Log=(function(){
         cssText+= ".loggingControls {padding:4px;}\n";
         cssText+= ".loggingControls * {margin:4px;}\n";
         css.innerHTML=cssText;
-        displayElement.ownerDocument.head.appendChild(css);
+        logContainer.ownerDocument.head.appendChild(css);
 
         getVisibilityFromButtonsAndSetVisibility();
     }
