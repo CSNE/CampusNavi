@@ -28,16 +28,41 @@ var Log=(function(){
 
     var levelElements = [[], [], [], [], [], []];
 
-    function init(logContainer){
+    function init(){
+        
         if (display!=null) throw "Cannot initialize twice!";
         
+        //setup container
+        var logContainer=document.createElement("div");        
+        document.body.appendChild(logContainer);
         logContainer.classList.add("loggingContainer");
-
+        logContainer.style.display="none";
+        
+        
+        
+        //setup show/hide buttons
+        var showHideButton=document.createElement("div");        
+        document.body.appendChild(showHideButton);
+        showHideButton.classList.add("logShowAndHideButton");
+        showHideButton.innerHTML="Show Logs"
+        showHideButton.addEventListener("click",function(){
+            if (logContainer.style.display==="flex") {
+                logContainer.style.display="none";
+                showHideButton.innerHTML="Show Logs";
+            }else{
+                logContainer.style.display="flex";
+                showHideButton.innerHTML="Hide Logs";
+            }
+            
+        });
+        
+        
+        //setup buttons container
         var buttonsContainer=logContainer.ownerDocument.createElement("div");
         buttonsContainer.classList.add("loggingControls");
         logContainer.appendChild(buttonsContainer);
 
-
+        //create buttons
         for(var i = 1; i <= 5; i++){
             var label = logContainer.ownerDocument.createElement("label");
 
@@ -57,15 +82,20 @@ var Log=(function(){
 
         }
 
-
+        //serup log container
         display=logContainer.ownerDocument.createElement("p");
         display.classList.add("loggingDisplay");
         logContainer.appendChild(display);
 
-
+        //styles
         var css = logContainer.ownerDocument.createElement("style");
         css.type = "text/css";
         var cssText="";
+        cssText+= ".loggingContainer{height:100%;width:100%;position:fixed;z-index:1000;left:0;top:0;background-color: white;opacity:0.7;}\n";
+        cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;right:0;bottom:0;background-color: #A0A0A0;opacity:0.7;}\n";
+        cssText+= ".logShowAndHideButton{font-size:24pt;color:black;padding:8px;}\n";
+        cssText+= "\n";
+        cssText+= "\n";
         cssText+= ".loggingContainer {display:flex;flex-flow: column;}\n";
         cssText+= ".loggingDisplay .level1 {color:gray;}\n";
         cssText+= ".loggingDisplay .level2 {color:black;}\n";
@@ -81,6 +111,7 @@ var Log=(function(){
         logContainer.ownerDocument.head.appendChild(css);
 
         getVisibilityFromButtonsAndSetVisibility();
+        
     }
 
     function timestamp(){
@@ -110,11 +141,21 @@ var Log=(function(){
 
             var elem=display.ownerDocument.createElement("div");
             elem.classList.add("level" + level);
-            //alert(elem.classList);
-            elem.innerHTML+="["+levelToCharacter[level]+"|"+timestamp();
-            elem.innerHTML+="] ";
+            
+            //level & time
+            var levelChar=levelToCharacter[level];
+            //stack trace
+            var stacktrace=(new Error()).stack;
+            var stacks=stacktrace.split("\n");
+            var lastExternalCallLocation=stacks[3].trim();
+            var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(0,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
+            
+            
+            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocationFormatted+"] ";
             elem.innerHTML+=message;
-
+            
+            
+            //if current level is disabled, hide it.
             elem.style.display =
                 currentVisibilityOptions[level] ?
                 "inline" : "none";
