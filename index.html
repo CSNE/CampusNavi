@@ -94,7 +94,7 @@
       GPS.addLocationListener(function(coords){
         var latlng=L.latLng(coords.lat,coords.long);
         currentLocationMarker.setLatLng(latlng);
-        //Log.debug(this);
+        Log.debug(this);
         if (!this.not_first) {
             mymap.setView(latlng);
             this.not_first = true;
