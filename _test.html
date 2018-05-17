@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+
+    <script>
+        /*
+[I|22:58.131] LatLng(37.560743, 126.936078) erp_g1  공학원 입구              ;
+[I|22:53.373] LatLng(37.560568, 126.936883) byro1   공학원 앞                ;
+[I|22:38.092] LatLng(37.562945, 126.936373) v5      v5                       ;
+[I|22:33.915] LatLng(37.562699, 126.935939) v1      v1                       ;
+[I|22:29.123] LatLng(37.561304, 126.935477) v2      v2                       ;
+[I|22:22.764] LatLng(37.561023, 126.937001) v3      v3                       ;
+[I|22:20.198] LatLng(37.561112, 126.936556) v4      v4                       ;
+[I|21:53.848] LatLng(37.562686, 126.937553) byro3   백양로 어딘가 3          ;
+[I|21:49.305] LatLng(37.562771, 126.937087) byro3_1 백양로 어딘가 3 샛길 1   ;
+[I|21:28.719] LatLng(37.561653, 126.937215) byro2   제1공학관 앞             ;
+[I|21:19.577] LatLng(37.561767, 126.936631) ena_g1  제1공학관 입구           ;
+*/
+        /*
+        id, name, loc
+        */
+        document.write(escape(JSON.stringify([
+            { "id": "erp_g1" , "name": "공학원 입구"              , "loc": [37.560743, 126.936078, 0] },
+            { "id": "byro1"  , "name": "공학원 앞 백양로"         , "loc": [37.560568, 126.936883, 0] },
+            { "id": "v5"     , "name": "아마 언덕 위"             , "loc": [37.562945, 126.936373, 0] },
+            { "id": "v1"     , "name": "스포츠 과학관 앞"         , "loc": [37.562699, 126.935939, 0] },
+            { "id": "byro2_2", "name": "백양로 어딘가 2 샛길 2"   , "loc": [37.561304, 126.935477, 0] },
+            { "id": "byro2"  , "name": "백양로 어딘가 2"          , "loc": [37.561023, 126.937001, 0] },
+            { "id": "byro2_1", "name": "백양로 어딘가 2 샛길 1"   , "loc": [37.561112, 126.936556, 0] },
+            { "id": "byro4"  , "name": "백양로 어딘가 4"          , "loc": [37.562686, 126.937553, 0] },
+            { "id": "byro4_1", "name": "백양로 어딘가 4 샛길 1"   , "loc": [37.562771, 126.937087, 0] },
+            { "id": "byro3"  , "name": "제1공학관 앞 백양로"      , "loc": [37.561653, 126.937215, 0] },
+            { "id": "ena_g1" , "name": "제1공학관 입구"           , "loc": [37.561767, 126.936631, 0] },
+
+            { "id": "byro3_1", "name": "제1공학관 앞"             , "loc": [37.561755, 126.936749, 0] }
+        ])));
+        
+        document.write("<br/>");
+
+        document.write(escape(JSON.stringify([
+            { undir: true, f: {}, vs: "yonsei_main_gate", ve: "byro1" },
+            { undir: true, f: {}, vs: "byro1", ve: "byro2" },
+            { undir: true, f: {}, vs: "byro2", ve: "byro3" },
+            { undir: true, f: {}, vs: "byro3", ve: "byro4" },
+            { undir: true, f: {}, vs: "byro1", ve: "erp_g1" },
+            { undir: true, f: {}, vs: "byro2", ve: "byro2_1" },
+            { undir: true, f: {}, vs: "byro2_1", ve: "byro2_2" },
+            { undir: true, f: {}, vs: "byro3", ve: "byro3_1" },
+            { undir: true, f: {}, vs: "byro3_1", ve: "ena_g1" },
+            { undir: true, f: {}, vs: "byro4", ve: "byro4_1" },
+            { undir: true, f: {}, vs: "byro2_2", ve: "v1" },
+            { undir: true, f: {}, vs: "v1", ve: "v5" },
+            { undir: true, f: {}, vs: "v5", ve: "byro4_1" },
+            { undir: true, f: {}, vs: "byro2_1", ve: "byro3_1" },
+            { undir: true, f: {}, vs: "byro3_1", ve: "byro4_1" }
+        ])));
+
+    </script>
+
+</body>
+</html>

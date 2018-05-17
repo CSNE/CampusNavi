@@ -66,10 +66,18 @@ function createDataJson()
                 "ve": "yonsei_main_gate",
                 "w": { "walk": 7, "run": 5 },
                 "f": {},
-                "undir": 1
+                "undir": true
             }
         ]
     };
+
+    /**** test ****/
+    var jsonv1 = "%5B%7B%22id%22%3A%22erp_g1%22%2C%22name%22%3A%22%uACF5%uD559%uC6D0%20%uC785%uAD6C%22%2C%22loc%22%3A%5B37.560743%2C126.936078%2C0%5D%7D%2C%7B%22id%22%3A%22byro1%22%2C%22name%22%3A%22%uACF5%uD559%uC6D0%20%uC55E%20%uBC31%uC591%uB85C%22%2C%22loc%22%3A%5B37.560568%2C126.936883%2C0%5D%7D%2C%7B%22id%22%3A%22v5%22%2C%22name%22%3A%22%uC544%uB9C8%20%uC5B8%uB355%20%uC704%22%2C%22loc%22%3A%5B37.562945%2C126.936373%2C0%5D%7D%2C%7B%22id%22%3A%22v1%22%2C%22name%22%3A%22%uC2A4%uD3EC%uCE20%20%uACFC%uD559%uAD00%20%uC55E%22%2C%22loc%22%3A%5B37.562699%2C126.935939%2C0%5D%7D%2C%7B%22id%22%3A%22byro2_2%22%2C%22name%22%3A%22%uBC31%uC591%uB85C%20%uC5B4%uB518%uAC00%202%20%uC0DB%uAE38%202%22%2C%22loc%22%3A%5B37.561304%2C126.935477%2C0%5D%7D%2C%7B%22id%22%3A%22byro2%22%2C%22name%22%3A%22%uBC31%uC591%uB85C%20%uC5B4%uB518%uAC00%202%22%2C%22loc%22%3A%5B37.561023%2C126.937001%2C0%5D%7D%2C%7B%22id%22%3A%22byro2_1%22%2C%22name%22%3A%22%uBC31%uC591%uB85C%20%uC5B4%uB518%uAC00%202%20%uC0DB%uAE38%201%22%2C%22loc%22%3A%5B37.561112%2C126.936556%2C0%5D%7D%2C%7B%22id%22%3A%22byro4%22%2C%22name%22%3A%22%uBC31%uC591%uB85C%20%uC5B4%uB518%uAC00%204%22%2C%22loc%22%3A%5B37.562686%2C126.937553%2C0%5D%7D%2C%7B%22id%22%3A%22byro4_1%22%2C%22name%22%3A%22%uBC31%uC591%uB85C%20%uC5B4%uB518%uAC00%204%20%uC0DB%uAE38%201%22%2C%22loc%22%3A%5B37.562771%2C126.937087%2C0%5D%7D%2C%7B%22id%22%3A%22byro3%22%2C%22name%22%3A%22%uC81C1%uACF5%uD559%uAD00%20%uC55E%20%uBC31%uC591%uB85C%22%2C%22loc%22%3A%5B37.561653%2C126.937215%2C0%5D%7D%2C%7B%22id%22%3A%22ena_g1%22%2C%22name%22%3A%22%uC81C1%uACF5%uD559%uAD00%20%uC785%uAD6C%22%2C%22loc%22%3A%5B37.561767%2C126.936631%2C0%5D%7D%2C%7B%22id%22%3A%22byro3_1%22%2C%22name%22%3A%22%uC81C1%uACF5%uD559%uAD00%20%uC55E%22%2C%22loc%22%3A%5B37.561755%2C126.936749%2C0%5D%7D%5D";
+    var jsone1 = "%5B%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22yonsei_main_gate%22%2C%22ve%22%3A%22byro1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro1%22%2C%22ve%22%3A%22byro2%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro2%22%2C%22ve%22%3A%22byro3%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro3%22%2C%22ve%22%3A%22byro4%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro1%22%2C%22ve%22%3A%22erp_g1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro2%22%2C%22ve%22%3A%22byro2_1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro2_1%22%2C%22ve%22%3A%22byro2_2%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro3%22%2C%22ve%22%3A%22byro3_1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro3_1%22%2C%22ve%22%3A%22ena_g1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro4%22%2C%22ve%22%3A%22byro4_1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro2_2%22%2C%22ve%22%3A%22v1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22v1%22%2C%22ve%22%3A%22v5%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22v5%22%2C%22ve%22%3A%22byro4_1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro2_1%22%2C%22ve%22%3A%22byro3_1%22%7D%2C%7B%22undir%22%3Atrue%2C%22f%22%3A%7B%7D%2C%22vs%22%3A%22byro3_1%22%2C%22ve%22%3A%22byro4_1%22%7D%5D";
+    //
+
+    obj.vertices = obj.vertices.concat(JSON.parse(unescape(jsonv1)));
+    obj.edges = obj.edges.concat(JSON.parse(unescape(jsone1)));//no w -> use distance
 
     var v_by_id = {};
 
@@ -100,11 +108,24 @@ function createDataJson()
         }
     }
 
+    //Log.debug("111");
+
+    /**** test ****/
+    for (var i = 0; i < masterGraph.edges.length; i++)
+    {
+        var e = masterGraph.edges[i];
+        if (!e.timeRequired)
+        {
+            var d = e.vStart.coordinates.getDistance(e.vEnd.coordinates);
+            e.timeRequired = { "walk": d, "run": d / 2 };
+        }
+    }
+    //
 
     Log.info("Geodata database created.");
     return masterGraph;
 }
 
-var createData = createDataXml;
+var createData = createDataJson;
 
 var GraphDatabase = createData();

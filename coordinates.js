@@ -21,7 +21,7 @@ var CoordinateConversions=(function(){
     var cartesianCenterCoords={"lat":37.5602,"long":126.9368,"alt":50};
 
     //지구 반지름 등 경도-위도 좌표계를 변환하기 위한 상수들
-    var earthRadius=6400*1000;
+    var earthRadius=6.3781e6;
     var earthCircumference=2*Math.PI*earthRadius;
     var metersPerDegreeLatitude=earthCircumference/360;
     var earthCircumferenceAtLatitude=2*Math.PI*earthCircumference*sind(cartesianCenterCoords.lat);
@@ -29,22 +29,35 @@ var CoordinateConversions=(function(){
 
     // 위도-경도-고도 좌표를 받아 XYZ 좌표계로 변환.
     // 예시: coordsToCartesian({"lat":37.5,"long":126.9,"alt":10})
-    function coordsToCartesian(coords){
+    function coordsToCartesian(coords) {
+        /*
         var y=(coords.lat-cartesianCenterCoords.lat)*metersPerDegreeLatitude;
         var x=(coords.long-cartesianCenterCoords.long)*metersPerDegreeLongitude;
         var z=coords.alt-cartesianCenterCoords.alt;
 
         return {"x":x,"y":y,"z":z};
+        //*/
+        var r = earthRadius + coords.alt;
+        var rp = r * cosd(coords.lat);
+        return {
+            "x": rp * cosd(coords.long),
+            "y": rp * sind(coords.long),
+            "z": r * sind(coords.lat)
+        };
     }
 
     // XYZ 좌표계를 위도-경도-고도 좌표계로 변환.
     // 예시: cartesianToCoords({"x":10,"y":20,"z":30})
-    function cartesianToCoords(coords){
+    function cartesianToCoords(coords) {
+        /*
         var lat=coords.y/metersPerDegreeLatitude+cartesianCenterCoords.lat;
         var long=coords.x/metersPerDegreeLongitude+cartesianCenterCoords.long;
         var alt=coords.z+cartesianCenterCoords.alt;
 
         return {"lat":lat,"long":long,"alt":alt};
+        //*/
+        var r = coords.x * coords.x + coords.y * coords.y + coords.z * coords.z;
+        var alt = r - earthRadius;
     }
 
 
@@ -84,5 +97,5 @@ function CoordinateSystem(lat,long,alt){
         return Math.sqrt(delta.x*delta.x+delta.y*delta.y+delta.z*delta.z);
     }
 
-
+    //Log.debug([this.x, this.y, this.z]);
 }

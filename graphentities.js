@@ -12,6 +12,7 @@ function Graph() {
       }
       //*/
         //같은 이름은 넣지 말자
+        e.id = this.edges.length;
         this.edges.push(e);
     }
 
@@ -27,14 +28,17 @@ function Graph() {
         this.vertices.push(v);
     }
 
-}
+    this.findShortestPath = function (from, to, pref) {
+        //alert();
+        return GraphCalculations.findShortestPath(this, from, to, pref);
+    }
 
-var Edge_id_counter = 0;
+}
 
 function Edge(vStart, vEnd, id) {
     // 간선을 표현하는 클래스
 
-    this.id = id;//실질적인 comparable identifier
+    this.id = id;
 
     //양쪽 꼭짓점
     this.vStart = vStart;
@@ -53,11 +57,16 @@ function Edge(vStart, vEnd, id) {
 
     //간선의 이름
     this.name = "Unnamed edge";
+
+    //Log.debug(this.vStart.coordinates.getDistance(this.vEnd.coordinates));
 }
 
-function Vertex(lat, long, alt) {
+function Vertex(lat, long, alt, id) {
     // 꼭짓점을 표현하는 클래스
-    // 위도, 경도, 고도를 받음.
+
+    this.id = id;//실질적인 comparable identifier
+
+    // 위도, 경도, 고도를 받음. path 그리기에 적절하게 표현 (배열)
     this.coordinates = new CoordinateSystem(lat, long, alt);
 
     //이 꼭짓점에서 나가는 edges

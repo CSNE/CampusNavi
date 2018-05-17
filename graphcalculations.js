@@ -9,23 +9,34 @@ var GraphCalculations=(function(){
             return this.n == 1;
         }
         this.enqueue = function (e) {
-            var i = n++;
-            for (var j; this.cmp(this.buf[i], this.buf[j = i >> 1]) ; i = j) {
+            //Log.debug("&nbsp;enqueue({ w: " + e.w + ", v: " + e.v.id + ", p: " + e.p + ", e: " + (e.ret ? "(" + e.e.vStart.id + ", " + e.e.vEnd.id + ")" : e.e) + " } })");
+            //Log.debug("&nbsp;&nbsp;n: " + this.n);
+            var i = this.n++;
+            //Log.debug("&nbsp;&nbsp;i >> 1: " + (i >> 1));
+            for (var j; i > 1 && this.cmp(e, this.buf[j = i >> 1]) ; i = j) {
                 this.buf[i] = this.buf[j];
             }
+            //Log.debug("&nbsp;&nbsp;i: " + i);
             this.buf[i] = e;
+            //Log.debug("&nbsp;&nbsp;buf: [" + this.buf + "]");
+            //Log.debug("&nbsp;&nbsp;n: " + this.n);
+            //Log.debug("&nbsp;&nbsp;return");
         }
         this.dequeue = function () {
+            //Log.debug("&nbsp;dequeue()");
+            //Log.debug("&nbsp;&nbsp;n: " + this.n);
             var i = 1;
             var ret = this.buf[i];
             for (; ;) {
                 var k = i;
+                //alert(k);
                 var j = i << 1;
-                if (this.cmp(this.buf[j], this.buf[k])) {
+                //alert(j);
+                if (j < this.n && this.cmp(this.buf[j], this.buf[k])) {
                     k = j;
                 }
                 j++;
-                if (this.cmp(this.buf[j], this.buf[k])) {
+                if (j < this.n && this.cmp(this.buf[j], this.buf[k])) {
                     k = j;
                 }
                 if (i == k)
@@ -33,7 +44,9 @@ var GraphCalculations=(function(){
                 this.buf[i] = this.buf[k];
                 i = k;
             }
-            this.buf[i] = this.buf[--n];
+            this.buf[i] = this.buf[--this.n];
+            //Log.debug("&nbsp;&nbsp;n: " + this.n);
+            //Log.debug("&nbsp;&nbsp;return { w: " + ret.w + ", v: " + ret.v.id + ", p: " + ret.p + ", e: " + (ret.e ? "(" + ret.e.vStart.id + ", " + ret.e.vEnd.id + ")" : ret.e) + " }");
             return ret;
         }
         this.peek = function () {
@@ -47,42 +60,74 @@ var GraphCalculations=(function(){
     var findShortestPath = function (graph, src, dst, pref) {
         //src, dst는 각각 정점의 집합(배열) 또는 하나의 정점
         //pref: preference, 뛰기, 실내 우선 등
-        //배열이 아닌 경우 src = [src], dst도
+
+        if (!Array.isArray(src))
+            src = [src];
+        if (!Array.isArray(dst))
+            dst = [dst];
+
+        //alert();
 
         var ssrc = {}, sdst = {};
         for (var i = 0; i < src.length; i++) {
-            ssrc[src[i].id] = 1;
+            ssrc[src[i].id] = true;
         }
         for (var i = 0; i < dst.length; i++)
         {
-            sdst[dst[i].id] = 1;
+            sdst[dst[i].id] = true;
         }
-
-        return findShortestPathWithId(graph, ssrc, sdst, pref);
+        //alert(66);
+        return findShortestPathWithIdSet(graph, ssrc, sdst, pref);
     }
 
     //returns: ret.p.p.p....p.v in src, p.p.....p.e: edge in path p.e: last edge
-    var findShortestPathWithId = function (graph, src, dst, pref)
+    var findShortestPathWithIdSet = function (graph, src, dst, pref)
     {
-        var q = new Heap();
+        //Log.debug("findShortestPathWithIdSet");
+        var q = new Heap(), vv = {}, ve = {};
         for (var k in src)
+        {
             q.enqueue({ "w": 0, "v": graph.vertices[k], "p": undefined, "e": undefined });
+        }
         while (!q.isEmpty())
         {
+            //alert(81);
             var p = q.dequeue();
-            if (dst[p.v.id])
-                p;
-            for (var i = 0; i < p.v.out_edges.length; i++)
+            //alert(p.w + ", " + p.v.id)
+
+            var v = p.v;
+            //Log.debug("&nbsp;vv[" + v.id + "]: " + vv[v.id]);
+            if (!vv[v.id])
             {
-                var e = p.v.out_edges[i];
-                q.enqueue({ "w": p.w + e.timeRequired[pref.time_name], "v": e.vEnd, "p": p, "e": e });
+                //Log.debug(v.id);
+                vv[v.id] = true;
+                //Log.debug("&nbsp;dst[" + v.id + "]: " + dst[v.id]);
+                if (dst[v.id])
+                {
+                    //alert(84);
+                    //alert("return { w: " + p.w + ", v: " + p.v.id + ", p: " + "{ w: ..., v: " + p.p.v.id + ", p: {...}, e: " + p.p.e + "}" + ", e: (" + p.e.vStart.id + ", " + p.e.vEnd.id + ")}");
+                    return p;
+                }
+                for (var i = 0; i < v.out_edges.length; i++)
+                {
+                    var e = v.out_edges[i];
+                    //alert("(" + e.vStart.id + ", " + e.vEnd.id + "), " + p.v.id + ", " + p.p);
+                    //alert("{ w: " + (p.w + e.timeRequired[pref.time_name]) + ", v: " + e.vEnd.id + ", p: " + p + ", e: (" + e.vStart.id + ", " + e.vEnd.id + ")}");
+                    //Log.debug("&nbsp;ve[" + e.id + "]: " + ve[e.id]);
+                    if (!ve[e.id])
+                    {
+                        ve[e.id] = true;
+                        q.enqueue({ "w": p.w + e.timeRequired[pref.time_name], "v": e.vEnd, "p": p, "e": e });
+                    }
+                }
             }
         }
+        //return undefined;
     }
 
     return {
         "findShortestPath":findShortestPath,
-        "findShortestPathWithId":findShortestPathWithId
+        "findShortestPathWithIdSet":findShortestPathWithIdSet
     }
 
 })();
