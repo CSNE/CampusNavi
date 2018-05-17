@@ -38,6 +38,23 @@
       #debugMsgBox{
         height:20%;
       }
+      
+      #uipanel_search table{
+        height:100%;
+        width:100%;
+      }
+      #uipanel_search table td{
+        vertical-align:middle;
+        padding:4px;
+      }
+      #uipanel_search table input{
+        width:100%;
+      }
+      #uipanel_search table button{
+        width:100%;
+        height:100%;
+        text-align: center;
+      }
     </style>
 
   </head>
@@ -48,7 +65,12 @@
 
     <div id="uipanel">
       <div id="uipanel_search">
-        
+        <table>
+          <tr><td><input type="text" list="destinationsData" id="uipanel_search_input_from"></td><td>부터</td><td rowspan="2"><button id="uipanel_search_button_find">탐색</button></td></tr>
+          <tr><td><input type="text" list="destinationsData" id="uipanel_search_input_to"></td><td>까지</td></tr>
+        </table>
+        <datalist id="destinationsData">
+        </datalist>
       </div>
     </div>
 
@@ -101,10 +123,35 @@
         }
       });
       
-
+      
+      var destinationsDataList=document.getElementById("destinationsData");
+      for(var i=0;i<GraphDatabase.vertices.length;i++){
+        var opt=document.createElement("option");
+        opt.setAttribute("value",GraphDatabase.vertices[i].name);
+        destinationsDataList.appendChild(opt);
+      }
+      
+      
+      
+      var search_button_find=document.getElementById("uipanel_search_button_find");
+      var search_input_from=document.getElementById("uipanel_search_input_from");
+      var search_input_to=document.getElementById("uipanel_search_input_to");
+      search_button_find.addEventListener("click",function(){
+        var fromName=search_input_from.value;
+        var fromVertex=GraphDatabase.findVertexWithName(fromName);
+        var toName=search_input_to.value;
+        var toVertex=GraphDatabase.findVertexWithName(toName);
+        
+        Log.info("Finding path from "+fromName+"(id="+fromVertex.id+") to "+toName+"(id="+toVertex.id+")");
+        //Log.debug(fromVertex.name);
+        //Log.debug(toVertex.name);
+        
+        var path1 = new Path(mymap, GraphDatabase, fromVertex, toVertex);
+      })
+      
     </script>
 
-    <script src="test.js"></script>
+    <!--<script src="test.js"></script>-->
   </body>
 
 

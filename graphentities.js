@@ -32,6 +32,13 @@ function Graph() {
         //alert();
         return GraphCalculations.findShortestPath(this, from, to, pref);
     }
+    
+    this.findVertexWithName=function(name){
+      for(var i=0;i<this.vertices.length;i++){
+        if (this.vertices[i].name===name) return this.vertices[i];
+      }
+      return null;
+    }
 
 }
 
