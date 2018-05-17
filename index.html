@@ -82,9 +82,18 @@
 
       // 지도에 마커 생성.
       // 초기 위치는 연세대 정문.
-      var currentLocationMarker=L.marker(L.latLng(CoordinateConversions.centerCoords.lat,
+      var currentLocationMarker=L.circleMarker(L.latLng(CoordinateConversions.centerCoords.lat,
                                                   CoordinateConversions.centerCoords.long),
-                                         {"title":"Your location","autoPan":true});
+                                         {
+                                             "title": "Your location", "autoPan": true,
+                                             "radius": 6,
+                                             "weight": 1,
+                                             "color": "#0B4AB5",
+                                             //"stroke": false,
+                                             "fill": true,
+                                             "fillOpacity": 1,
+                                             "fillColor": "#689DF6"
+                                         });
       currentLocationMarker.addTo(mymap);
 
       GPS.startTracking();
