@@ -137,9 +137,16 @@
         var toName=search_input_to.value;
         var toVertex=GraphDatabase.findVertexWithName(toName);
         
+        if (fromVertex===null){
+          Log.error("Invalid vertex name: \""+fromName+"\" Cannot start navigation.")
+          return;
+        }
+        if (toVertex===null){
+          Log.error("Invalid vertex name: \""+toName+"\" Cannot start navigation.")
+          return;
+        }
         Log.info("Finding path from "+fromName+"(id="+fromVertex.id+") to "+toName+"(id="+toVertex.id+")");
-        //Log.debug(fromVertex.name);
-        //Log.debug(toVertex.name);
+        
         
         var path1 = new Path(mymap, GraphDatabase, fromVertex, toVertex);
       })
