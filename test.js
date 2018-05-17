@@ -1,7 +1,7 @@
 ﻿
 //alert("test.js");
 
-Log.debug(GraphDatabase.edges.length);
+//Log.debug(GraphDatabase.edges.length);
 
 var path1 = new Path(mymap, GraphDatabase, GraphDatabase.vertices[0], GraphDatabase.vertices[1]);
 //alert(path1);
@@ -17,7 +17,7 @@ window.setInterval(function () {
 }, 5000);
 
 mymap.on("click", function (e) {
-    Log.info(e.latlng);
+    Log.debug(e.latlng);
 });
 
 /*

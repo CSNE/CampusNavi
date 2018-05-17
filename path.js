@@ -1,7 +1,7 @@
 ﻿
 function Path(map, graph, from, to, pref)
 {
-    Log.debug("path from " + from.name + " to " + to.name);
+    //Log.debug("path from " + from.name + " to " + to.name);
     //this.path_data = undefined;
     this.map = map;
     this.graph = graph;
@@ -21,7 +21,8 @@ function Path(map, graph, from, to, pref)
         }
         //alert(latlngs);
         //Log.debug("path_length: " + (latlngs.length - 1));
-        Log.debug("time: " + p.w);
+        //Log.debug("time: " + p.w);
+        Log.verbose("path from " + from.name + " to " + to.name + "(" + p.w.toFixed() + "초)");
         this.path_data = [];
         if (latlngs.length)
             this.path_data.push(L.polyline(latlngs, { "color": "red" }).addTo(this.map));

@@ -21,35 +21,43 @@ var Log=(function(){
 
     var buttonsList=[];
 
-    var currentVisibilityOptions;
+    var currentVisibilityOptions = [];
     
     var levelToName=["","Verbose","Debug","Info","Warning","Error"];
-    var levelToCharacter=["","V","D","I","W","E"];
+    var levelToCharacter = ["", "V", "D", "I", "W", "E"];
+
+    var levelElements = [[], [], [], [], [], []];
 
     function init(displayElement){
         if (display!=null) throw "Cannot initialize twice!";
 
         var buttonsContainer=displayElement.ownerDocument.createElement("div");
-        buttonsContainer.className+="loggingControls";
+        buttonsContainer.classList.add("loggingControls");
         displayElement.appendChild(buttonsContainer);
 
 
-        for(var i=0;i<5;i++){
-            buttonsList[i]=displayElement.ownerDocument.createElement("input");
-            buttonsList[i].type="checkbox";
+        for(var i = 1; i <= 5; i++){
+            var label = displayElement.ownerDocument.createElement("label");
+
+            var btn = displayElement.ownerDocument.createElement("input");
+            btn.type="checkbox";
             //if (i>1) buttonsList[i].checked=true;
-            buttonsList[i].checked=true;
-            buttonsList[i].addEventListener("change",getVisibilityFromButtonsAndSetVisibility);
-            buttonsContainer.appendChild(buttonsList[i]);
-            var label=displayElement.ownerDocument.createElement("label");
-            label.innerHTML=["Verbose","Debug","Info","Warning","Error"][i];
+            btn.checked=true;
+            btn.addEventListener("change", getVisibilityFromButtonsAndSetVisibility);
+            buttonsList[i] = btn;
+            label.appendChild(btn);
+
+            var span = displayElement.ownerDocument.createElement("span");
+            span.innerHTML = levelToName[i];
+            label.appendChild(span);
+
             buttonsContainer.appendChild(label);
 
         }
 
 
         display=displayElement.ownerDocument.createElement("p");
-        display.className+="loggingDisplay";
+        display.classList.add("loggingDisplay");
         displayElement.appendChild(display);
 
 
@@ -97,18 +105,22 @@ var Log=(function(){
 
 
 
-            var elem=display.ownerDocument.createElement("span");
-            elem.classList+="level"+level;
+            var elem=display.ownerDocument.createElement("div");
+            elem.classList.add("level" + level);
+            //alert(elem.classList);
             elem.innerHTML+="["+levelToCharacter[level]+"|"+timestamp();
             elem.innerHTML+="] ";
             elem.innerHTML+=message;
 
-            if (currentVisibilityOptions[elem.classList[0]]) elem.style.display="inline";
-            else elem.style.display="none";
+            elem.style.display =
+                currentVisibilityOptions[level] ?
+                "inline" : "none";
 
-            elem.appendChild(display.ownerDocument.createElement("br"));
+
+            //elem.appendChild(display.ownerDocument.createElement("br"));
 
             prependChild(elem);
+            levelElements[level].push(elem);
         }else{
             throw "No display element! Make sure init() is called with proper HTML element."
         }
@@ -131,20 +143,30 @@ var Log=(function(){
     }
 
     function getVisibilityFromButtonsAndSetVisibility(){
-        res={};
-        for (var i=0;i<5;i++){
-            res["level"+(i+1)]=buttonsList[i].checked;
+        //res={};
+        for (var i=1;i<=5;i++){
+            var b = buttonsList[i].checked;
+            if (currentVisibilityOptions[i] ^ b)
+            {
+                currentVisibilityOptions[i] = b;
+                setVisibility(i, b);
+            }
         }
-        currentVisibilityOptions=res;
+        //currentVisibilityOptions=res;
 
-        setVisibility(currentVisibilityOptions);
+        //setVisibility(currentVisibilityOptions);
     }
 
-    function setVisibility(options){
+    /*
+    function setVisibility(options) {
+        //alert(JSON.stringify(options));
         if (display!=null){
             var children = display.childNodes;
+            //alert([children, children.length]);
             for (var i = 0; i < children.length; i++) {
-                if (children[i].classList.length>0){
+                //alert(children[i].classList[0]);
+                //alert(children[i].classList)
+                if (children[i].classList.length > 0) {
                     if (options[children[i].classList[0]]) children[i].style.display="inline";
                     else children[i].style.display="none";
                 }
@@ -154,6 +176,17 @@ var Log=(function(){
             throw "No display element! Make sure init() is called with proper HTML element."
         }
 
+    }
+    //*/
+
+    function setVisibility(level, b)
+    {
+        var d = b ? "inline" : "none";
+        var a = levelElements[level];
+        for (var i = 0; i < a.length; i++)
+        {
+            a[i].style.display = d;
+        }
     }
 
     return {
