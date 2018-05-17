@@ -151,7 +151,7 @@ var Log=(function(){
             var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(1,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
             
             
-            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocationFormatted+"] ";
+            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+lastExternalCallLocation+"] ";
             elem.innerHTML+=message;
             
             
