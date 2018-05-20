@@ -45,10 +45,14 @@
         vertical-align:middle;
         padding:4px;
       }
-      #uipanel_search table input{
+      #uipanel_search table input:not([type]),
+      #uipanel_search table input[type="text"]
+      {
         width:100%;
       }
-      #uipanel_search table button{
+      #uipanel_search table button,
+      #uipanel_search table input[type="submit"]
+      {
         width:100%;
         height:100%;
         text-align: center;
@@ -62,14 +66,45 @@
     <div id="mapid"></div>
 
     <div id="uipanel">
-      <div id="uipanel_search">
+      <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
+      <form id="uipanel_search" onsubmit="return false;">
         <table>
-          <tr><td><input type="text" list="destinationsData" id="uipanel_search_input_from"></td><td>부터</td><td rowspan="2"><button id="uipanel_search_button_find">탐색</button></td></tr>
-          <tr><td><input type="text" list="destinationsData" id="uipanel_search_input_to"></td><td>까지</td></tr>
+          <tr>
+            <td><input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1"></td>
+            <td>부터</td>
+            <td rowspan="2">
+                <!--
+              <button id="uipanel_search_button_find" tabindex="3">탐색</button>
+                    -->
+              <input type="submit" value="탐색" id="uipanel_search_button_find"/>
+            </td>
+          </tr>
+          <tr>
+            <td><input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2"></td>
+            <td>까지</td>
+          </tr>
         </table>
+        <!--
+        <div style="display: inline-block; width: 80%; height: 60px; vertical-align: bottom;">
+            <div>
+                <input type="text" list="destinationsData"
+                        id="uipanel_search_input_from"
+                        style="width: 80%; margin: 4px;" />부터
+            </div
+            ><div>
+                 <input type="text" list="destinationsData"
+                        id="uipanel_search_input_to"
+                        style="width: 80%; margin: 4px;" />까지
+            </div>
+        </div
+        ><div style="display: inline-flex; flex-flow: wrap; width: 20%; height: 60px; vertical-align: bottom;">
+           <button id="uipanel_search_button_find"
+                   style="width:100%; height: 52px; margin: 4px;">탐색</button>
+        </div>
+        -->
         <datalist id="destinationsData">
         </datalist>
-      </div>
+      </form>
     </div>
 
     <!-- 자바스크립트 -->
@@ -136,30 +171,41 @@
       }
       
       
-      
+      var path1;
       var search_button_find=document.getElementById("uipanel_search_button_find");
       var search_input_from=document.getElementById("uipanel_search_input_from");
       var search_input_to=document.getElementById("uipanel_search_input_to");
-      search_button_find.addEventListener("click",function(){
-        var fromName=search_input_from.value;
-        var fromVertex=GraphDatabase.findVertexWithName(fromName);
-        var toName=search_input_to.value;
-        var toVertex=GraphDatabase.findVertexWithName(toName);
-        
-        if (fromVertex===null){
-          Log.error("Invalid vertex name: \""+fromName+"\" Cannot start navigation.")
-          return;
-        }
-        if (toVertex===null){
-          Log.error("Invalid vertex name: \""+toName+"\" Cannot start navigation.")
-          return;
-        }
-        Log.info("Finding path from "+fromName+"(id="+fromVertex.id+") to "+toName+"(id="+toVertex.id+")");
-        
-        
-        var path1 = new Path(mymap, GraphDatabase, fromVertex, toVertex);
-      })
+      //search_button_find.addEventListener("click", function () {
+      document.forms[0].addEventListener("submit", function() {
+          var fromName = search_input_from.value;
+          var fromVertex = GraphDatabase.findVertexWithName(fromName);
+          var toName = search_input_to.value;
+          var toVertex = GraphDatabase.findVertexWithName(toName);
+
+          if (fromVertex === null) {
+              Log.error("Invalid vertex name: \"" + fromName + "\" Cannot start navigation.")
+              return;
+          }
+          if (toVertex === null) {
+              Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
+              return;
+          }
+          Log.info("Finding path from " + fromName + "(id=" + fromVertex.id + ") to " + toName + "(id=" + toVertex.id + ")");
+
+          if (path1)
+              path1.destroy();
+          path1 = new Path(mymap, GraphDatabase, fromVertex, toVertex);
+      });
       
+      /*
+      var return_event_func = function (e) {
+          //alert(e.keyCode);
+          if (e.keyCode == 13)
+              search_button_find.click();
+      };
+      search_input_from.addEventListener("keypress", return_event_func);
+      search_input_to.addEventListener("keypress", return_event_func);
+      //*/
     </script>
 
     <!--<script src="test.js"></script>-->
