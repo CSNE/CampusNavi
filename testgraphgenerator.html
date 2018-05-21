@@ -71,10 +71,22 @@
         }
         .input
         {
+            display: inline-block;
+            vertical-align: bottom;
+            height: 1em;
+            padding: 2px;
+            border: 1px solid blue;
             color: blue;
         }
+        .label
+        {
+            display: inline-block;
+            vertical-align: bottom;
+            height: 1em;
+            padding: 2px;
+        }
 
-        #debugMsgBox {
+        #json_string {
             height: 20%;
         }
     </style>
@@ -93,10 +105,24 @@
                 return ret;
             }
 
-            this.remove = function (n)//static
+            this.remove = function (n)
             {
-                n.prev.next = n.next;
-                n.next.prev = n.prev;
+                if (n.prev && n.next)//static
+                {
+                    n.prev.next = n.next;
+                    n.next.prev = n.prev;
+                }
+                else
+                {
+                    for (var i = this.iterator(); !i.end(); i.next())
+                    {
+                        if (i.get() == n)
+                        {
+                            i.remove();
+                            break;
+                        }
+                    }
+                }
             }
 
             function Iterator(l) {
@@ -127,12 +153,42 @@
 
         var V = new List(), E = new List();
 
+        function findVertexById(id)
+        {
+            for (var i = V.iterator(); !i.end(); i.next())
+            {
+                var v = i.get();
+                if (v.id == id)
+                    return v;
+            }
+            return null;
+        }
+
+        function update(o)
+        {
+            switch (o.type)
+            {
+                case "vertex":
+                    updateVertex(o);
+                    break;
+                case "edge":
+                    updateEdge(o);
+                    break;
+            }
+        }
+
         function updateVertex(v)
         {
             v.layer.setLatLng(v.loc);
             v.layer.setTooltipContent("[" + v.id + "]: " + v.name);
             v.targetElement.input_id.innerHTML = v.id;
             v.targetElement.input_name.innerHTML = v.name;
+            //update edges
+            for (var i = v.edges.iterator(); !i.end(); i.next())
+            {
+                Log.debug(i.get().name);
+                updateEdge(i.get());
+            }
         }
 
         function setLocation(e, loc)
@@ -141,10 +197,98 @@
             updateVertex(e);
         }
 
-        var vertex_style_default =  { bubblingMouseEvents: false, radius: 12, stroke: false, fill: true, fillOpacity: 1, fillColor: "blue" };
-        var vertex_style_selected = { bubblingMouseEvents: false, radius: 12, stroke: true, weight: 4, color: "lime", fill: true, fillOpacity: 1, fillColor: "blue" };
-        var edge_style_default =    { bubblingMouseEvents: false, weight: 4, color: "red" };
-        var edge_style_selected =   { bubblingMouseEvents: false, weight: 4, color: "lime" };
+        function updateEdge(e)
+        {
+            e.layer.setLatLngs([e.vs ? e.vs.loc : getDefaultLocation(), e.ve ? e.ve.loc : getDefaultLocation()])
+            e.targetElement.input_name.innerHTML = e.name;
+            e.targetElement.input_vs.innerHTML = e.vs ? e.vs.id : "(null)";
+            e.targetElement.input_ve.innerHTML = e.ve ? e.ve.id : "(null)";
+            e.targetElement.input_w.innerHTML = JSON.stringify(e.w);
+            e.targetElement.input_f.innerHTML = JSON.stringify(e.f);
+        }
+
+        var vertex_style_default =  { bubblingMouseEvents: false, pane: "vertices", radius: 12, stroke: false, fill: true, fillOpacity: 1, fillColor: "blue" };
+        var vertex_style_selected = { bubblingMouseEvents: false, pane: "selected", radius: 12, stroke: true, weight: 4, color: "lime", fill: true, fillOpacity: 1, fillColor: "blue" };
+        var edge_style_default =    { bubblingMouseEvents: false, pane: "edges", weight: 4, color: "red" };
+        var edge_style_selected = { bubblingMouseEvents: false, pane: "selected", weight: 4, color: "lime" };
+
+        function getCurrentJSON()
+        {
+            var obj = {
+                vertices: [],
+                edges: []
+            };
+            for (var i = V.iterator(); !i.end(); i.next())
+            {
+                var o = i.get();
+                obj.vertices.push({ id: o.id, name: o.name, loc: o.loc });
+            }
+            for (var i = E.iterator(); !i.end(); i.next())
+            {
+                var o = i.get();
+                obj.edges.push({ name: o.name, vs: o.vs.id, ve: o.ve.id, w: o.w, f: o.f });
+            }
+            return JSON.stringify(obj);
+        }
+
+        function loadData()
+        {
+            //Log.debug("loadData");
+            var ret = null;
+            //Log.debug(document.cookie);
+            if (document.cookie)
+            {
+                var arr = document.cookie.split(";");
+                for (var i = 0; i < arr.length; i++)
+                {
+                    var pair = arr[i].split("=");
+                    //alert(pair);
+                    switch (pair[0].trim()) {
+                        case "data":
+                            ret = pair[1].trim();
+                            break;
+                        case "vertex_id_counter":
+                            //alert();
+                            vertex_id_counter = parseInt(pair[1].trim());
+                            break;
+                    }
+                }
+            }
+            return ret;
+            //Log.info("no cookie");
+        }
+
+        function storeData(data)
+        {
+            //Log.debug("storeData");
+            var date = new Date();
+            date.setFullYear(date.getFullYear() + 1);
+            //Log.debug(date.toUTCString());
+            document.cookie = "data=" + data + ";" +
+                "expires=" + date.toUTCString() + ";";
+            //Log.debug(x);
+            document.cookie = "vertex_id_counter=" + vertex_id_counter + ";" +
+                "expires=" + date.toUTCString() + ";";
+            //Log.debug(document.cookie);
+        }
+
+        function applyData(data)
+        {
+            var obj = JSON.parse(unescape(data));
+            var vb = document.getElementById("vbtn");
+            var eb = document.getElementById("ebtn");
+            for (var i = 0; i < obj.vertices.length; i++)
+            {
+                var o = obj.vertices[i];
+                create_new_vertex(vb, { id: o.id, name: o.name, loc: o.loc});
+            }
+            for (var i = 0; i < obj.edges.length; i++)
+            {
+                var o = obj.edges[i];
+                create_new_edge(eb, { name: o.name, vs: findVertexById(o.vs), ve: findVertexById(o.ve), w: o.w, f: o.f });
+            }
+            document.getElementById("json_string").innerHTML = data;
+        }
 
     </script>
 
@@ -156,6 +300,7 @@
 
     <script>
         var selected;
+        var two_vertices = [null, null];
 
         function select(e)
         {
@@ -174,6 +319,8 @@
         select["vertex"] = function (e) {
             e.targetElement.classList.add("selected");
             e.layer.setStyle(vertex_style_selected);
+            two_vertices[1] = two_vertices[0];
+            two_vertices[0] = e;
         }
         select["edge"] = function (e) {
             e.targetElement.classList.add("selected");
@@ -188,6 +335,22 @@
             selected.layer.setStyle(edge_style_default);
         }
 
+        function removeObj(e)
+        {
+            switch (e.type) {
+                case "vertex":
+                    l = V;
+                    break;
+                case "edge":
+                    l = E;
+                    break;
+                default:
+                    return;
+            }
+            l.remove(e.node);
+            e.targetElement.parentNode.removeChild(e.targetElement);
+            mymap.removeLayer(e.layer);
+        }
         
         function element_click(e)
         {
@@ -196,17 +359,70 @@
                 s = s.parentNode;
             select(s.targetObj);
         }
-        function element_value_change(e)
+        function element_dblclick(e)
         {
+            var s = e.target;
+            while (!s.targetObj)
+                s = s.parentNode;
+            var l;
+            removeObj(s.targetObj);
+        }
+        function element_value_change(e) {
             //alert(e);
             var s = e.target;
             var o = s.parentNode.targetObj;
-            o[s.name] = prompt(s.name, o[s.name]);
-            updateVertex(o);
+            var x;
+            switch (s.valuetype)
+            {
+                case "string":
+                    x = o[s.name];
+                    break;
+                case "json":
+                    x = JSON.stringify(o[s.name]);
+                    break;
+                case "vertex":
+                    x = o[s.name].id;
+                    break;
+            }
+            x = prompt(s.name, x);
+            switch (s.valuetype)
+            {
+                case "string":
+                    o[s.name] = x;
+                    break;
+                case "json":
+                    try
+                    {
+                        x = JSON.parse(x);
+                        if (x)
+                        {
+                            o[s.name] = x;
+                        }
+                    }
+                    catch (e)
+                    {
+                        Log.error(e);
+                    }
+                    break;
+                case "vertex":
+                    x = findVertexById(x);
+                    if (x)
+                    {
+                        o[s.name].edges.remove(o);
+                        o[s.name] = x;
+                        x.edges.add(o);
+                    }
+                    break;
+            }
+            update(o);
         }
         function layer_click(e)
         {
             select(e.target.targetObj);
+        }
+        function layer_dblclick(e)
+        {
+            removeObj(e.target.targetObj);
         }
 
         function create_new_element(btn)
@@ -217,15 +433,19 @@
             btn.parentNode.insertBefore(e, btn);
             return e;
         }
-        function create_new_vertex(btn) {
-            if (!this.c)
-                this.c = 0;
+        var vertex_id_counter = 0;
+        function create_new_vertex(btn, obj) {
             var e = create_new_element(btn);
             e.addEventListener("click", element_click);
-            var obj = { type: "vertex", id: "v" + this.c++, name: "New vertex", loc: getDefaultLocation() };
+            e.addEventListener("dblclick", element_dblclick);
+            if (!obj)
+                obj = { id: "v" + vertex_id_counter++, name: "New vertex", loc: getDefaultLocation() };
+            obj.type = "vertex";
+            obj.edges = new List();
             obj.targetElement = e;
             obj.layer = L.circleMarker(obj.loc, vertex_style_default)
                 .on("click", layer_click)
+                .on("dblclick", layer_dblclick)
                 .addTo(mymap);
             obj.node = V.add(obj);
             obj.layer.targetObj = obj;
@@ -235,39 +455,51 @@
             var s;
 
             s = doc.createElement("span");
+            s.classList.add("label");
             s.innerHTML = "id: ";
             e.appendChild(s);
 
             s = doc.createElement("span");
             s.classList.add("input");
             s.name = "id";
+            s.valuetype = "string";
             s.addEventListener("click", element_value_change);
-            s.innerHTML = obj.id;
             e.input_id = s;
             e.appendChild(s);
 
             s = doc.createElement("span");
+            s.classList.add("label");
             s.innerHTML = ", name: ";
             e.appendChild(s);
 
             s = doc.createElement("span");
             s.classList.add("input");
             s.name = "name";
+            s.valuetype = "string";
             s.addEventListener("click", element_value_change);
-            s.innerHTML = obj.name;
             e.input_name = s;
             e.appendChild(s);
 
             updateVertex(obj);
+
+            select(obj);
         }
 
-        function create_new_edge(btn) {
+        function create_new_edge(btn, obj) {
             var e = create_new_element(btn);
             e.addEventListener("click", element_click);
-            var obj = { type: "edge", name: "New Edge", vs: undefined, ve: undefined, w: null, f: {} };
+            e.addEventListener("dblclick", element_dblclick);
+            if (!obj)
+                obj = { name: "New Edge", vs: two_vertices[1], ve: two_vertices[0], w: null, f: {} };
+            obj.type = "edge";
+            if (obj.vs)
+                obj.vs.edges.add(obj);
+            if (obj.ve)
+                obj.ve.edges.add(obj);
             obj.targetElement = e;
-            obj.layer = L.polyline([getDefaultLocation()], edge_style_default)
+            obj.layer = L.polyline([obj.vs ? obj.vs.loc : getDefaultLocation(), obj.ve ? obj.ve.loc : getDefaultLocation()], edge_style_default)
                 .on("click", layer_click)
+                .on("dblclick", layer_dblclick)
                 .addTo(mymap);
             obj.node = E.add(obj);
             obj.layer.targetObj = obj;
@@ -277,18 +509,78 @@
             var s;
 
             s = doc.createElement("span");
+            s.classList.add("label");
             s.innerHTML = "name: ";
             e.appendChild(s);
 
             s = doc.createElement("span");
             s.classList.add("input");
             s.name = "name";
+            s.valuetype = "string";
             s.addEventListener("click", element_value_change);
             s.innerHTML = obj.name;
             e.input_name = s;
             e.appendChild(s);
 
-            updateVertex(obj);
+            s = doc.createElement("span");
+            s.classList.add("label");
+            s.innerHTML = ", vs: ";
+            e.appendChild(s);
+
+            s = doc.createElement("span");
+            s.classList.add("input");
+            s.name = "vs";
+            s.valuetype = "vertex";
+            s.addEventListener("click", element_value_change);
+            s.innerHTML = obj.vs ? obj.vs.id : "(null)";
+            e.input_vs = s;
+            e.appendChild(s);
+
+            s = doc.createElement("span");
+            s.classList.add("label");
+            s.innerHTML = ", ve: ";
+            e.appendChild(s);
+
+            s = doc.createElement("span");
+            s.classList.add("input");
+            s.name = "ve";
+            s.valuetype = "vertex";
+            s.addEventListener("click", element_value_change);
+            s.innerHTML = obj.ve ? obj.ve.id : "(null)";
+            e.input_ve = s;
+            e.appendChild(s);
+
+            s = doc.createElement("span");
+            s.classList.add("label");
+            s.innerHTML = ", w: ";
+            e.appendChild(s);
+
+            s = doc.createElement("span");
+            s.classList.add("input");
+            s.name = "w";
+            s.valuetype = "json";
+            s.addEventListener("click", element_value_change);
+            s.innerHTML = JSON.stringify(obj.w);
+            //Log.debug(JSON.stringify(obj.w));
+            e.input_w = s;
+            e.appendChild(s);
+
+            s = doc.createElement("span");
+            s.classList.add("label");
+            s.innerHTML = ", f: ";
+            e.appendChild(s);
+
+            s = doc.createElement("span");
+            s.classList.add("input");
+            s.name = "f";
+            s.valuetype = "json";
+            s.addEventListener("click", element_value_change);
+            s.innerHTML = JSON.stringify(obj.f);
+            //Log.debug(JSON.stringify(obj.f));
+            e.input_f = s;
+            e.appendChild(s);
+
+            updateEdge(obj);
         }
 
     </script>
@@ -296,17 +588,16 @@
     <div id="uipanel">
         <div class="listcontainer">
             <div id="vlist" class="list">
-                <div class="newbutton" onclick="create_new_vertex(this)">Create Vertex</div>
+                <div id="vbtn" class="newbutton" onclick="create_new_vertex(this)">Create Vertex</div>
             </div>
         </div><div class="listcontainer">
-            <div id="vlist" class="list">
-                <div class="newbutton" onclick="create_new_edge(this)">Create Edge</div>
+            <div id="elist" class="list">
+                <div id="ebtn" class="newbutton" onclick="create_new_edge(this)">Create Edge</div>
             </div>
         </div>
     </div>
 
-    <!-- Log div -->
-    <div id="debugMsgBox"></div>
+    <div id="json_string"></div>
 
     <!-- 자바스크립트 -->
     <!-- 로그 시작 -->
@@ -333,6 +624,13 @@
         accessToken: 'pk.eyJ1IjoiY2hhbnNvbDk4IiwiYSI6ImNqZ25henV1dTJibjgycXBxeGczaWk2enMifQ.w474LPaUpTnZiQnw5E3Ujg'
         }).addTo(mymap);
 
+        var pane_edges = mymap.createPane("edges", mymap.getPane("overlayPane"));
+        var pane_vertices = mymap.createPane("vertices", mymap.getPane("overlayPane"));
+        var pane_selected = mymap.createPane("selected", mymap.getPane("overlayPane"));
+        pane_edges.style.zIndex = 1002;
+        pane_vertices.style.zIndex = 1003;
+        pane_selected.style.zIndex = 1001;
+
         // 지도에 마커 생성.
         // 초기 위치는 연세대 정문.
         var currentLocationMarker=L.marker(L.latLng(CoordinateConversions.centerCoords.lat,
@@ -345,10 +643,25 @@
                 setLocation(selected, e.latlng);
         });
 
-        function getDefaultLocation()
-        {
+        function getDefaultLocation() {
             return mymap.getCenter();
         }
+
+        jsonout = document.getElementById("json_string");
+        jsonout.addEventListener("click", function () {
+            var data = escape(getCurrentJSON());
+            jsonout.innerHTML = data;
+            storeData(data);
+        });
+
+        //document.body.addEventListener("load", function () {
+        (function() {
+            var data = loadData();
+            if (data)
+            {
+                applyData(data);
+            }
+        })();
 
     </script>
 </body>

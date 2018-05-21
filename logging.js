@@ -147,11 +147,17 @@ var Log = (function () {
             //level & time
             var levelChar=levelToCharacter[level];
             //stack trace
-            var stacktrace=(new Error()).stack;
-            var stacks=stacktrace.split("\n");
-            var lastExternalCallLocation=stacks[3].trim();
-            //var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(0,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
-            callLocationFormatted = lastExternalCallLocation.substring(lastExternalCallLocation.lastIndexOf(root_dir_name)).slice(root_dir_name.length - 1, -1);
+            var stacktrace = (new Error()).stack;
+            if (stacktrace) {
+                var stacks = stacktrace.split("\n");
+                var lastExternalCallLocation = stacks[3].trim();
+                //var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(0,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
+                var callLocationFormatted = lastExternalCallLocation.substring(lastExternalCallLocation.lastIndexOf(root_dir_name)).slice(root_dir_name.length - 1, -1);
+            }
+            else
+            {
+                var callLocationFormatted = "";
+            }
             
             //alert(lastExternalCallLocation);
             elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocationFormatted+"] ";
