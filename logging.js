@@ -16,7 +16,9 @@
   Log.error()   - For critical errors. Displayed in red.
 */
 
-var Log=(function(){
+var Log = (function () {
+    var root_dir_name = "CampusNavi/";
+
     var display=null;
 
     var buttonsList=[];
@@ -148,9 +150,10 @@ var Log=(function(){
             var stacktrace=(new Error()).stack;
             var stacks=stacktrace.split("\n");
             var lastExternalCallLocation=stacks[3].trim();
-            var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(0,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
+            //var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(0,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
+            callLocationFormatted = lastExternalCallLocation.substring(lastExternalCallLocation.lastIndexOf(root_dir_name)).slice(root_dir_name.length - 1, -1);
             
-            
+            //alert(lastExternalCallLocation);
             elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocationFormatted+"] ";
             elem.innerHTML+=message;
             

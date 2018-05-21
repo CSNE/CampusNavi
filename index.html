@@ -51,6 +51,7 @@
         width:100%;
       }
       #uipanel_search table button,
+      #uipanel_search table input[type="button"],
       #uipanel_search table input[type="submit"]
       {
         width:100%;
@@ -69,14 +70,23 @@
       <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
       <form id="uipanel_search" onsubmit="return false;">
         <table>
+          <colgroup>
+            <col style="width: 60%;" />
+            <col style="width: 10%;" />
+            <col style="width: 10%;" />
+            <col style="width: 20%;" />
+          </colgroup>
           <tr>
             <td><input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1"></td>
             <td>부터</td>
             <td rowspan="2">
+              <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="3" />
+            </td>
+            <td rowspan="2">
                 <!--
               <button id="uipanel_search_button_find" tabindex="3">탐색</button>
                     -->
-              <input type="submit" value="탐색" id="uipanel_search_button_find"/>
+              <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" />
             </td>
           </tr>
           <tr>
@@ -172,7 +182,8 @@
       
       
       var path1;
-      var search_button_find=document.getElementById("uipanel_search_button_find");
+      var search_button_find = document.getElementById("uipanel_search_button_find");
+      var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
       var search_input_from=document.getElementById("uipanel_search_input_from");
       var search_input_to=document.getElementById("uipanel_search_input_to");
       //search_button_find.addEventListener("click", function () {
@@ -190,11 +201,15 @@
               Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
               return;
           }
-          Log.info("Finding path from " + fromName + "(id=" + fromVertex.id + ") to " + toName + "(id=" + toVertex.id + ")");
 
           if (path1)
               path1.destroy();
           path1 = new Path(mymap, GraphDatabase, fromVertex, toVertex);
+      });
+      search_button_swap.addEventListener("click", function () {
+        var s = search_input_from.value;
+        search_input_from.value = search_input_to.value;
+        search_input_to.value = s;
       });
       
       /*

@@ -79,6 +79,7 @@ function createDataJson()
     obj.vertices = obj.vertices.concat(JSON.parse(unescape(jsonv1)));
     obj.edges = obj.edges.concat(JSON.parse(unescape(jsone1)));//no w -> use distance
 
+    /**** parsing ****/
     var v_by_id = {};
 
     for (var i = 0; i < obj.vertices.length; i++)
@@ -111,6 +112,10 @@ function createDataJson()
     //Log.debug("111");
 
     /**** test ****/
+    /*
+    걷는 속도; 1
+    뛰는 속도: 2
+    */
     for (var i = 0; i < masterGraph.edges.length; i++)
     {
         var e = masterGraph.edges[i];

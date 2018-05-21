@@ -21,14 +21,17 @@ var GraphCalculations=(function(){
             //Log.debug("&nbsp;&nbsp;buf: [" + this.buf + "]");
             //Log.debug("&nbsp;&nbsp;n: " + this.n);
             //Log.debug("&nbsp;&nbsp;return");
+            //this.validation();
         }
         this.dequeue = function () {
             //Log.debug("&nbsp;dequeue()");
             //Log.debug("&nbsp;&nbsp;n: " + this.n);
             var i = 1;
             var ret = this.buf[i];
+            //var e = this.buf[--this.n];
+            --this.n;
             for (; ;) {
-                var k = i;
+                var k = this.n;
                 //alert(k);
                 var j = i << 1;
                 //alert(j);
@@ -39,14 +42,15 @@ var GraphCalculations=(function(){
                 if (j < this.n && this.cmp(this.buf[j], this.buf[k])) {
                     k = j;
                 }
-                if (i == k)
-                    break;
                 this.buf[i] = this.buf[k];
+                if (k == this.n)
+                    break;
                 i = k;
             }
-            this.buf[i] = this.buf[--this.n];
             //Log.debug("&nbsp;&nbsp;n: " + this.n);
             //Log.debug("&nbsp;&nbsp;return { w: " + ret.w + ", v: " + ret.v.id + ", p: " + ret.p + ", e: " + (ret.e ? "(" + ret.e.vStart.id + ", " + ret.e.vEnd.id + ")" : ret.e) + " }");
+            //this.buf[this.n] = undefined;
+            //this.validation();
             return ret;
         }
         this.peek = function () {
@@ -54,6 +58,17 @@ var GraphCalculations=(function(){
         }
         this.cmp = function (a, b) {
             return a.w < b.w;
+        }
+        this.validation = function () {
+            for (var i = 2; i < this.n; i++)
+            {
+                if (this.cmp(this.buf[i], this.buf[i >> 1]))
+                    Log.error("invalid heap");
+            }
+        }
+
+        this.toString = function () {
+            return "[" + this.buf + "]";
         }
     }
 
@@ -80,6 +95,8 @@ var GraphCalculations=(function(){
         return findShortestPathWithIdSet(graph, ssrc, sdst, pref);
     }
 
+    var state_toString = function () { return "<" + this.e.vStart.name + ", " + this.e.vEnd.name + ">: " + this.w; };
+
     //returns: ret.p.p.p....p.v in src, p.p.....p.e: edge in path p.e: last edge
     var findShortestPathWithIdSet = function (graph, src, dst, pref)
     {
@@ -87,7 +104,7 @@ var GraphCalculations=(function(){
         var q = new Heap(), vv = {}, ve = {};
         for (var k in src)
         {
-            q.enqueue({ "w": 0, "v": graph.vertices[k], "p": undefined, "e": undefined });
+            q.enqueue({ "w": 0, "v": graph.vertices[k], "p": undefined, "e": undefined, toString: function () { return "<, " + this.v.name + ">: " + this.w } });
         }
         while (!q.isEmpty())
         {
@@ -99,7 +116,16 @@ var GraphCalculations=(function(){
             //Log.debug("&nbsp;vv[" + v.id + "]: " + vv[v.id]);
             if (!vv[v.id])
             {
-                //Log.debug(v.id);
+                //Log.debug("&nbsp;v: " + v.name);
+                /*
+                try {
+                    Log.debug("&nbsp;&nbsp;&nbsp;heap: " + q);
+                }
+                catch (e)
+                {
+                    Log.error("[" + e.name + "]" + e.message);
+                }
+                //*/
                 vv[v.id] = true;
                 //Log.debug("&nbsp;dst[" + v.id + "]: " + dst[v.id]);
                 if (dst[v.id])
@@ -117,7 +143,9 @@ var GraphCalculations=(function(){
                     if (!ve[e.id])
                     {
                         ve[e.id] = true;
-                        q.enqueue({ "w": p.w + e.timeRequired[pref.time_name], "v": e.vEnd, "p": p, "e": e });
+                        q.enqueue({ "w": p.w + e.timeRequired[pref.time_name], "v": e.vEnd, "p": p, "e": e, toString: state_toString });
+                        //Log.debug("&nbsp;&nbsp;<" + e.vStart.name + ", " + e.vEnd.name + ">: " + (p.w + e.timeRequired[pref.time_name]));
+                        //Log.debug("&nbsp;&nbsp;&nbsp;heap: " + q);
                     }
                 }
             }
