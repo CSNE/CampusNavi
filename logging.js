@@ -17,29 +17,28 @@
 */
 
 var Log = (function () {
-    var root_dir_name = "CampusNavi/";
 
     var display=null;
 
     var buttonsList=[];
 
     var currentVisibilityOptions = [];
-    
+
     var levelToName=["","Verbose","Debug","Info","Warning","Error"];
     var levelToCharacter = ["", "V", "D", "I", "W", "E"];
 
     var levelElements = [[], [], [], [], [], []];
+    
 
     function init(){
-        
+
         if (display!=null) throw "Cannot initialize twice!";
-        
+
         //setup container
         var logContainer=document.createElement("div");        
         document.body.appendChild(logContainer);
         logContainer.classList.add("loggingContainer");
         logContainer.style.display="none";
-        
         
         
         //setup show/hide buttons
@@ -55,10 +54,10 @@ var Log = (function () {
                 logContainer.style.display="flex";
                 showHideButton.innerHTML="Hide Logs";
             }
-            
+
         });
-        
-        
+
+
         //setup buttons container
         var buttonsContainer=logContainer.ownerDocument.createElement("div");
         buttonsContainer.classList.add("loggingControls");
@@ -113,7 +112,7 @@ var Log = (function () {
         logContainer.ownerDocument.head.appendChild(css);
 
         getVisibilityFromButtonsAndSetVisibility();
-        
+
     }
 
     function timestamp(){
@@ -129,6 +128,7 @@ var Log = (function () {
 
         return ""+m+":"+s+"."+ms;
     }
+    
     function prependChild(elem){
         if (display!=null){
             display.insertBefore(elem,display.firstChild);
@@ -136,6 +136,40 @@ var Log = (function () {
             throw "No display element! Make sure init() is called with proper HTML element."
         }
     }
+
+    function getCallLocationAtDepth(depth){
+        //stack trace
+        var stacktrace = (new Error()).stack;
+
+        var stacks = stacktrace.split("\n");
+
+        //The weird code below
+        //is due to how different browsers return a differently formatted Error.stack
+        var stackdepth=0;
+        var callLocation='';
+        while (stackdepth<(depth+1)){ //+1 because of this function
+            callLocation=stacks.shift().trim();
+
+            //Chrome-based browsers
+            //will have "Error" as the first line of the stack trace
+            //which does not count as a call location
+            //Firefox does not have this first line
+            //and begins the stack trace right away
+            //thus this conditional.
+            if (callLocation!=="Error") stackdepth++; 
+        }
+
+        //get only the last file
+        var callLocationFormatted=callLocation.split("/").pop();
+
+        //the below regex will convert
+        // index.html:123:45) --> index.html:123
+        callLocationFormatted=/.*?:[^:]*/.exec(callLocationFormatted)[0];
+
+        return callLocationFormatted;
+
+    }
+
     function print(level,message){
         if (display!=null){
 
@@ -143,27 +177,20 @@ var Log = (function () {
 
             var elem=display.ownerDocument.createElement("div");
             elem.classList.add("level" + level);
-            
+
             //level & time
             var levelChar=levelToCharacter[level];
-            //stack trace
-            var stacktrace = (new Error()).stack;
-            if (stacktrace) {
-                var stacks = stacktrace.split("\n");
-                var lastExternalCallLocation = stacks[3].trim();
-                //var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(0,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
-                var callLocationFormatted = lastExternalCallLocation.substring(lastExternalCallLocation.lastIndexOf(root_dir_name)).slice(root_dir_name.length - 1, -1);
-            }
-            else
-            {
-                var callLocationFormatted = "";
-            }
+
+
+            var callLocation=getCallLocationAtDepth(3);
+            //if there's no filename, prepend index.html
+            if (callLocation.charAt(0)==":") callLocation="index.html"+callLocation;
             
             //alert(lastExternalCallLocation);
-            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocationFormatted+"] ";
+            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocation+"] ";
             elem.innerHTML+=message;
-            
-            
+
+
             //if current level is disabled, hide it.
             elem.style.display =
                 currentVisibilityOptions[level] ?
