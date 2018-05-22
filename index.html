@@ -20,8 +20,8 @@
         height:100%;
         overflow:hidden;
       }
-      
-      
+
+
 
       #maincontent {
         display: flex;
@@ -46,29 +46,21 @@
           flex-direction: column;
         }
       }
+      
+      .uipanel *{
+        margin:4px;
+      }
 
 
-      #uipanel_search table{
-        height:100%;
-        width:100%;
+      #uipanel_search{
+        display: grid;
+        grid-template-rows: auto auto;  /* key rule */
+        grid-template-columns: 1fr auto auto auto;
+        grid-template-areas: "frominput fromlabel changebtn findbtn" 
+                             "toinput   tolabel   changebtn findbtn" ;
       }
-      #uipanel_search table td{
-        vertical-align:middle;
-        padding:4px;
-      }
-      #uipanel_search table input:not([type]),
-      #uipanel_search table input[type="text"]
-      {
-        width:100%;
-      }
-      #uipanel_search table button,
-      #uipanel_search table input[type="button"],
-      #uipanel_search table input[type="submit"]
-      {
-        width:100%;
-        height:100%;
-        text-align: center;
-      }
+
+
     </style>
 
   </head>
@@ -78,25 +70,21 @@
       <!-- 지도 div -->
       <div id="mapid"></div>
 
-      <div id="uipanel">
+      <div class="uipanel">
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
         <div id="uipanel_search">
-          <table>
-            <tr>
-              <td><input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1"></td>
-              <td>부터</td>
-              <td rowspan="2">
-                <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="3" />
-              </td>
-              <td rowspan="2">
-                <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" />
-              </td>
-            </tr>
-            <tr>
-              <td><input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2"></td>
-              <td>까지</td>
-            </tr>
-          </table>
+
+          <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;">
+
+          <div style="grid-area: fromlabel;">부터</div>
+
+          <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="3" style="grid-area: changebtn;" />
+
+          <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" style="grid-area: findbtn;" />
+
+          <input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput">
+
+          <div style="grid-area: tolabel;">까지</div>
 
           <datalist id="destinationsData">
           </datalist>
@@ -174,7 +162,7 @@
       var search_input_from=document.getElementById("uipanel_search_input_from");
       var search_input_to=document.getElementById("uipanel_search_input_to");
       //search_button_find.addEventListener("click", function () {
-      document.forms[0].addEventListener("submit", function() {
+      search_button_find.addEventListener("click", function() {
         var fromName = search_input_from.value;
         var fromVertex = GraphDatabase.findVertexWithName(fromName);
         var toName = search_input_to.value;
