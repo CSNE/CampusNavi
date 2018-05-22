@@ -1,43 +1,44 @@
 ﻿
-function Path(map, graph, from, to, pref)
+function Path(graph, from, to, pref)
 {
-    //Log.debug("path from " + from.name + " to " + to.name);
-    //this.path_data = undefined;
-    this.map = map;
+    Log.debug("Finding path from " + from.name + " to " + to.name);
+
     this.graph = graph;
 
-    {
-        //alert(from.id + "\n" + to.id + "\n" + JSON.stringify(pref));
-        if (!pref)
-            pref = { "time_name": "walk" };
-        var p = this.graph.findShortestPath(from, to, pref);
-        //alert(8);
-        var latlngs = [];
-        for (var i = p; i; i = i.p) {
-            var c = i.v.coordinates;
-            //alert(JSON.stringify(c));
-            //alert([c.lat, c.long]);
-            latlngs.push([c.lat, c.long]);
-        }
-        //alert(latlngs);
-        //Log.debug("path_length: " + (latlngs.length - 1));
-        //Log.debug("time: " + p.w);
-        Log.info("path from " + from.name + " to " + to.name + "(" + p.w.toFixed() + "초)");
-        //Log.info("Finding path from " + fromName + "(id=" + fromVertex.id + ") to " + toName + "(id=" + toVertex.id + ")");
-        this.path_data = [];
-        if (latlngs.length)
-            this.path_data.push(L.polyline(latlngs, { "color": "red" }).addTo(this.map));
-        for (var i = 0; i < latlngs.length; i++) {
-            this.path_data.push(L.circleMarker(latlngs[i], { "radius": 4, "stroke": false, "fill": true, "fillColor": "blue", "fillOpacity": 1 }).addTo(map));
-        }
-        //alert(18);
+
+    if (!pref)
+        pref = { "time_name": "walk" };
+    this.pref=pref;
+
+    this.p = this.graph.findShortestPath(from, to, pref);
+
+    this.latlngs = [];
+    for (var i = this.p; i; i = i.p) {
+        var c = i.v.coordinates;
+
+        this.latlngs.push([c.lat, c.long]);
     }
 
-    this.destroy = function() {
+    this.timeRequired=this.p.w;
+    Log.info("Found path from " + from.name + " to " + to.name + "(" + this.p.w.toFixed() + "초)");
+
+
+
+    this.displayOnMap=function(map){
+        this.path_data = [];
+        if (this.latlngs.length)
+            this.path_data.push(L.polyline(this.latlngs, { "color": "red" }).addTo(map));
+        for (var i = 0; i < this.latlngs.length; i++) {
+            this.path_data.push(L.circleMarker(this.latlngs[i], { "radius": 4, "stroke": false, "fill": true, "fillColor": "blue", "fillOpacity": 1 }).addTo(map));
+        }
+    }
+
+    this.removeFromMap = function(map) {
         if (this.path_data) {
             for (var i = 0; i < this.path_data.length; i++) {
-                this.map.removeLayer(this.path_data[i]);
+                map.removeLayer(this.path_data[i]);
             }
         }
     }
+
 }

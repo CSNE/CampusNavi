@@ -13,6 +13,8 @@
             integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
             crossorigin=""></script>
 
+
+
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="styles.css">
     <style>
@@ -46,7 +48,7 @@
           flex-direction: column;
         }
       }
-      
+
       .uipanel *{
         margin:4px;
       }
@@ -54,11 +56,36 @@
 
       #uipanel_search{
         display: grid;
-        grid-template-rows: auto auto;  /* key rule */
+        grid-template-rows: auto auto;
         grid-template-columns: 1fr auto auto auto;
         grid-template-areas: "frominput fromlabel changebtn findbtn" 
-                             "toinput   tolabel   changebtn findbtn" ;
+          "toinput   tolabel   changebtn findbtn" ;
       }
+      #uipanel_search *{
+        place-self: center;
+      }
+
+      .route_element{
+        display: grid;
+
+        grid-template-rows: auto auto;
+        grid-template-columns: auto 1fr;
+        grid-template-areas: "icon name" 
+          "icon time" ;
+        border:1px solid black;
+      }
+      .route_element *{
+        place-self: center;
+      }
+      .route_name{grid-area:name;}
+      .route_icon{
+        grid-area:icon;
+        width:24px;
+        height:24px;
+      }
+      .route_time{grid-area:time;}
+
+
 
 
     </style>
@@ -70,11 +97,11 @@
       <!-- 지도 div -->
       <div id="mapid"></div>
 
-      <div class="uipanel">
+      <div class="uipanel" >
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
         <div id="uipanel_search">
 
-          <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;">
+          <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
           <div style="grid-area: fromlabel;">부터</div>
 
@@ -82,14 +109,34 @@
 
           <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" style="grid-area: findbtn;" />
 
-          <input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput">
+          <input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
 
           <div style="grid-area: tolabel;">까지</div>
 
           <datalist id="destinationsData">
           </datalist>
         </div>
+
+
+
+        <div id="uipanel_routes" style="display:none">
+          <button id="uipanel_routes_goback">Go back</button>
+          <template id="route_template">
+            <div class="route_element">
+              <img class="route_icon">
+              <div class="route_name"></div>
+              <div class="route_time"></div>
+            </div>
+          </template>
+          <div id=uipanel_route_list>
+
+          </div>
+
+
+        </div>
       </div>
+
+
     </div>
 
     <!-- 자바스크립트 -->
@@ -105,8 +152,11 @@
     <script src="timetable.js"></script>
     <script src="userdata.js"></script>
     <script src="weather.js"></script>
+    <script src="util.js"></script>
     <script>
       Log.info("Log framework started");
+
+      Log.debug("Screen size "+window.innerWidth+"x"+window.innerHeight);
 
       // Leaflet.js 설정
       var mymap = L.map('mapid').setView([37.565149, 126.938016], 16);
@@ -156,11 +206,62 @@
       }
 
 
-      var path1;
+      var uipanel_search=document.getElementById("uipanel_search");
+      var uipanel_routes=document.getElementById("uipanel_routes");
+      var uipanel_route_list=document.getElementById("uipanel_route_list");
+
       var search_button_find = document.getElementById("uipanel_search_button_find");
       var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
       var search_input_from=document.getElementById("uipanel_search_input_from");
       var search_input_to=document.getElementById("uipanel_search_input_to");
+
+
+      var routeTemplate = document.getElementById("route_template");
+
+      document.getElementById("uipanel_routes_goback").addEventListener("click",returnToSearchMode);
+
+      function enterRouteListingMode(paths){
+        uipanel_search.style.display="none";
+        uipanel_routes.style.display="block";
+        
+        //remove all route listings
+        while (uipanel_route_list.firstChild) {
+          uipanel_route_list.removeChild(uipanel_route_list.firstChild);
+        }
+
+        for(var i=0;i<paths.length;i++){
+          var currentPath=paths[i];
+          var newElement = document.importNode(routeTemplate.content, true);
+          newElement.querySelectorAll(".route_name")[0].innerHTML=currentPath.pref.time_name;
+          newElement.querySelectorAll(".route_time")[0].innerHTML=Util.humanReadableTime(currentPath.timeRequired);
+          newElement.querySelector(".route_icon").setAttribute("src","icons/baseline-directions_walk-24px.png");
+
+
+
+          uipanel_route_list.appendChild(newElement);
+          Log.verbose("Path listed.");
+
+          //somehow doing newElement.addEventListener does not work
+          //don't ask me why
+          uipanel_route_list.lastElementChild.addEventListener("mouseenter",function(){
+            Log.verbose("Mouse Entered!");
+            currentPath.displayOnMap(mymap);
+          });
+
+          uipanel_route_list.lastElementChild.addEventListener("mouseleave",function(){
+            Log.verbose("Mouse Left!");
+            currentPath.removeFromMap(mymap);
+          });
+        }
+      }
+      function returnToSearchMode(){
+        
+        
+        uipanel_search.style.display="grid";
+        uipanel_routes.style.display="none";
+        
+      }
+
       //search_button_find.addEventListener("click", function () {
       search_button_find.addEventListener("click", function() {
         var fromName = search_input_from.value;
@@ -177,9 +278,14 @@
           return;
         }
 
-        if (path1)
-          path1.destroy();
-        path1 = new Path(mymap, GraphDatabase, fromVertex, toVertex);
+
+        var path1 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "walk" });
+        var path2 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "walk" });
+        var path3 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "walk" });
+
+
+        enterRouteListingMode([path1,path2,path3]);
+
       });
       search_button_swap.addEventListener("click", function () {
         var s = search_input_from.value;
