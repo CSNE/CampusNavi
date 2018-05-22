@@ -28,7 +28,7 @@ var Log = (function () {
     var levelToCharacter = ["", "V", "D", "I", "W", "E"];
 
     var levelElements = [[], [], [], [], [], []];
-    
+
 
     function init(){
 
@@ -39,8 +39,8 @@ var Log = (function () {
         document.body.appendChild(logContainer);
         logContainer.classList.add("loggingContainer");
         logContainer.style.display="none";
-        
-        
+
+
         //setup show/hide buttons
         var showHideButton=document.createElement("div");        
         document.body.appendChild(showHideButton);
@@ -93,7 +93,7 @@ var Log = (function () {
         css.type = "text/css";
         var cssText="";
         cssText+= ".loggingContainer{height:100%;width:100%;position:fixed;z-index:1000;left:0;top:0;background-color: white;opacity:0.7;}\n";
-        cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;right:0;bottom:0;background-color: #A0A0A0;opacity:0.7;}\n";
+        cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;left:0;bottom:0;background-color: #A0A0A0;opacity:0.7;}\n";
         cssText+= ".logShowAndHideButton{font-size:24pt;color:black;padding:8px;}\n";
         cssText+= "\n";
         cssText+= "\n";
@@ -128,7 +128,7 @@ var Log = (function () {
 
         return ""+m+":"+s+"."+ms;
     }
-    
+
     function prependChild(elem){
         if (display!=null){
             display.insertBefore(elem,display.firstChild);
@@ -185,7 +185,7 @@ var Log = (function () {
             var callLocation=getCallLocationAtDepth(3);
             //if there's no filename, prepend index.html
             if (callLocation.charAt(0)==":") callLocation="index.html"+callLocation;
-            
+
             //alert(lastExternalCallLocation);
             elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocation+"] ";
             elem.innerHTML+=message;

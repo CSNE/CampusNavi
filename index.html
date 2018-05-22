@@ -5,11 +5,6 @@
 
     <meta charset="utf-8">
 
-    <style>
-
-      #mapid { height: 480px; }
-    </style>
-
     <!-- leaflet.js 불러오기 -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
           integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
@@ -25,18 +20,34 @@
         height:100%;
         overflow:hidden;
       }
-      #mapid{
-        height:60%;
-      }
-      #uipanel{
-        height:40%;
-      }
-      #uipanel iframe{
+      
+      
+
+      #maincontent {
+        display: flex;
+        flex-direction: column;
         width:100%;
         height:100%;
       }
+      #mapid{
+        flex-grow:1;
+      }
 
-      
+
+      @media screen and (min-width: 800px){
+        #maincontent {
+          flex-direction: row;
+        }
+
+      }
+
+      @media screen and (max-width: 800px){
+        #maincontent {
+          flex-direction: column;
+        }
+      }
+
+
       #uipanel_search table{
         height:100%;
         width:100%;
@@ -63,58 +74,34 @@
   </head>
 
   <body>
-    <!-- 지도 div -->
-    <div id="mapid"></div>
+    <div id="maincontent">
+      <!-- 지도 div -->
+      <div id="mapid"></div>
 
-    <div id="uipanel">
-      <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
-      <form id="uipanel_search" onsubmit="return false;">
-        <table>
-          <colgroup>
-            <col style="width: 60%;" />
-            <col style="width: 10%;" />
-            <col style="width: 10%;" />
-            <col style="width: 20%;" />
-          </colgroup>
-          <tr>
-            <td><input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1"></td>
-            <td>부터</td>
-            <td rowspan="2">
-              <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="3" />
-            </td>
-            <td rowspan="2">
-                <!--
-              <button id="uipanel_search_button_find" tabindex="3">탐색</button>
-                    -->
-              <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" />
-            </td>
-          </tr>
-          <tr>
-            <td><input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2"></td>
-            <td>까지</td>
-          </tr>
-        </table>
-        <!--
-        <div style="display: inline-block; width: 80%; height: 60px; vertical-align: bottom;">
-            <div>
-                <input type="text" list="destinationsData"
-                        id="uipanel_search_input_from"
-                        style="width: 80%; margin: 4px;" />부터
-            </div
-            ><div>
-                 <input type="text" list="destinationsData"
-                        id="uipanel_search_input_to"
-                        style="width: 80%; margin: 4px;" />까지
-            </div>
-        </div
-        ><div style="display: inline-flex; flex-flow: wrap; width: 20%; height: 60px; vertical-align: bottom;">
-           <button id="uipanel_search_button_find"
-                   style="width:100%; height: 52px; margin: 4px;">탐색</button>
+      <div id="uipanel">
+        <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
+        <div id="uipanel_search">
+          <table>
+            <tr>
+              <td><input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1"></td>
+              <td>부터</td>
+              <td rowspan="2">
+                <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="3" />
+              </td>
+              <td rowspan="2">
+                <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" />
+              </td>
+            </tr>
+            <tr>
+              <td><input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2"></td>
+              <td>까지</td>
+            </tr>
+          </table>
+
+          <datalist id="destinationsData">
+          </datalist>
         </div>
-        -->
-        <datalist id="destinationsData">
-        </datalist>
-      </form>
+      </div>
     </div>
 
     <!-- 자바스크립트 -->
@@ -145,42 +132,42 @@
       // 지도에 마커 생성.
       // 초기 위치는 연세대 정문.
       var currentLocationMarker=L.circleMarker(L.latLng(CoordinateConversions.centerCoords.lat,
-                                                  CoordinateConversions.centerCoords.long),
-                                         {
-                                             "title": "Your location", "autoPan": true,
-                                             "radius": 6,
-                                             "weight": 1,
-                                             "color": "#0B4AB5",
-                                             //"stroke": false,
-                                             "fill": true,
-                                             "fillOpacity": 1,
-                                             "fillColor": "#689DF6"
-                                         });
+                                                        CoordinateConversions.centerCoords.long),
+                                               {
+        "title": "Your location", "autoPan": true,
+        "radius": 6,
+        "weight": 1,
+        "color": "#0B4AB5",
+        //"stroke": false,
+        "fill": true,
+        "fillOpacity": 1,
+        "fillColor": "#689DF6"
+      });
       currentLocationMarker.addTo(mymap);
 
       GPS.startTracking();
       //var gpsEnabledButton=L.control();
       //gpsEnabledButton.addTo(mymap);
-      
+
       GPS.addLocationListener(function(coords){
         var latlng=L.latLng(coords.lat,coords.long);
         currentLocationMarker.setLatLng(latlng);
         //Log.debug(this);
         if (!this.not_first) {
-            mymap.setView(latlng);
-            this.not_first = true;
+          mymap.setView(latlng);
+          this.not_first = true;
         }
       });
-      
-      
+
+
       var destinationsDataList=document.getElementById("destinationsData");
       for(var i=0;i<GraphDatabase.vertices.length;i++){
         var opt=document.createElement("option");
         opt.setAttribute("value",GraphDatabase.vertices[i].name);
         destinationsDataList.appendChild(opt);
       }
-      
-      
+
+
       var path1;
       var search_button_find = document.getElementById("uipanel_search_button_find");
       var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
@@ -188,30 +175,30 @@
       var search_input_to=document.getElementById("uipanel_search_input_to");
       //search_button_find.addEventListener("click", function () {
       document.forms[0].addEventListener("submit", function() {
-          var fromName = search_input_from.value;
-          var fromVertex = GraphDatabase.findVertexWithName(fromName);
-          var toName = search_input_to.value;
-          var toVertex = GraphDatabase.findVertexWithName(toName);
+        var fromName = search_input_from.value;
+        var fromVertex = GraphDatabase.findVertexWithName(fromName);
+        var toName = search_input_to.value;
+        var toVertex = GraphDatabase.findVertexWithName(toName);
 
-          if (fromVertex === null) {
-              Log.error("Invalid vertex name: \"" + fromName + "\" Cannot start navigation.")
-              return;
-          }
-          if (toVertex === null) {
-              Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
-              return;
-          }
+        if (fromVertex === null) {
+          Log.error("Invalid vertex name: \"" + fromName + "\" Cannot start navigation.")
+          return;
+        }
+        if (toVertex === null) {
+          Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
+          return;
+        }
 
-          if (path1)
-              path1.destroy();
-          path1 = new Path(mymap, GraphDatabase, fromVertex, toVertex);
+        if (path1)
+          path1.destroy();
+        path1 = new Path(mymap, GraphDatabase, fromVertex, toVertex);
       });
       search_button_swap.addEventListener("click", function () {
         var s = search_input_from.value;
         search_input_from.value = search_input_to.value;
         search_input_to.value = s;
       });
-      
+
       /*
       var return_event_func = function (e) {
           //alert(e.keyCode);
