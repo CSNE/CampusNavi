@@ -344,6 +344,18 @@
             document.getElementById("json_string").innerHTML = data;
         }
 
+        function clearAll()
+        {
+            for (var i = V.iterator(); !i.end(); i.next())
+            {
+                removeObj(i.get());
+            }
+            for (var i = E.iterator(); !i.end(); i.next())
+            {
+                removeObj(i.get());
+            }
+        }
+
     </script>
 
 </head>
@@ -801,6 +813,7 @@
         }
         function json_input()
         {
+            clearAll();
             applyData(jsonout.value);
         }
 
@@ -809,14 +822,13 @@
             json_output();
         });
         document.getElementById("btn_in").addEventListener("click", function () {
-            //try {
+            try {
                 json_input();
-            //} catch (e) {
-                //Log.error(e.message);
-                //return false;
-            //}
+            } catch (e) {
+                Log.error(e.message);
+                return;
+            }
             json_output();
-            return false;
         });
 
         //document.body.addEventListener("load", function () {
