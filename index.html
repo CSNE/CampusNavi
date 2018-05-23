@@ -70,9 +70,9 @@
         display: grid;
 
         grid-template-rows: auto auto;
-        grid-template-columns: auto 1fr;
-        grid-template-areas: "icon name" 
-          "icon time" ;
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "icon name gobtn" 
+          "icon time gobtn" ;
         border:1px solid black;
       }
       .route_element *{
@@ -85,7 +85,8 @@
         height:24px;
       }
       .route_time{grid-area:time;}
-      
+      .route_begin{grid-area:gobtn}
+
       #debugpanel{
         height:100%;
         width:100%;
@@ -109,6 +110,26 @@
         opacity:0.7;
         font-size:32px;
       }
+      
+      
+      #uipanel_navigation_container{
+        display: grid;
+
+        grid-template-rows: auto auto auto;
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "routename      .        targettime" 
+                             "canvas         canvas   canvas" 
+                             "timeremaining  .        eta" ;
+        border:1px solid black;
+      }
+      #uipanel_navigation_grid *{
+        place-self: center;
+      }
+      #navigation_routename{grid-area:routename;}
+      #navigation_targettime{grid-area:targettime;}
+      #navigation_canvas{grid-area:canvas;}
+      #navigation_timeremaining{grid-area:timeremaining;}
+      #navigation_eta{grid-area:eta;}
 
 
 
@@ -121,7 +142,7 @@
     <button id="debug_panel_toggle">
       Debug Panel
     </button>
-    <div id="debugpanel">
+    <div id="debugpanel" style="display:none;">
       <div id="debug_buttons_container">
         <button onclick="debug_button_1_onclick()">Fake Location Mode</button>
         <button onclick="debug_button_2_onclick()">Debug Button 2</button>
@@ -139,21 +160,21 @@
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
         <div id="uipanel_search">
           <div id="uipanel_search_grid">
-          <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
+            <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
-          <div style="grid-area: fromlabel;">부터</div>
+            <div style="grid-area: fromlabel;">부터</div>
 
-          <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="3" style="grid-area: changebtn;" />
+            <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="3" style="grid-area: changebtn;" />
 
-          <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" style="grid-area: findbtn;" />
+            <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" style="grid-area: findbtn;" />
 
-          <input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
+            <input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
 
-          <div style="grid-area: tolabel;">까지</div>
+            <div style="grid-area: tolabel;">까지</div>
 
-          <datalist id="destinationsData">
-          </datalist>
-            </div>
+            <datalist id="destinationsData">
+            </datalist>
+          </div>
         </div>
 
 
@@ -165,6 +186,7 @@
               <img class="route_icon">
               <div class="route_name"></div>
               <div class="route_time"></div>
+              <button class="route_begin">Go!</button>
             </div>
           </template>
           <div id=uipanel_route_list>
@@ -173,10 +195,18 @@
 
 
         </div>
-        
+
         <div id="uipanel_navigation" style="display:none">
           <button id="uipanel_navigation_goback">Go back</button>
-
+          <span style="color:red;font-size:2em;"><br>아직 구현 안 됨<br></span>
+          <div id="uipanel_navigation_container">
+            
+            <div id="navigation_routename"></div>
+            <div id="navigation_targettime"></div>
+            <div id="navigation_canvas"></div>
+            <div id="navigation_timeremaining"></div>
+            <div id="navigation_eta"></div>
+          </div>
         </div>
       </div>
 
@@ -193,6 +223,7 @@
     <script src="graphcalculations.js"></script>
     <script src="path.js"></script>
     <script src="geodata.js"></script>
+    <script src="navigationcontext.js"></script>
     <script src="timetable.js"></script>
     <script src="userdata.js"></script>
     <script src="weather.js"></script>
@@ -251,8 +282,8 @@
       var uipanel_search=document.getElementById("uipanel_search");
       var uipanel_routes=document.getElementById("uipanel_routes");
       var uipanel_navigation=document.getElementById("uipanel_navigation");
-      
-      
+
+
       var uipanel_route_list=document.getElementById("uipanel_route_list");
 
       var search_button_find = document.getElementById("uipanel_search_button_find");
@@ -261,12 +292,21 @@
       var search_input_to=document.getElementById("uipanel_search_input_to");
 
       var routeTemplate = document.getElementById("route_template");
-      
+
       var route_button_goback=document.getElementById("uipanel_routes_goback");
       
       
-      //UI 이벤트 처리 함수들.
+      var navigation_routename=document.getElementById("navigation_routename");
+      var navigation_targettime=document.getElementById("navigation_targettime");
+      var navigation_canvas=document.getElementById("navigation_canvas");
+      var navigation_timeremaining=document.getElementById("navigation_timeremaining");
+      var navigation_eta=document.getElementById("navigation_eta");
       
+      var navigation_button_goback=document.getElementById("uipanel_navigation_goback");
+
+
+      //UI 이벤트 처리 함수들.
+
       function displaySearchPanel(){
         uipanel_search.style.display="block";
         uipanel_routes.style.display="none";
@@ -280,7 +320,7 @@
         uipanel_routes.style.display="none";
         uipanel_navigation.style.display="block";
       }
-      
+
       // UI Mode: Search --> RouteListing
       function enterRouteListingMode(paths){
         displayRouteListingPanel();
@@ -296,26 +336,43 @@
           newElement.querySelectorAll(".route_name")[0].innerHTML=currentPath.pref.time_name;
           newElement.querySelectorAll(".route_time")[0].innerHTML=Util.humanReadableTime(currentPath.timeRequired);
           newElement.querySelector(".route_icon").setAttribute("src","icons/baseline-directions_walk-24px.png");
-
+          newElement.querySelector(".route_begin").addEventListener("click",function(){
+            Log.info("begin navigation.");
+            enterNavigationMode(currentPath);
+          });
           uipanel_route_list.appendChild(newElement);
           Log.verbose("Path listed.");
 
           //somehow doing newElement.addEventListener does not work
           //don't ask me why
-          uipanel_route_list.lastElementChild.addEventListener("mouseenter",function(){
+          var currentElement=uipanel_route_list.lastElementChild
+          currentElement.addEventListener("mouseenter",function(){
             Log.verbose("Mouse Entered!");
             currentPath.displayOnMap(mymap);
           });
 
-          uipanel_route_list.lastElementChild.addEventListener("mouseleave",function(){
+          currentElement.addEventListener("mouseleave",function(){
             Log.verbose("Mouse Left!");
             currentPath.removeFromMap(mymap);
           });
         }
       }
-      
-      
+      function enterNavigationMode(path){
+        var navContext=new NavigationContext(path);
+        GPS.addLocationListener(function(location){
+          navContext.updateLocation(location);
+        });
+        displayNavigationPanel();
+        path.displayOnMap(mymap);
+        navigation_routename.innerHTML=path.from.name+" -> "+path.to.name;
+        navigation_targettime.innerHTML="목표도착시각: ";
+        navigation_timeremaining.innerHTML="남은시간: ";
+        navigation_eta.innerHTML="예상도착시간: ";
+      }
+
+
       route_button_goback.addEventListener("click",displaySearchPanel);
+      navigation_button_goback.addEventListener("click",displaySearchPanel);
 
       search_button_find.addEventListener("click", function() {
         var fromName = search_input_from.value;
@@ -340,32 +397,32 @@
 
         enterRouteListingMode([path1,path2,path3]);
       });
-      
+
       // 바꾸기 버튼
       search_button_swap.addEventListener("click", function () {
         var s = search_input_from.value;
         search_input_from.value = search_input_to.value;
         search_input_to.value = s;
       });
-      
+
       //Debug Panel
       var debugpanel=document.getElementById("debugpanel");
       document.getElementById("debug_panel_toggle").addEventListener("click",function(){
         if (debugpanel.style.display==="none")debugpanel.style.display="flex";
         else debugpanel.style.display="none";
       });
-      
+
       //debug buttons
       function debug_button_1_onclick(){
         Log.debug("Button 1 clicked");
-        
+
         Log.info("Entering fake location mode");
         GPS.stopTracking();
         mymap.on("click",function(e){
           var location=new CoordinateSystem(e.latlng.lat,e.latlng.lng,e.latlng.alt);
           GPS.forceCurrentLocation(location);
         })
-        
+
       }
       function debug_button_2_onclick(){
         Log.debug("Button 2 clicked");

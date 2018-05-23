@@ -76,6 +76,7 @@ var GPS=(function(){
             return;
         }
         navigator.geolocation.clearWatch(watchID);
+        watchID=null;
     }
     function forceCurrentLocation(coordinateSystem){
         //FOR DEBUG & TESTING PURPOSES ONLY!
