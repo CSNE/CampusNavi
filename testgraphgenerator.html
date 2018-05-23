@@ -281,7 +281,11 @@
             for (var i = 0; i < obj.vertices.length; i++)
             {
                 var o = obj.vertices[i];
-                create_new_vertex(vb, { id: o.id, name: o.name, loc: o.loc});
+                if (o.loc.lat)
+                {
+                    o.loc = [o.loc.lat, o.loc.lng, 0];
+                }
+                create_new_vertex(vb, { id: o.id, name: o.name, loc: o.loc });
             }
             for (var i = 0; i < obj.edges.length; i++)
             {
@@ -705,7 +709,8 @@
         });
 
         function getDefaultLocation() {
-            return mymap.getCenter();
+            var latlng = mymap.getCenter();
+            return [latlng.lat, latlng.lng, 0];
         }
 
         jsonout = document.getElementById("json_string");
