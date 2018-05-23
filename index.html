@@ -321,6 +321,12 @@
         uipanel_navigation.style.display="block";
       }
 
+      var route_icon_path = {
+          walk: "icons/baseline-directions_walk-24px.png",
+          run: "icons/baseline-directions_run-24px.png",
+          fly: "icons/baseline-directions_run-24px.png"
+      };
+
       // UI Mode: Search --> RouteListing
       function enterRouteListingMode(paths){
         displayRouteListingPanel();
@@ -335,7 +341,7 @@
           var newElement = document.importNode(routeTemplate.content, true);
           newElement.querySelectorAll(".route_name")[0].innerHTML=currentPath.pref.time_name;
           newElement.querySelectorAll(".route_time")[0].innerHTML=Util.humanReadableTime(currentPath.timeRequired);
-          newElement.querySelector(".route_icon").setAttribute("src","icons/baseline-directions_walk-24px.png");
+          newElement.querySelector(".route_icon").setAttribute("src",route_icon_path[paths[i].pref.time_name]);
           newElement.querySelector(".route_begin").addEventListener("click",function(){
             Log.info("begin navigation.");
             enterNavigationMode(currentPath);
@@ -391,8 +397,8 @@
 
 
         var path1 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "walk" });
-        var path2 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "walk" });
-        var path3 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "walk" });
+        var path2 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "run" });
+        var path3 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "fly" });
 
 
         enterRouteListingMode([path1,path2,path3]);
