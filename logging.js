@@ -140,13 +140,19 @@ var Log = (function () {
     function getCallLocationAtDepth(depth){
         //stack trace
         var stacktrace = (new Error()).stack;
-
+        //alert(stacktrace);
+        if (!stacktrace)//internet explorer doesn't support Error.stack
+            return "";
         var stacks = stacktrace.split("\n");
 
         //The weird code below
         //is due to how different browsers return a differently formatted Error.stack
-        var stackdepth=0;
-        var callLocation='';
+        //var stackdepth=0;
+        var callLocation = '';
+
+        callLocation = stacks[depth + (stacks[0].trim() == "Error")];
+
+        /*
         while (stackdepth<(depth+1)){ //+1 because of this function
             callLocation=stacks.shift().trim();
 
@@ -158,6 +164,7 @@ var Log = (function () {
             //thus this conditional.
             if (callLocation!=="Error") stackdepth++; 
         }
+        //*/
 
         //get only the last file
         var callLocationFormatted=callLocation.split("/").pop();

@@ -305,7 +305,7 @@
 
         function select(e)
         {
-            if (e != selected)
+            if (e != selected && e.type == "vertex")
             {
                 if (selected)
                 {
@@ -317,38 +317,67 @@
         }
         var unselect = {};
 
+        function updateStyle(e)
+        {
+            e.removeFrom(mymap);
+            e.addTo(mymap);
+        }
+
         select["vertex"] = function (e) {
             e.targetElement.classList.add("selected");
             e.layer.setStyle(vertex_style_selected);
+            updateStyle(e.layer);
             two_vertices[1] = two_vertices[0];
             two_vertices[0] = e;
         }
         select["edge"] = function (e) {
             e.targetElement.classList.add("selected");
             e.layer.setStyle(edge_style_selected);
+            updateStyle(e.layer);
         }
-        unselect["vertex"] = function (e) {
+        unselect["vertex"] = function () {
             selected.targetElement.classList.remove("selected");
             selected.layer.setStyle(vertex_style_default);
+            updateStyle(selected.layer);
+            selected = null;
         }
-        unselect["edge"] = function (e) {
+        unselect["edge"] = function () {
             selected.targetElement.classList.remove("selected");
             selected.layer.setStyle(edge_style_default);
+            updateStyle(selected.layer);
+            selected = null;
         }
 
         function removeObj(e)
         {
+            if (selected == e)
+                unselect[e.type](e);
             switch (e.type) {
                 case "vertex":
                     l = V;
+                    for (var i = 0, j = 0; i < 2; i++) {
+                        if (two_vertices[i] == e) {
+                            j++;
+                        }
+                        two_vertices[i] = i + j < 2 ? two_vertices[i + j] : null;
+                    }
+                    for (var i = e.edges.iterator(); !i.end(); i.next())
+                    {
+                        removeObj(i.get());
+                    }
                     break;
                 case "edge":
                     l = E;
+                    if (e.vs)
+                        e.vs.edges.remove(e);
+                    if (e.ve)
+                        e.ve.edges.remove(e);
                     break;
                 default:
                     return;
             }
             l.remove(e.node);
+            //alert(e.targetElement.classList);
             e.targetElement.parentNode.removeChild(e.targetElement);
             mymap.removeLayer(e.layer);
         }
@@ -627,22 +656,22 @@
         accessToken: 'pk.eyJ1IjoiY2hhbnNvbDk4IiwiYSI6ImNqZ25henV1dTJibjgycXBxeGczaWk2enMifQ.w474LPaUpTnZiQnw5E3Ujg'
         }).addTo(mymap);
 
-        var pane_edges = mymap.createPane("edges", mymap.getPane("overlayPane"));
         var pane_vertices = mymap.createPane("vertices", mymap.getPane("overlayPane"));
+        var pane_edges = mymap.createPane("edges", mymap.getPane("overlayPane"));
         var pane_selected = mymap.createPane("selected", mymap.getPane("overlayPane"));
-        pane_edges.style.zIndex = 1002;
-        pane_vertices.style.zIndex = 1003;
-        pane_selected.style.zIndex = 1001;
+        pane_vertices.style.zIndex = 1002;
+        pane_edges.style.zIndex = 1001;
+        pane_selected.style.zIndex = 1003;
 
         // 지도에 마커 생성.
         // 초기 위치는 연세대 정문.
         var currentLocationMarker=L.marker(L.latLng(CoordinateConversions.centerCoords.lat,
                                                     CoordinateConversions.centerCoords.long),
                                             {"title":"Your location","autoPan":true});
-        currentLocationMarker.addTo(mymap);
+        //currentLocationMarker.addTo(mymap);
 
         mymap.on("click", function (e) {
-            if (e.sourceTarget == mymap)
+            if (e.sourceTarget == mymap && selected && selected.type == "vertex")
                 setLocation(selected, e.latlng);
         });
 
