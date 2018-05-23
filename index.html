@@ -48,7 +48,7 @@
           flex-direction: column;
         }
       }
-      
+
 
       .uipanel *{
         margin:4px;
@@ -143,7 +143,7 @@
     <!-- 자바스크립트 -->
     <!-- 로그 시작 -->
     <script src="logging.js"></script>
-    <script> Log.init(document.getElementById("debugMsgBox"));</script>
+    <script> Log.init();Log.info("Log framework started");</script>
     <script src="coordinates.js"></script>
     <script src="gps.js"></script>
     <script src="graphentities.js"></script>
@@ -155,7 +155,7 @@
     <script src="weather.js"></script>
     <script src="util.js"></script>
     <script>
-      Log.info("Log framework started");
+      Log.info("All JS loaded.");
 
       Log.debug("Screen size "+window.innerWidth+"x"+window.innerHeight);
 
@@ -185,9 +185,6 @@
       currentLocationMarker.addTo(mymap);
 
       GPS.startTracking();
-      //var gpsEnabledButton=L.control();
-      //gpsEnabledButton.addTo(mymap);
-
       GPS.addLocationListener(function(coords){
         var latlng=L.latLng(coords.lat,coords.long);
         currentLocationMarker.setLatLng(latlng);
@@ -199,6 +196,7 @@
       });
 
 
+      //Datalist에 꼭짓점 이름들을 넣음.
       var destinationsDataList=document.getElementById("destinationsData");
       for(var i=0;i<GraphDatabase.vertices.length;i++){
         var opt=document.createElement("option");
@@ -206,7 +204,7 @@
         destinationsDataList.appendChild(opt);
       }
 
-
+      //HTML DOM 변수들.
       var uipanel_search=document.getElementById("uipanel_search");
       var uipanel_routes=document.getElementById("uipanel_routes");
       var uipanel_route_list=document.getElementById("uipanel_route_list");
@@ -216,15 +214,18 @@
       var search_input_from=document.getElementById("uipanel_search_input_from");
       var search_input_to=document.getElementById("uipanel_search_input_to");
 
-
       var routeTemplate = document.getElementById("route_template");
-
-      document.getElementById("uipanel_routes_goback").addEventListener("click",returnToSearchMode);
-
+      
+      var route_button_goback=document.getElementById("uipanel_routes_goback");
+      
+      
+      //UI 이벤트 처리 함수들.
+      
+      // UI Mode: Search --> RouteListing
       function enterRouteListingMode(paths){
         uipanel_search.style.display="none";
         uipanel_routes.style.display="block";
-        
+
         //remove all route listings
         while (uipanel_route_list.firstChild) {
           uipanel_route_list.removeChild(uipanel_route_list.firstChild);
@@ -236,8 +237,6 @@
           newElement.querySelectorAll(".route_name")[0].innerHTML=currentPath.pref.time_name;
           newElement.querySelectorAll(".route_time")[0].innerHTML=Util.humanReadableTime(currentPath.timeRequired);
           newElement.querySelector(".route_icon").setAttribute("src","icons/baseline-directions_walk-24px.png");
-
-
 
           uipanel_route_list.appendChild(newElement);
           Log.verbose("Path listed.");
@@ -255,15 +254,15 @@
           });
         }
       }
+      
+      // UI Mode: Search <-- RouteListing
       function returnToSearchMode(){
-        
-        
         uipanel_search.style.display="grid";
         uipanel_routes.style.display="none";
-        
       }
+      
+      route_button_goback.addEventListener("click",returnToSearchMode);
 
-      //search_button_find.addEventListener("click", function () {
       search_button_find.addEventListener("click", function() {
         var fromName = search_input_from.value;
         var fromVertex = GraphDatabase.findVertexWithName(fromName);
@@ -286,26 +285,16 @@
 
 
         enterRouteListingMode([path1,path2,path3]);
-
       });
+      
+      // 바꾸기 버튼
       search_button_swap.addEventListener("click", function () {
         var s = search_input_from.value;
         search_input_from.value = search_input_to.value;
         search_input_to.value = s;
       });
 
-      /*
-      var return_event_func = function (e) {
-          //alert(e.keyCode);
-          if (e.keyCode == 13)
-              search_button_find.click();
-      };
-      search_input_from.addEventListener("keypress", return_event_func);
-      search_input_to.addEventListener("keypress", return_event_func);
-      //*/
     </script>
-
-    <!--<script src="test.js"></script>-->
   </body>
 
 
