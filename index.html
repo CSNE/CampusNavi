@@ -158,7 +158,7 @@
 
       <div class="uipanel" >
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
-        <div id="uipanel_search">
+        <form id="uipanel_search" action="javascript:">
           <div id="uipanel_search_grid">
             <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
@@ -175,7 +175,7 @@
             <datalist id="destinationsData">
             </datalist>
           </div>
-        </div>
+        </form>
 
 
 
@@ -374,7 +374,7 @@
       route_button_goback.addEventListener("click",displaySearchPanel);
       navigation_button_goback.addEventListener("click",displaySearchPanel);
 
-      search_button_find.addEventListener("click", function() {
+      uipanel_search.addEventListener("submit", function () {
         var fromName = search_input_from.value;
         var fromVertex = GraphDatabase.findVertexWithName(fromName);
         var toName = search_input_to.value;

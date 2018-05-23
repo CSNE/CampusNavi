@@ -325,7 +325,8 @@
 
         select["vertex"] = function (e) {
             e.targetElement.classList.add("selected");
-            e.layer.setStyle(vertex_style_selected);
+            e.layer.setStyle(vertex_style_selected)
+            ;//    .on(event_draggable_vertex);
             updateStyle(e.layer);
             two_vertices[1] = two_vertices[0];
             two_vertices[0] = e;
@@ -337,7 +338,8 @@
         }
         unselect["vertex"] = function () {
             selected.targetElement.classList.remove("selected");
-            selected.layer.setStyle(vertex_style_default);
+            selected.layer.setStyle(vertex_style_default)
+            ;//    .off(event_draggable_vertex);
             updateStyle(selected.layer);
             selected = null;
         }
@@ -455,6 +457,34 @@
             removeObj(e.target.targetObj);
         }
 
+        function layer_vertex_dragstart()
+        {
+            //Log.debug("dragstart");
+            mymap.dragging.disable();
+            mymap.on(event_map_dragging_layer);
+        }
+        function layer_vertex_dragend()
+        {
+            //Log.debug("dragend");
+            mymap.off(event_map_dragging_layer);
+            mymap.dragging.enable();
+        }
+        function layer_vertex_dragend_if_up(e)
+        {
+            Log.debug(e.originalEvent.button);
+            //layer_vertex_dragend(e);
+        }
+
+        function map_drag(e)
+        {
+            setLocation(selected, e.latlng);
+        }
+
+        var event_vertex = { mousedown: layer_click, dblclick: layer_dblclick };
+        var event_edge = { click: layer_click, dblclick: layer_dblclick };
+        var event_draggable_vertex = { mousedown: layer_vertex_dragstart, mouseup: layer_vertex_dragend };
+        var event_map_dragging_layer = { mousemove: map_drag, mouseup: layer_vertex_dragend /*, mouseover: layer_vertex_dragend_if_up*/ };
+
         function create_new_element(btn)
         {
             var e = btn.ownerDocument.createElement("div");
@@ -474,8 +504,8 @@
             obj.edges = new List();
             obj.targetElement = e;
             obj.layer = L.circleMarker(obj.loc, vertex_style_default)
-                .on("click", layer_click)
-                .on("dblclick", layer_dblclick)
+                .on(event_vertex)
+                .on(event_draggable_vertex)
                 .addTo(mymap);
             obj.node = V.add(obj);
             obj.layer.targetObj = obj;
@@ -528,8 +558,7 @@
                 obj.ve.edges.add(obj);
             obj.targetElement = e;
             obj.layer = L.polyline([obj.vs ? obj.vs.loc : getDefaultLocation(), obj.ve ? obj.ve.loc : getDefaultLocation()], edge_style_default)
-                .on("click", layer_click)
-                .on("dblclick", layer_dblclick)
+                .on(event_edge)
                 .addTo(mymap);
             obj.node = E.add(obj);
             obj.layer.targetObj = obj;
@@ -671,8 +700,8 @@
         //currentLocationMarker.addTo(mymap);
 
         mymap.on("click", function (e) {
-            if (e.sourceTarget == mymap && selected && selected.type == "vertex")
-                setLocation(selected, e.latlng);
+            //if (e.sourceTarget == mymap && selected && selected.type == "vertex")
+                //setLocation(selected, e.latlng);
         });
 
         function getDefaultLocation() {
