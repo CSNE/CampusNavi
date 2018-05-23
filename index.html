@@ -55,14 +55,14 @@
       }
 
 
-      #uipanel_search{
+      #uipanel_search_grid{
         display: grid;
         grid-template-rows: auto auto;
         grid-template-columns: 1fr auto auto auto;
         grid-template-areas: "frominput fromlabel changebtn findbtn" 
           "toinput   tolabel   changebtn findbtn" ;
       }
-      #uipanel_search *{
+      #uipanel_search_grid *{
         place-self: center;
       }
 
@@ -85,6 +85,30 @@
         height:24px;
       }
       .route_time{grid-area:time;}
+      
+      #debugpanel{
+        height:100%;
+        width:100%;
+        position:fixed;
+        z-index:5000;
+        left:0;
+        top:0;
+        background-color: white;
+        opacity:0.7;
+        display:flex;
+        flex-direction: column;
+      }
+      #logcontainer{
+        flex-grow:1;
+      }
+      #debug_panel_toggle{
+        z-index:10000;
+        position:fixed;
+        left:0;
+        bottom:0;
+        opacity:0.7;
+        font-size:32px;
+      }
 
 
 
@@ -94,6 +118,19 @@
   </head>
 
   <body>
+    <button id="debug_panel_toggle">
+      Debug Panel
+    </button>
+    <div id="debugpanel">
+      <div id="debug_buttons_container">
+        <button onclick="debug_button_1_onclick()">Debug Button 1</button>
+        <button onclick="debug_button_2_onclick()">Debug Button 2</button>
+        <button onclick="debug_button_3_onclick()">Debug Button 3</button>
+        <button onclick="debug_button_4_onclick()">Debug Button 4</button>
+        <button onclick="debug_button_5_onclick()">Debug Button 5</button>        
+      </div>
+      <div id="logcontainer"></div>
+    </div>
     <div id="maincontent">
       <!-- 지도 div -->
       <div id="mapid"></div>
@@ -101,7 +138,7 @@
       <div class="uipanel" >
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
         <div id="uipanel_search">
-
+          <div id="uipanel_search_grid">
           <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
           <div style="grid-area: fromlabel;">부터</div>
@@ -116,6 +153,7 @@
 
           <datalist id="destinationsData">
           </datalist>
+            </div>
         </div>
 
 
@@ -135,6 +173,11 @@
 
 
         </div>
+        
+        <div id="uipanel_navigation" style="display:none">
+          <button id="uipanel_navigation_goback">Go back</button>
+
+        </div>
       </div>
 
 
@@ -143,7 +186,7 @@
     <!-- 자바스크립트 -->
     <!-- 로그 시작 -->
     <script src="logging.js"></script>
-    <script> Log.init();Log.info("Log framework started");</script>
+    <script> Log.init(document.getElementById("logcontainer"));Log.info("Log framework started");</script>
     <script src="coordinates.js"></script>
     <script src="gps.js"></script>
     <script src="graphentities.js"></script>
@@ -207,6 +250,9 @@
       //HTML DOM 변수들.
       var uipanel_search=document.getElementById("uipanel_search");
       var uipanel_routes=document.getElementById("uipanel_routes");
+      var uipanel_navigation=document.getElementById("uipanel_navigation");
+      
+      
       var uipanel_route_list=document.getElementById("uipanel_route_list");
 
       var search_button_find = document.getElementById("uipanel_search_button_find");
@@ -221,10 +267,23 @@
       
       //UI 이벤트 처리 함수들.
       
-      // UI Mode: Search --> RouteListing
-      function enterRouteListingMode(paths){
+      function displaySearchPanel(){
+        uipanel_search.style.display="block";
+        uipanel_routes.style.display="none";
+        uipanel_navigation.style.display="none";
+      }function displayRouteListingPanel(){
         uipanel_search.style.display="none";
         uipanel_routes.style.display="block";
+        uipanel_navigation.style.display="none";
+      }function displayNavigationPanel(){
+        uipanel_search.style.display="none";
+        uipanel_routes.style.display="none";
+        uipanel_navigation.style.display="block";
+      }
+      
+      // UI Mode: Search --> RouteListing
+      function enterRouteListingMode(paths){
+        displayRouteListingPanel();
 
         //remove all route listings
         while (uipanel_route_list.firstChild) {
@@ -255,13 +314,8 @@
         }
       }
       
-      // UI Mode: Search <-- RouteListing
-      function returnToSearchMode(){
-        uipanel_search.style.display="grid";
-        uipanel_routes.style.display="none";
-      }
       
-      route_button_goback.addEventListener("click",returnToSearchMode);
+      route_button_goback.addEventListener("click",displaySearchPanel);
 
       search_button_find.addEventListener("click", function() {
         var fromName = search_input_from.value;
@@ -293,6 +347,30 @@
         search_input_from.value = search_input_to.value;
         search_input_to.value = s;
       });
+      
+      //Debug Panel
+      var debugpanel=document.getElementById("debugpanel");
+      document.getElementById("debug_panel_toggle").addEventListener("click",function(){
+        if (debugpanel.style.display==="none")debugpanel.style.display="flex";
+        else debugpanel.style.display="none";
+      });
+      
+      //debug buttons
+      function debug_button_1_onclick(){
+        Log.debug("Button 1 clicked");
+      }
+      function debug_button_2_onclick(){
+        Log.debug("Button 2 clicked");
+      }
+      function debug_button_3_onclick(){
+        Log.debug("Button 3 clicked");
+      }
+      function debug_button_4_onclick(){
+        Log.debug("Button 4 clicked");
+      }
+      function debug_button_5_onclick(){
+        Log.debug("Button 5 clicked");
+      }
 
     </script>
   </body>
