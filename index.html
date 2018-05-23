@@ -27,7 +27,6 @@
 
       #maincontent {
         display: flex;
-        flex-direction: column;
         width:100%;
         height:100%;
       }
@@ -36,18 +35,19 @@
       }
 
 
-      @media screen and (min-width: 800px){
+      @media screen and (min-aspect-ratio: 4/3){
         #maincontent {
           flex-direction: row;
         }
 
       }
 
-      @media screen and (max-width: 800px){
+      @media screen and (max-aspect-ratio: 4/3){
         #maincontent {
           flex-direction: column;
         }
       }
+      
 
       .uipanel *{
         margin:4px;
