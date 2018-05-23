@@ -4,6 +4,8 @@ function Path(graph, from, to, pref)
     Log.debug("Finding path from " + from.name + " to " + to.name);
 
     this.graph = graph;
+    this.from=from;
+    this.to=to;
 
 
     if (!pref)
