@@ -123,7 +123,7 @@
     </button>
     <div id="debugpanel">
       <div id="debug_buttons_container">
-        <button onclick="debug_button_1_onclick()">Debug Button 1</button>
+        <button onclick="debug_button_1_onclick()">Fake Location Mode</button>
         <button onclick="debug_button_2_onclick()">Debug Button 2</button>
         <button onclick="debug_button_3_onclick()">Debug Button 3</button>
         <button onclick="debug_button_4_onclick()">Debug Button 4</button>
@@ -358,6 +358,14 @@
       //debug buttons
       function debug_button_1_onclick(){
         Log.debug("Button 1 clicked");
+        
+        Log.info("Entering fake location mode");
+        GPS.stopTracking();
+        mymap.on("click",function(e){
+          var location=new CoordinateSystem(e.latlng.lat,e.latlng.lng,e.latlng.alt);
+          GPS.forceCurrentLocation(location);
+        })
+        
       }
       function debug_button_2_onclick(){
         Log.debug("Button 2 clicked");
