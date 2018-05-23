@@ -41,7 +41,7 @@ var Weather=(function(){
     var hours = today.getHours();
     var minutes = today.getMinutes();
  
-    $('.weather-date').html(month +"월 " + day + "일 " + week[today.getDay()]+"요일");
+    // $('.weather-date').html(month +"월 " + day + "일 " + week[today.getDay()]+"요일");
  
     /*
      * 기상청 30분마다 발표
@@ -114,7 +114,7 @@ var Weather=(function(){
                 case 2:
                     // 비/눈이지만 완전히 눈이 아니므로 비로 표시함.
                     return {"weather":"rain"};
-                    $('.weather-state-text').html("비/눈");
+                    // $('.weather-state-text').html("비/눈");
                     break;
                 case 3:
                     return {"weather":"snow"};
