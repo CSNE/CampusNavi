@@ -7,6 +7,9 @@
 
   Firstly, call Log.init() with a DOM element as its argument.
   All the logs will be displayed within the supplied element.
+  
+  if Log.init() is called with no arguments,
+  a togglable overlay element will be created automatically.
 
   You can then call one of the five methods:
   Log.verbose() - For not-so-important messages. Displayed in gray.
@@ -29,33 +32,49 @@ var Log = (function () {
 
     var levelElements = [[], [], [], [], [], []];
 
-
-    function init(){
+    
+    function init(container){
 
         if (display!=null) throw "Cannot initialize twice!";
 
-        //setup container
-        var logContainer=document.createElement("div");        
-        document.body.appendChild(logContainer);
-        logContainer.classList.add("loggingContainer");
-        logContainer.style.display="none";
+
+        if (!container){
+            //setup container
+            var logContainer=document.createElement("div");        
+            document.body.appendChild(logContainer);
+            logContainer.classList.add("loggingContainer");
+            logContainer.style.display="none";
 
 
-        //setup show/hide buttons
-        var showHideButton=document.createElement("div");        
-        document.body.appendChild(showHideButton);
-        showHideButton.classList.add("logShowAndHideButton");
-        showHideButton.innerHTML="Show Logs"
-        showHideButton.addEventListener("click",function(){
-            if (logContainer.style.display==="flex") {
-                logContainer.style.display="none";
-                showHideButton.innerHTML="Show Logs";
-            }else{
-                logContainer.style.display="flex";
-                showHideButton.innerHTML="Hide Logs";
-            }
+            //setup show/hide buttons
+            var showHideButton=document.createElement("div");        
+            document.body.appendChild(showHideButton);
+            showHideButton.classList.add("logShowAndHideButton");
+            showHideButton.innerHTML="Show Logs"
+            showHideButton.addEventListener("click",function(){
+                if (logContainer.style.display==="flex") {
+                    logContainer.style.display="none";
+                    showHideButton.innerHTML="Show Logs";
+                }else{
+                    logContainer.style.display="flex";
+                    showHideButton.innerHTML="Hide Logs";
+                }
 
-        });
+            });
+
+            //styles
+            var css = logContainer.ownerDocument.createElement("style");
+            css.type = "text/css";
+            var cssText="";
+            cssText+= ".loggingContainer{height:100%;width:100%;position:fixed;z-index:1000;left:0;top:0;background-color: white;opacity:0.7;}\n";
+            cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;left:0;bottom:0;background-color: #A0A0A0;opacity:0.7;}\n";
+            cssText+= ".logShowAndHideButton{font-size:24pt;color:black;padding:8px;}\n";
+            css.innerHTML=cssText;
+            logContainer.ownerDocument.head.appendChild(css);
+        }else{
+            var logContainer=container;
+            logContainer.classList.add("loggingContainer");
+        }
 
 
         //setup buttons container
@@ -92,11 +111,6 @@ var Log = (function () {
         var css = logContainer.ownerDocument.createElement("style");
         css.type = "text/css";
         var cssText="";
-        cssText+= ".loggingContainer{height:100%;width:100%;position:fixed;z-index:1000;left:0;top:0;background-color: white;opacity:0.7;}\n";
-        cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;left:0;bottom:0;background-color: #A0A0A0;opacity:0.7;}\n";
-        cssText+= ".logShowAndHideButton{font-size:24pt;color:black;padding:8px;}\n";
-        cssText+= "\n";
-        cssText+= "\n";
         cssText+= ".loggingContainer {display:flex;flex-flow: column;}\n";
         cssText+= ".loggingDisplay .level1 {color:gray;}\n";
         cssText+= ".loggingDisplay .level2 {color:black;}\n";
@@ -105,7 +119,8 @@ var Log = (function () {
         cssText+= ".loggingDisplay .level5 {color:red;}\n";
         cssText+= ".loggingDisplay {overflow:scroll;}\n";
         cssText+= ".loggingDisplay {font-family:consolas, monospace;}\n";
-        cssText+= ".loggingDisplay {display: flex;flex-flow: column;  height: 100%;}\n";
+        //cssText+= ".loggingDisplay {display: flex;flex-flow: column;  height: 100%;}\n";
+        cssText+= ".loggingDisplay {flex-grow:1;}\n";
         cssText+= ".loggingControls {padding:4px;}\n";
         cssText+= ".loggingControls * {margin:4px;}\n";
         css.innerHTML=cssText;
@@ -194,7 +209,7 @@ var Log = (function () {
             //if current level is disabled, hide it.
             elem.style.display =
                 currentVisibilityOptions[level] ?
-                "inline" : "none";
+                "block" : "none";
 
 
             //elem.appendChild(display.ownerDocument.createElement("br"));
@@ -261,7 +276,7 @@ var Log = (function () {
 
     function setVisibility(level, b)
     {
-        var d = b ? "inline" : "none";
+        var d = b ? "block" : "none";
         var a = levelElements[level];
         for (var i = 0; i < a.length; i++)
         {
