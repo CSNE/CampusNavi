@@ -88,13 +88,13 @@ var Coordinates=(function(){
         this.timestamp=null;
 
         this.setXyzFromLatLong=function(){
-            var conved=CoordinateConversions.coordsToCartesian({"lat":lat,"long":long,"alt":alt});
+            var conved=CoordinateConversions.coordsToCartesian({"lat":this.lat,"long":this.long,"alt":this.alt});
             this.x=conved.x;
             this.y=conved.y;
             this.z=conved.z;
         }
         this.setLatLongFromXyz=function(){
-            var conved=CoordinateConversions.cartesianToCoords({"x":x,"y":y,"z":z});
+            var conved=CoordinateConversions.cartesianToCoords({"x":this.x,"y":this.y,"z":this.z});
             this.lat=conved.lat;
             this.long=conved.long;
             this.alt=conved.alt;
@@ -120,6 +120,7 @@ var Coordinates=(function(){
         res.y=y;
         res.z=z;
         res.setLatLongFromXyz();
+        return res;
     }
     function fromVector(vec){
         var res=new CoordinateSystem();
@@ -127,6 +128,7 @@ var Coordinates=(function(){
         res.y=vec.y;
         res.z=vec.z;
         res.setLatLongFromXyz();
+        return res;
     }
     function fromLatLongAlt(lat,long,alt){
         var res=new CoordinateSystem();
@@ -134,6 +136,7 @@ var Coordinates=(function(){
         res.long=long;
         res.alt=alt;
         res.setXyzFromLatLong();
+        return res;
     }
     function fromLatLng(latlng){
         return fromLatLongAlt(latlng.lat,latlng.lng,latlng.alt);
