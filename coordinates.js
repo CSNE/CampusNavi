@@ -24,8 +24,11 @@ var CoordinateConversions=(function(){
     var earthRadius=6.3781e6;
     var earthCircumference=2*Math.PI*earthRadius;
     var metersPerDegreeLatitude=earthCircumference/360;
-    var earthCircumferenceAtLatitude=2*Math.PI*earthCircumference*sind(cartesianCenterCoords.lat);
+    var earthCircumferenceAtLatitude=2*Math.PI*earthRadius*sind(cartesianCenterCoords.lat);
     var metersPerDegreeLongitude=earthCircumferenceAtLatitude/360;
+    Log.debug("metersPerDegreeLatitude "+metersPerDegreeLatitude);
+    Log.debug("metersPerDegreeLongitude "+metersPerDegreeLongitude);
+    Log.debug("sind(cartesianCenterCoords.lat) "+sind(cartesianCenterCoords.lat));
 
     // 위도-경도-고도 좌표를 받아 XYZ 좌표계로 변환.
     // 예시: coordsToCartesian({"lat":37.5,"long":126.9,"alt":10})
@@ -110,6 +113,14 @@ var Coordinates=(function(){
         this.getDistance=function(othercoord){
             var delta=this.getCartesianDelta(othercoord);
             return Math.sqrt(delta.x*delta.x+delta.y*delta.y+delta.z*delta.z);
+        }
+        
+        this.toVector=function(){
+          return new Vector(this.x,this.y,this.z);
+        }
+        
+        this.toLatLng=function(){
+          return L.latLng(this.lat,this.long,this.alt);
         }
 
         //Log.debug([this.x, this.y, this.z]);
