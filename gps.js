@@ -21,7 +21,7 @@ var GPS=(function(){
 
         Log.verbose("LAT "+lat+" | LONG "+long+" | ALT "+alt+" | ACC "+acc);
 
-        var newLocation=new CoordinateSystem(position.coords.latitude,position.coords.longitude,position.coords.altitude);
+        var newLocation= Coordinates.fromGeoloationCoords(position.coords);
 
         updateLocation(newLocation);
 

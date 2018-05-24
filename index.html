@@ -425,7 +425,7 @@
         Log.info("Entering fake location mode");
         GPS.stopTracking();
         mymap.on("click",function(e){
-          var location=new CoordinateSystem(e.latlng.lat,e.latlng.lng,e.latlng.alt);
+          var location=Coordinates.fromLatLng(e.latlng);
           GPS.forceCurrentLocation(location);
         })
 
