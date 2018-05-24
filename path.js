@@ -14,18 +14,24 @@ function Path(graph, from, to, pref)
 
     this.p = this.graph.findShortestPath(from, to, pref);
     this.layers = [];
+    this.edges=[];
+    this.vertices=[]
     if (this.p) {
 
         this.latlngs = [];
         for (var i = this.p; i; i = i.p) {
-            var c = i.v.coordinates;
+            var coords = i.v.coordinates;
+            var edge=i.e;
 
-            this.latlngs.push([c.lat, c.long]);
+            this.latlngs.push([coords.lat, coords.long]);
+            if (edge) this.edges.unshift(edge);
+            
+            this.vertices.unshift(i.v);
         }
 
         if (this.latlngs.length)
             this.layers.push(L.polyline(this.latlngs, { "color": "red" }));
-
+        
         this.timeRequired = this.p.w;
         Log.info("Found path from " + from.name + " to " + to.name + "(" + this.p.w.toFixed() + "초)");
     }

@@ -119,6 +119,10 @@ var Coordinates=(function(){
           return new Vector(this.x,this.y,this.z);
         }
         
+        this.to2DVector=function(){
+            return new Vector(this.x,this.y,0);
+        }
+        
         this.toLatLng=function(){
           return L.latLng(this.lat,this.long,this.alt);
         }

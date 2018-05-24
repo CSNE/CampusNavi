@@ -95,7 +95,7 @@
         left:0;
         top:0;
         background-color: white;
-        opacity:0.7;
+        opacity:0.8;
         display:flex;
         flex-direction: column;
       }
@@ -110,16 +110,16 @@
         opacity:0.7;
         font-size:32px;
       }
-      
-      
+
+
       #uipanel_navigation_container{
         display: grid;
 
         grid-template-rows: auto auto auto;
         grid-template-columns: auto 1fr auto;
         grid-template-areas: "routename      .        targettime" 
-                             "canvas         canvas   canvas" 
-                             "timeremaining  .        eta" ;
+          "canvas         canvas   canvas" 
+          "timeremaining  .        eta" ;
         border:1px solid black;
       }
       #uipanel_navigation_grid *{
@@ -200,7 +200,7 @@
           <button id="uipanel_navigation_goback">Go back</button>
           <span style="color:red;font-size:2em;"><br>아직 구현 안 됨<br></span>
           <div id="uipanel_navigation_container">
-            
+
             <div id="navigation_routename"></div>
             <div id="navigation_targettime"></div>
             <div id="navigation_canvas"></div>
@@ -259,9 +259,23 @@
       });
       currentLocationMarker.addTo(mymap);
 
+      var debugMarker=L.circleMarker(L.latLng(CoordinateConversions.centerCoords.lat,
+                                                        CoordinateConversions.centerCoords.long),
+                                               {
+        "title": "Your location", "autoPan": true,
+        "radius": 6,
+        "weight": 1,
+        "color": "#FF0000",
+        //"stroke": false,
+        "fill": true,
+        "fillOpacity": 1,
+        "fillColor": "#FF8080"
+      });
+      debugMarker.addTo(mymap);
+
       GPS.startTracking();
       GPS.addLocationListener(function(coords){
-        var latlng=L.latLng(coords.lat,coords.long);
+        var latlng=coords.toLatLng();
         currentLocationMarker.setLatLng(latlng);
         //Log.debug(this);
         if (!this.not_first) {
@@ -295,14 +309,14 @@
       var routeTemplate = document.getElementById("route_template");
 
       var route_button_goback=document.getElementById("uipanel_routes_goback");
-      
-      
+
+
       var navigation_routename=document.getElementById("navigation_routename");
       var navigation_targettime=document.getElementById("navigation_targettime");
       var navigation_canvas=document.getElementById("navigation_canvas");
       var navigation_timeremaining=document.getElementById("navigation_timeremaining");
       var navigation_eta=document.getElementById("navigation_eta");
-      
+
       var navigation_button_goback=document.getElementById("uipanel_navigation_goback");
 
 
@@ -323,9 +337,9 @@
       }
 
       var route_icon_path = {
-          walk: "icons/baseline-directions_walk-24px.png",
-          run: "icons/baseline-directions_run-24px.png",
-          fly: "icons/baseline-directions_run-24px.png"
+        walk: "icons/baseline-directions_walk-24px.png",
+        run: "icons/baseline-directions_run-24px.png",
+        fly: "icons/baseline-directions_run-24px.png"
       };
 
       // UI Mode: Search --> RouteListing
@@ -354,12 +368,12 @@
           //don't ask me why
           var currentElement=uipanel_route_list.lastElementChild
           currentElement.addEventListener("mouseenter",function(){
-            Log.verbose("Mouse Entered!");
+            //Log.verbose("Mouse Entered!");
             currentPath.displayOnMap(mymap);
           });
 
           currentElement.addEventListener("mouseleave",function(){
-            Log.verbose("Mouse Left!");
+            //Log.verbose("Mouse Left!");
             currentPath.removeFromMap(mymap);
           });
         }
@@ -368,9 +382,22 @@
         var navContext=new NavigationContext(path);
         GPS.addLocationListener(function(location){
           navContext.updateLocation(location);
+          if (!navContext.DEBUG_VARIABLE) Log.error("NULL???");
+          debugMarker.setLatLng(navContext.DEBUG_VARIABLE.closestLocation.toLatLng());
         });
         displayNavigationPanel();
-        path.displayOnMap(mymap);
+
+        Log.verbose("Path printing");
+        Log.verbose("edge count: "+path.edges.length);
+        for(var i=0;i<path.edges.length;i++){
+          Log.verbose("EDGE: "+path.edges[i].vStart.name+" >> "+path.edges[i].vEnd.name);
+        }
+
+        setTimeout(function(){//Avoid race condition with RouteListingPanel
+          path.displayOnMap(mymap); 
+        },100);
+
+
         navigation_routename.innerHTML=path.from.name+" -> "+path.to.name;
         navigation_targettime.innerHTML="목표도착시각: ";
         navigation_timeremaining.innerHTML="남은시간: ";
@@ -428,11 +455,12 @@
         mymap.on("click",function(e){
           var location=Coordinates.fromLatLng(e.latlng);
           GPS.forceCurrentLocation(location);
+          //Log.verbose("X "+location.x.toFixed()+" Y "+location.y.toFixed()+" Z "+location.z.toFixed());
         })
 
       }
       function debug_button_2_onclick(){
-        Log.debug("Button 2 clicked");
+        Log.debug("Button\n 2 clicked");
       }
       function debug_button_3_onclick(){
         Log.debug("Button 3 clicked");

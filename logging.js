@@ -66,8 +66,8 @@ var Log = (function () {
             var css = logContainer.ownerDocument.createElement("style");
             css.type = "text/css";
             var cssText="";
-            cssText+= ".loggingContainer{height:100%;width:100%;position:fixed;z-index:1000;left:0;top:0;background-color: white;opacity:0.7;}\n";
-            cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;left:0;bottom:0;background-color: #A0A0A0;opacity:0.7;}\n";
+            cssText+= ".loggingContainer{height:100%;width:100%;position:fixed;z-index:1000;left:0;top:0;background-color: white;opacity:0.8;}\n";
+            cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;left:0;bottom:0;background-color: #A0A0A0;opacity:0.8;}\n";
             cssText+= ".logShowAndHideButton{font-size:24pt;color:black;padding:8px;}\n";
             css.innerHTML=cssText;
             logContainer.ownerDocument.head.appendChild(css);
@@ -209,8 +209,19 @@ var Log = (function () {
             if (callLocation.charAt(0)==":") callLocation="index.html"+callLocation;
 
             //alert(lastExternalCallLocation);
-            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocation+"] ";
-            elem.innerHTML+=message;
+            var information="["+levelChar+"|"+timestamp()+"|"+callLocation+"] ";
+            elem.innerHTML+=information;
+            
+            // newlines are converted to <br>
+            var messageSplit=message.split("\n");
+            for(var i=0;i<messageSplit.length;i++){
+                if (i!=0) {
+                    elem.innerHTML+="<br>";
+                    elem.innerHTML+="&nbsp".repeat(information.length);
+                }
+                elem.innerHTML+=messageSplit[i]
+            }
+            
 
 
             //if current level is disabled, hide it.
