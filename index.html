@@ -198,7 +198,6 @@
 
         <div id="uipanel_navigation" style="display:none">
           <button id="uipanel_navigation_goback">Go back</button>
-          <span style="color:red;font-size:2em;"><br>아직 구현 안 됨<br></span>
           <div id="uipanel_navigation_container">
 
             <div id="navigation_routename"></div>
@@ -350,7 +349,7 @@
           uipanel_route_list.removeChild(uipanel_route_list.firstChild);
         }
         
-        Log.debug("Listing "+path.length+" paths.");
+        Log.debug("Listing "+paths.length+" paths.");
         paths.forEach(function(currentPath){
           //let currentPath=paths[i]; //we use let here so function closures don't fuck us over
           var newElement = document.importNode(routeTemplate.content, true);
@@ -377,7 +376,9 @@
       }
       function enterNavigationMode(path){
         Log.info("Navigation mode entered."+path.from.name+">>"+path.to.name+"["+path.pref.time_name+"]")
-        var navContext=new NavigationContext(path);
+        
+          var navContext=new NavigationContext(path);
+          
         GPS.addLocationListener(function(location){
           navContext.updateLocation(location);
           if (!navContext.DEBUG_VARIABLE) Log.error("NULL???");
@@ -401,6 +402,12 @@
         navigation_targettime.innerHTML="목표도착시각: ";
         navigation_timeremaining.innerHTML="남은시간: ";
         navigation_eta.innerHTML="예상도착시간: ";
+        
+        navContext.addContextUpdateListener(function(data){
+          navigation_timeremaining.innerHTML="남은시간: "+(data.timeLeft/1000).toFixed()+"sec.";
+          var d=new Date(data.arrivalTime);
+          navigation_eta.innerHTML="예상도착시간: "+d.getMinutes()+":"+d.getSeconds();
+        })
       }
 
 
