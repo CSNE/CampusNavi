@@ -1,7 +1,7 @@
 ﻿
 function Path(graph, from, to, pref)
 {
-    Log.debug("Finding path from " + from.name + " to " + to.name);
+    Log.debug("Finding path from " + from.name + " to " + to.name+" ["+pref.time_name+"]");
 
     this.graph = graph;
     this.from=from;

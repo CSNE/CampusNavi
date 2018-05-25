@@ -351,12 +351,12 @@
           uipanel_route_list.removeChild(uipanel_route_list.firstChild);
         }
 
-        for(var i=0;i<paths.length;i++){
-          var currentPath=paths[i];
+        paths.forEach(function(currentPath){
+          //let currentPath=paths[i]; //we use let here so function closures don't fuck us over
           var newElement = document.importNode(routeTemplate.content, true);
           newElement.querySelectorAll(".route_name")[0].innerHTML=currentPath.pref.time_name;
           newElement.querySelectorAll(".route_time")[0].innerHTML=Util.humanReadableTime(currentPath.timeRequired);
-          newElement.querySelector(".route_icon").setAttribute("src",route_icon_path[paths[i].pref.time_name]);
+          newElement.querySelector(".route_icon").setAttribute("src",route_icon_path[currentPath.pref.time_name]);
           newElement.querySelector(".route_begin").addEventListener("click",function(){
             Log.info("begin navigation.");
             enterNavigationMode(currentPath);
@@ -376,9 +376,10 @@
             //Log.verbose("Mouse Left!");
             currentPath.removeFromMap(mymap);
           });
-        }
+        });
       }
       function enterNavigationMode(path){
+        Log.info("Navigation mode entered."+path.from.name+">>"+path.to.name+"["+path.pref.time_name+"]")
         var navContext=new NavigationContext(path);
         GPS.addLocationListener(function(location){
           navContext.updateLocation(location);
