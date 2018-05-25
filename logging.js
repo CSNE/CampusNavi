@@ -7,7 +7,7 @@
 
   Firstly, call Log.init() with a DOM element as its argument.
   All the logs will be displayed within the supplied element.
-  
+
   if Log.init() is called with no arguments,
   a togglable overlay element will be created automatically.
 
@@ -32,7 +32,7 @@ var Log = (function () {
 
     var levelElements = [[], [], [], [], [], []];
 
-    
+
     function init(container){
 
         if (display!=null) throw "Cannot initialize twice!";
@@ -212,7 +212,7 @@ var Log = (function () {
             //alert(lastExternalCallLocation);
             var information="["+levelChar+"|"+timestamp()+"|"+callLocation+"] ";
             elem.innerHTML+=information;
-            
+
             // newlines are converted to <br>
             var messageSplit=message.split("\n");
             for(var i=0;i<messageSplit.length;i++){
@@ -222,7 +222,7 @@ var Log = (function () {
                 }
                 elem.innerHTML+=messageSplit[i]
             }
-            
+
 
 
             //if current level is disabled, hide it.
@@ -244,25 +244,29 @@ var Log = (function () {
         if (display!=null){
             var message=error.stack;
 
+
+
             var elem=display.ownerDocument.createElement("div");
             elem.classList.add("level5");
             elem.classList.add("stacktrace");
-            
-            // newlines are converted to <br>
-            var messageSplit=message.split("\n");
-            elem.innerHTML+="------Stack Trace------<br>";
-            for(var i=0;i<messageSplit.length;i++){
-                if (i!=0) {
-                    elem.innerHTML+="<br>";
-                }
-                elem.innerHTML+=messageSplit[i]
-            }
-            elem.innerHTML+="<br>-----------------------";
-            
-            elem.style.display =
-                currentVisibilityOptions[5] ?
-                "block" : "none";
 
+            if (!message){ //For browsers not supporting Error.stack
+                elem.innerHTML="This browser does not support Error stack traces.";
+            }else{
+                // newlines are converted to <br>
+                var messageSplit=message.split("\n");
+                elem.innerHTML+="------Stack Trace------<br>";
+                for(var i=0;i<messageSplit.length;i++){
+                    if (i!=0) {
+                        elem.innerHTML+="<br>";
+                    }
+                    elem.innerHTML+=messageSplit[i]
+                }
+                elem.innerHTML+="<br>-----------------------";
+            }
+            elem.style.display =
+                    currentVisibilityOptions[5] ?
+                    "block" : "none";
             prependChild(elem);
             levelElements[5].push(elem);
         }else{
