@@ -26,10 +26,7 @@ var CoordinateConversions=(function(){
     var metersPerDegreeLatitude=earthCircumference/360;
     var earthCircumferenceAtLatitude=2*Math.PI*earthRadius*sind(cartesianCenterCoords.lat);
     var metersPerDegreeLongitude=earthCircumferenceAtLatitude/360;
-    Log.debug("metersPerDegreeLatitude "+metersPerDegreeLatitude);
-    Log.debug("metersPerDegreeLongitude "+metersPerDegreeLongitude);
-    Log.debug("sind(cartesianCenterCoords.lat) "+sind(cartesianCenterCoords.lat));
-
+    
     // 위도-경도-고도 좌표를 받아 XYZ 좌표계로 변환.
     // 예시: coordsToCartesian({"lat":37.5,"long":126.9,"alt":10})
     function coordsToCartesian(coords) {

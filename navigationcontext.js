@@ -38,34 +38,6 @@ function NavigationContext(path){
 
         distance=vectorHP.length();
 
-        /*
-        Log.debug("ratio calculation BEGIN");
-        Log.debug(vectorSE.length());
-        Log.debug(vectorSE.normalize().toString());
-        Log.debug(vectorSH.dot(vectorSE.normalize()).toString());
-
-        Log.debug("ratio calculation END");
-
-        Log.debug("vectorS "+vectorS.toString());
-        Log.debug("vectorE "+vectorE.toString());
-        Log.debug("vectorP "+vectorP.toString());
-
-        Log.debug("vectorSE "+vectorSE.toString());
-        Log.debug("vectorSP "+vectorSP.toString());
-        Log.debug("vectorSH "+vectorSH.toString());
-
-        Log.debug("vectorSE Normalized "+vectorSE.normalize().toString());
-        Log.debug("vectorSH Top "+(vectorSP.dot(vectorSE)).toString());
-        Log.debug("vectorSH Low"+(vectorSE.dot(vectorSE).toString()));
-
-
-        Log.debug("vectorH "+vectorH.toString());
-        Log.debug("vectorSH "+vectorSH.toString());
-
-        Log.debug("perpendicularPoint "+perpendicularPoint.toVector().toString());
-        Log.debug("distance "+distance);
-        Log.debug("ratio "+ratio);
-        */
         return {
             "perpendicularPoint":perpendicularPoint,
             "ratio":ratio,
@@ -83,28 +55,17 @@ function NavigationContext(path){
         var currentResult;
         var currentEdge;
 
-        //Log.debug("numedges "+path.edges.length);
         for(var i=0;i<path.edges.length;i++){
             currentEdge=path.edges[i];
             currentResult=findDistanceBetweenLineAndPoint(
                 currentEdge.vStart.coordinates,
                 currentEdge.vEnd.coordinates,
                 point);
-            /*
-            Log.debug("Edge "+i);
-            Log.debug(currentEdge.vStart.name);
-            Log.debug(currentEdge.vStart.coordinates.toVector().toString());
-            Log.debug(currentEdge.vEnd.name);
-            Log.debug(currentEdge.vEnd.coordinates.toVector().toString());
-            Log.debug(point.toVector().toString());
-            Log.debug(currentResult.distance.toFixed());
-            Log.debug(currentResult.ratio);
-            */
+
             if (currentResult.ratio<1 && 
                 currentResult.ratio>0 &&
                 currentResult.distance<currentMinValue){
                 currentMinValue=currentResult.distance;
-                //Log.debug("SELECTEED!");
                 result={"type":"edge",
                         "edge":currentEdge,
                         "closestLocation":currentResult.perpendicularPoint,
@@ -117,7 +78,6 @@ function NavigationContext(path){
         var currentVertex;
         var currentDistance;
         for(var i=0;i<path.vertices.length;i++){
-            //Log.debug("Path "+i);
             currentVertex=path.vertices[i];
             currentDistance=currentVertex.coordinates.to2DVector().sub(point.to2DVector()).length();
             if (currentDistance<currentMinValue) {
@@ -126,11 +86,8 @@ function NavigationContext(path){
                     "vertex":currentVertex,
                     "closestLocation":currentVertex.coordinates
                    };
-            }
-            //Log.debug("currentDistance "+currentDistance);
-            
+            }            
         }
-
         return result;
     }
 
@@ -146,40 +103,43 @@ function NavigationContext(path){
         this.DEBUG_VARIABLE=result;
         
         if (result.type==="edge"){
-            Log.verbose("Navigation Context Updated.\n"+
-                        "Closest graph element: edge\n"+
-                        "Edge Start: "+result.edge.vStart.name+"\n"+
-                        "Edge End: "+result.edge.vEnd.name+"\n"+
-                        "Edge Ratio: "+result.edgeCompletionRatio);
+            
             var pathToStartVertex= new Path(
                     GraphDatabase,
                     this.path.from,
                     result.edge.vStart,
                     this.path.pref);
             var timeToStartVertex=pathToStartVertex.timeRequired;
-            Log.verbose("Path to start vertex takes "+timeToStartVertex.toFixed()+" secs.");
+            
             var pathToEndVertex= new Path(
                     GraphDatabase,
                     this.path.from,
                     result.edge.vEnd,
                     this.path.pref);
             var timeToEndVertex=pathToEndVertex.timeRequired;
-            Log.verbose("Path to end vertex takes "+timeToEndVertex.toFixed()+" secs.");
             currentTimeInitialEstimate=timeToEndVertex*result.edgeCompletionRatio+
                                        timeToStartVertex*(1-result.edgeCompletionRatio);
-            Log.verbose("Path to current position takes "+currentTimeInitialEstimate.toFixed()+" secs");
-        }else if(result.type==="vertex"){
-            Log.verbose("Navigation Context Updated.\n"+
-                        "Closest graph element: vertex\n"+
-                        "Vertex Name: "+result.vertex.name);
             
+            Log.verbose("Navigation Context Updated.\n"+
+                        "Closest graph element: edge\n"+
+                        "Edge Start: "+result.edge.vStart.name+"\n"+
+                        "Edge End: "+result.edge.vEnd.name+"\n"+
+                        "Edge Ratio: "+result.edgeCompletionRatio+"\n"+
+                        "Time to start vertex: "+timeToStartVertex+"\n"+
+                        "Time to end vertex: "+timeToEndVertex+"\n"+
+                        "Time to current position: "+currentTimeInitialEstimate);
+        }else if(result.type==="vertex"){
             var pathToVertex= new Path(
                     GraphDatabase,
                     this.path.from,
                     result.vertex,
                     this.path.pref);
             var timeToVertex=pathToVertex.timeRequired;
-            Log.verbose("Path to vertex takes "+timeToVertex.toFixed()+" secs.");
+            
+            Log.verbose("Navigation Context Updated.\n"+
+                        "Closest graph element: vertex\n"+
+                        "Vertex Name: "+result.vertex.name+"\n"+
+                        "Time to current position: "+timeToVertex);
         }else{
             Log.error("what?");
         }
@@ -188,4 +148,6 @@ function NavigationContext(path){
     this.destroy=function(){
 
     }
+        
+    Log.debug("Navigation Context Created.\nTarget path is "+this.path.from.name+" >> "+this.path.to.name);
 }

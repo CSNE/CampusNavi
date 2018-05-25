@@ -277,7 +277,6 @@
       GPS.addLocationListener(function(coords){
         var latlng=coords.toLatLng();
         currentLocationMarker.setLatLng(latlng);
-        //Log.debug(this);
         if (!this.not_first) {
           mymap.setView(latlng);
           this.not_first = true;
@@ -345,12 +344,13 @@
       // UI Mode: Search --> RouteListing
       function enterRouteListingMode(paths){
         displayRouteListingPanel();
-
+        
         //remove all route listings
         while (uipanel_route_list.firstChild) {
           uipanel_route_list.removeChild(uipanel_route_list.firstChild);
         }
-
+        
+        Log.debug("Listing "+path.length+" paths.");
         paths.forEach(function(currentPath){
           //let currentPath=paths[i]; //we use let here so function closures don't fuck us over
           var newElement = document.importNode(routeTemplate.content, true);
@@ -362,18 +362,15 @@
             enterNavigationMode(currentPath);
           });
           uipanel_route_list.appendChild(newElement);
-          Log.verbose("Path listed.");
 
           //somehow doing newElement.addEventListener does not work
           //don't ask me why
           var currentElement=uipanel_route_list.lastElementChild
           currentElement.addEventListener("mouseenter",function(){
-            //Log.verbose("Mouse Entered!");
             currentPath.displayOnMap(mymap);
           });
 
           currentElement.addEventListener("mouseleave",function(){
-            //Log.verbose("Mouse Left!");
             currentPath.removeFromMap(mymap);
           });
         });
@@ -387,12 +384,13 @@
           debugMarker.setLatLng(navContext.DEBUG_VARIABLE.closestLocation.toLatLng());
         });
         displayNavigationPanel();
-
-        Log.verbose("Path printing");
-        Log.verbose("edge count: "+path.edges.length);
+          
+        var toPrint="Printing Path information\n";
+        toPrint+="edge count: "+path.edges.length+"\n";
         for(var i=0;i<path.edges.length;i++){
-          Log.verbose("EDGE: "+path.edges[i].vStart.name+" >> "+path.edges[i].vEnd.name);
+          toPrint+="EDGE: "+path.edges[i].vStart.name+" >> "+path.edges[i].vEnd.name+"\n";
         }
+        Log.verbose(toPrint);
 
         setTimeout(function(){//Avoid race condition with RouteListingPanel
           path.displayOnMap(mymap); 
@@ -456,7 +454,6 @@
         mymap.on("click",function(e){
           var location=Coordinates.fromLatLng(e.latlng);
           GPS.forceCurrentLocation(location);
-          //Log.verbose("X "+location.x.toFixed()+" Y "+location.y.toFixed()+" Z "+location.z.toFixed());
         })
 
       }

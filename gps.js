@@ -19,7 +19,7 @@ var GPS=(function(){
             return;
         }
 
-        Log.verbose("LAT "+lat+" | LONG "+long+" | ALT "+alt+" | ACC "+acc);
+        Log.verbose("GPS Data Acquired.\nLAT "+lat+"\nLONG "+long+"\nALT "+alt+"\nACC "+acc);
 
         var newLocation= Coordinates.fromGeoloationCoords(position.coords);
 
@@ -56,7 +56,7 @@ var GPS=(function(){
 
         // 위치정보 요청
         if ("geolocation" in navigator) {
-            Log.info("Geolocation available.");
+            Log.info("Geolocation available!");
 
             var options = {
                 enableHighAccuracy: true,

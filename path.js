@@ -1,7 +1,7 @@
 ﻿
 function Path(graph, from, to, pref)
 {
-    Log.debug("Finding path from " + from.name + " to " + to.name+" ["+pref.time_name+"]");
+    Log.verbose("Finding path from " + from.name + " to " + to.name+" ["+pref.time_name+"]");
 
     this.graph = graph;
     this.from=from;
@@ -33,7 +33,7 @@ function Path(graph, from, to, pref)
             this.layers.push(L.polyline(this.latlngs, { "color": "red" }));
         
         this.timeRequired = this.p.w;
-        Log.info("Found path from " + from.name + " to " + to.name + "(" + this.p.w.toFixed() + "초)");
+        Log.debug("Found path from " + from.name + " to " + to.name + "(" +pref.time_name+", "+ this.p.w.toFixed() + "초)");
     }
     else
     {

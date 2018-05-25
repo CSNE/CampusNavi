@@ -137,8 +137,6 @@ function createDataJson()
         }
     }
 
-    //Log.debug("111");
-
     /**** test ****/
     /*
     걷는 속도; 1
@@ -151,7 +149,7 @@ function createDataJson()
         {
             var d = e.vStart.coordinates.getDistance(e.vEnd.coordinates);
             e.timeRequired = { "walk": d, "run": d / 2, "fly": d / 30 };
-            Log.debug("<" + e.vStart.name + ", " + e.vEnd.name + ">: " + d);
+            Log.verbose("<" + e.vStart.name + ", " + e.vEnd.name + ">: " + d);
         }
     }
     //
