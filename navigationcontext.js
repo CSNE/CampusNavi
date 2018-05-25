@@ -139,6 +139,9 @@ function NavigationContext(path){
     this.updateLocation=function(location){
         //We need to do a lot of shit here
         var result=findClosestEdgeInPath(path,location);
+        
+        var totalTimeInitialEstimate=path.timeRequired;
+        var currentTimeInitialEstimate;
 
         this.DEBUG_VARIABLE=result;
         
@@ -148,10 +151,35 @@ function NavigationContext(path){
                         "Edge Start: "+result.edge.vStart.name+"\n"+
                         "Edge End: "+result.edge.vEnd.name+"\n"+
                         "Edge Ratio: "+result.edgeCompletionRatio);
+            var pathToStartVertex= new Path(
+                    GraphDatabase,
+                    this.path.from,
+                    result.edge.vStart,
+                    this.path.pref);
+            var timeToStartVertex=pathToStartVertex.timeRequired;
+            Log.verbose("Path to start vertex takes "+timeToStartVertex.toFixed()+" secs.");
+            var pathToEndVertex= new Path(
+                    GraphDatabase,
+                    this.path.from,
+                    result.edge.vEnd,
+                    this.path.pref);
+            var timeToEndVertex=pathToEndVertex.timeRequired;
+            Log.verbose("Path to end vertex takes "+timeToEndVertex.toFixed()+" secs.");
+            currentTimeInitialEstimate=timeToEndVertex*result.edgeCompletionRatio+
+                                       timeToStartVertex*(1-result.edgeCompletionRatio);
+            Log.verbose("Path to current position takes "+currentTimeInitialEstimate.toFixed()+" secs");
         }else if(result.type==="vertex"){
             Log.verbose("Navigation Context Updated.\n"+
                         "Closest graph element: vertex\n"+
                         "Vertex Name: "+result.vertex.name);
+            
+            var pathToVertex= new Path(
+                    GraphDatabase,
+                    this.path.from,
+                    result.vertex,
+                    this.path.pref);
+            var timeToVertex=pathToVertex.timeRequired;
+            Log.verbose("Path to vertex takes "+timeToVertex.toFixed()+" secs.");
         }else{
             Log.error("what?");
         }
