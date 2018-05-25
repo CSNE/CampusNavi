@@ -8,6 +8,9 @@
   Firstly, call Log.init() with a DOM element as its argument.
   All the logs will be displayed within the supplied element.
 
+  if Log.init() is called with no arguments,
+  a togglable overlay element will be created automatically.
+
   You can then call one of the five methods:
   Log.verbose() - For not-so-important messages. Displayed in gray.
   Log.debug()   - For information that may be useful when debugging. Displayed in black.
@@ -17,48 +20,63 @@
 */
 
 var Log = (function () {
-    var root_dir_name = "CampusNavi/";
 
     var display=null;
 
     var buttonsList=[];
 
     var currentVisibilityOptions = [];
-    
+
     var levelToName=["","Verbose","Debug","Info","Warning","Error"];
     var levelToCharacter = ["", "V", "D", "I", "W", "E"];
 
     var levelElements = [[], [], [], [], [], []];
 
-    function init(){
-        
+
+    function init(container){
+
         if (display!=null) throw "Cannot initialize twice!";
-        
-        //setup container
-        var logContainer=document.createElement("div");        
-        document.body.appendChild(logContainer);
-        logContainer.classList.add("loggingContainer");
-        logContainer.style.display="none";
-        
-        
-        
-        //setup show/hide buttons
-        var showHideButton=document.createElement("div");        
-        document.body.appendChild(showHideButton);
-        showHideButton.classList.add("logShowAndHideButton");
-        showHideButton.innerHTML="Show Logs"
-        showHideButton.addEventListener("click",function(){
-            if (logContainer.style.display==="flex") {
-                logContainer.style.display="none";
-                showHideButton.innerHTML="Show Logs";
-            }else{
-                logContainer.style.display="flex";
-                showHideButton.innerHTML="Hide Logs";
-            }
-            
-        });
-        
-        
+
+
+        if (!container){
+            //setup container
+            var logContainer=document.createElement("div");        
+            document.body.appendChild(logContainer);
+            logContainer.classList.add("loggingContainer");
+            logContainer.style.display="none";
+
+
+            //setup show/hide buttons
+            var showHideButton=document.createElement("div");        
+            document.body.appendChild(showHideButton);
+            showHideButton.classList.add("logShowAndHideButton");
+            showHideButton.innerHTML="Show Logs"
+            showHideButton.addEventListener("click",function(){
+                if (logContainer.style.display==="flex") {
+                    logContainer.style.display="none";
+                    showHideButton.innerHTML="Show Logs";
+                }else{
+                    logContainer.style.display="flex";
+                    showHideButton.innerHTML="Hide Logs";
+                }
+
+            });
+
+            //styles
+            var css = logContainer.ownerDocument.createElement("style");
+            css.type = "text/css";
+            var cssText="";
+            cssText+= ".loggingContainer{height:100%;width:100%;position:fixed;z-index:1000;left:0;top:0;background-color: white;opacity:0.8;}\n";
+            cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;left:0;bottom:0;background-color: #A0A0A0;opacity:0.8;}\n";
+            cssText+= ".logShowAndHideButton{font-size:24pt;color:black;padding:8px;}\n";
+            css.innerHTML=cssText;
+            logContainer.ownerDocument.head.appendChild(css);
+        }else{
+            var logContainer=container;
+            logContainer.classList.add("loggingContainer");
+        }
+
+
         //setup buttons container
         var buttonsContainer=logContainer.ownerDocument.createElement("div");
         buttonsContainer.classList.add("loggingControls");
@@ -93,27 +111,24 @@ var Log = (function () {
         var css = logContainer.ownerDocument.createElement("style");
         css.type = "text/css";
         var cssText="";
-        cssText+= ".loggingContainer{height:100%;width:100%;position:fixed;z-index:1000;left:0;top:0;background-color: white;opacity:0.7;}\n";
-        cssText+= ".logShowAndHideButton{position:fixed;z-index:1001;right:0;bottom:0;background-color: #A0A0A0;opacity:0.7;}\n";
-        cssText+= ".logShowAndHideButton{font-size:24pt;color:black;padding:8px;}\n";
-        cssText+= "\n";
-        cssText+= "\n";
         cssText+= ".loggingContainer {display:flex;flex-flow: column;}\n";
         cssText+= ".loggingDisplay .level1 {color:gray;}\n";
         cssText+= ".loggingDisplay .level2 {color:black;}\n";
         cssText+= ".loggingDisplay .level3 {color:green;}\n";
         cssText+= ".loggingDisplay .level4 {color:orange;}\n";
         cssText+= ".loggingDisplay .level5 {color:red;}\n";
+        cssText+= ".loggingDisplay .stacktrace {font-size:0.7em;}\n";
         cssText+= ".loggingDisplay {overflow:scroll;}\n";
         cssText+= ".loggingDisplay {font-family:consolas, monospace;}\n";
-        cssText+= ".loggingDisplay {display: flex;flex-flow: column;  height: 100%;}\n";
+        //cssText+= ".loggingDisplay {display: flex;flex-flow: column;  height: 100%;}\n";
+        cssText+= ".loggingDisplay {flex-grow:1;}\n";
         cssText+= ".loggingControls {padding:4px;}\n";
         cssText+= ".loggingControls * {margin:4px;}\n";
         css.innerHTML=cssText;
         logContainer.ownerDocument.head.appendChild(css);
 
         getVisibilityFromButtonsAndSetVisibility();
-        
+
     }
 
     function timestamp(){
@@ -129,13 +144,55 @@ var Log = (function () {
 
         return ""+m+":"+s+"."+ms;
     }
+
     function prependChild(elem){
         if (display!=null){
             display.insertBefore(elem,display.firstChild);
         }else{
-            throw "No display element! Make sure init() is called with proper HTML element."
+            throw "No display element! Make sure init() was called."
         }
     }
+
+    function getCallLocationAtDepth(depth){
+        //stack trace
+        var stacktrace = (new Error()).stack;
+        //alert(stacktrace);
+        if (!stacktrace)//internet explorer doesn't support Error.stack
+            return "";
+        var stacks = stacktrace.split("\n");
+
+        //The weird code below
+        //is due to how different browsers return a differently formatted Error.stack
+        //var stackdepth=0;
+        var callLocation = '';
+
+        callLocation = stacks[depth + (stacks[0].trim() == "Error")];
+
+        /*
+        while (stackdepth<(depth+1)){ //+1 because of this function
+            callLocation=stacks.shift().trim();
+
+            //Chrome-based browsers
+            //will have "Error" as the first line of the stack trace
+            //which does not count as a call location
+            //Firefox does not have this first line
+            //and begins the stack trace right away
+            //thus this conditional.
+            if (callLocation!=="Error") stackdepth++; 
+        }
+        //*/
+
+        //get only the last file
+        var callLocationFormatted=callLocation.split("/").pop();
+
+        //the below regex will convert
+        // index.html:123:45) --> index.html:123
+        callLocationFormatted=/.*?:[^:]*/.exec(callLocationFormatted)[0];
+
+        return callLocationFormatted;
+
+    }
+
     function print(level,message){
         if (display!=null){
 
@@ -143,25 +200,35 @@ var Log = (function () {
 
             var elem=display.ownerDocument.createElement("div");
             elem.classList.add("level" + level);
-            
+
             //level & time
             var levelChar=levelToCharacter[level];
-            //stack trace
-            var stacktrace=(new Error()).stack;
-            var stacks=stacktrace.split("\n");
-            var lastExternalCallLocation=stacks[3].trim();
-            //var callLocationFormatted=/\/[^/]*:/.exec(lastExternalCallLocation)[0].slice(0,-1);//lastExternalCallLocation.split("/").pop().replace(")","");
-            callLocationFormatted = lastExternalCallLocation.substring(lastExternalCallLocation.lastIndexOf(root_dir_name)).slice(root_dir_name.length - 1, -1);
-            
+
+
+            var callLocation=getCallLocationAtDepth(3);
+            //if there's no filename, prepend index.html
+            if (callLocation.charAt(0)==":") callLocation="index.html"+callLocation;
+
             //alert(lastExternalCallLocation);
-            elem.innerHTML+="["+levelChar+"|"+timestamp()+"|"+callLocationFormatted+"] ";
-            elem.innerHTML+=message;
-            
-            
+            var information="["+levelChar+"|"+timestamp()+"|"+callLocation+"] ";
+            elem.innerHTML+=information;
+
+            // newlines are converted to <br>
+            var messageSplit=message.split("\n");
+            for(var i=0;i<messageSplit.length;i++){
+                if (i!=0) {
+                    elem.innerHTML+="<br>";
+                    elem.innerHTML+="&nbsp".repeat(information.length);
+                }
+                elem.innerHTML+=messageSplit[i]
+            }
+
+
+
             //if current level is disabled, hide it.
             elem.style.display =
                 currentVisibilityOptions[level] ?
-                "inline" : "none";
+                "block" : "none";
 
 
             //elem.appendChild(display.ownerDocument.createElement("br"));
@@ -172,6 +239,39 @@ var Log = (function () {
             throw "No display element! Make sure init() is called with proper HTML element."
         }
 
+    }
+    function printStackTrace(error){
+        if (display!=null){
+            var message=error.stack;
+
+
+
+            var elem=display.ownerDocument.createElement("div");
+            elem.classList.add("level5");
+            elem.classList.add("stacktrace");
+
+            if (!message){ //For browsers not supporting Error.stack
+                elem.innerHTML="This browser does not support Error stack traces.";
+            }else{
+                // newlines are converted to <br>
+                var messageSplit=message.split("\n");
+                elem.innerHTML+="------Stack Trace------<br>";
+                for(var i=0;i<messageSplit.length;i++){
+                    if (i!=0) {
+                        elem.innerHTML+="<br>";
+                    }
+                    elem.innerHTML+=messageSplit[i]
+                }
+                elem.innerHTML+="<br>-----------------------";
+            }
+            elem.style.display =
+                    currentVisibilityOptions[5] ?
+                    "block" : "none";
+            prependChild(elem);
+            levelElements[5].push(elem);
+        }else{
+            throw "No display element! Make sure init() is called with proper HTML element."
+        }
     }
     function verbose(message){
         print(1,message);
@@ -186,6 +286,7 @@ var Log = (function () {
         print(4,message);
     }
     function error(message){
+        printStackTrace(new Error());
         print(5,message);
     }
 
@@ -228,7 +329,7 @@ var Log = (function () {
 
     function setVisibility(level, b)
     {
-        var d = b ? "inline" : "none";
+        var d = b ? "block" : "none";
         var a = levelElements[level];
         for (var i = 0; i < a.length; i++)
         {

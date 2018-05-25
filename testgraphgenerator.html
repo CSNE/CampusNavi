@@ -71,82 +71,50 @@
         }
         .input
         {
+            display: inline-block;
+            vertical-align: bottom;
+            height: 1em;
+            padding: 2px;
+            border: 1px solid blue;
             color: blue;
         }
+        .label
+        {
+            display: inline-block;
+            vertical-align: bottom;
+            height: 1em;
+            padding: 2px;
+        }
 
-        #debugMsgBox {
+        #json_panel
+        {
+            display: flex;
+            flex-flow: row;
             height: 20%;
+        }
+        #json_string {
+            display: inline-block;
+            vertical-align: bottom;
+            width: 90%;
+            height: 100%;
+        }
+        #btn_container
+        {
+            display: inline-block;
+            vertical-align: bottom;
+            width: 10%;
+            height: 100%;
+        }
+        #btn_in,
+        #btn_out {
+            display: block;
+            width: 100%;
+            height: 50%;
         }
     </style>
 
-    <script>
-        function List() {
-            this.h = {};
-            this.h.next = this.h;
-            this.h.prev = this.h;
-            this.h.isHeader = true;
-
-            this.add = function (e) {
-                var ret = { v: e, next: this.h, prev: this.h.prev };
-                this.h.prev.next = ret;
-                this.h.prev = ret;
-                return ret;
-            }
-
-            this.remove = function (n)//static
-            {
-                n.prev.next = n.next;
-                n.next.prev = n.prev;
-            }
-
-            function Iterator(l) {
-                this.p = l.h.next;
-
-                this.end = function () {
-                    return this.p.isHeader;
-                }
-
-                this.next = function () {
-                    this.p = this.p.next;
-                }
-
-                this.get = function () {
-                    return this.p.v;
-                }
-
-                this.remove = function () {
-                    this.p.prev.next = this.p.next;
-                    this.p.next.prev = this.p.prev;
-                }
-            }
-
-            this.iterator = function () {
-                return new Iterator(this);
-            }
-        }
-
-        var V = new List(), E = new List();
-
-        function updateVertex(v)
-        {
-            v.layer.setLatLng(v.loc);
-            v.layer.setTooltipContent("[" + v.id + "]: " + v.name);
-            v.targetElement.input_id.innerHTML = v.id;
-            v.targetElement.input_name.innerHTML = v.name;
-        }
-
-        function setLocation(e, loc)
-        {
-            e.loc = loc;
-            updateVertex(e);
-        }
-
-        var vertex_style_default =  { bubblingMouseEvents: false, radius: 12, stroke: false, fill: true, fillOpacity: 1, fillColor: "blue" };
-        var vertex_style_selected = { bubblingMouseEvents: false, radius: 12, stroke: true, weight: 4, color: "lime", fill: true, fillOpacity: 1, fillColor: "blue" };
-        var edge_style_default =    { bubblingMouseEvents: false, weight: 4, color: "red" };
-        var edge_style_selected =   { bubblingMouseEvents: false, weight: 4, color: "lime" };
-
-    </script>
+    <script src="util.js"></script>
+    <script src="testgraphgenerator.js"></script>
 
 </head>
 
@@ -154,159 +122,24 @@
     <!-- 지도 div -->
     <div id="mapid"></div>
 
-    <script>
-        var selected;
-
-        function select(e)
-        {
-            if (e != selected)
-            {
-                if (selected)
-                {
-                    unselect[selected.type](selected);
-                }
-                select[e.type](e);
-                selected = e;
-            }
-        }
-        var unselect = {};
-
-        select["vertex"] = function (e) {
-            e.targetElement.classList.add("selected");
-            e.layer.setStyle(vertex_style_selected);
-        }
-        select["edge"] = function (e) {
-            e.targetElement.classList.add("selected");
-            e.layer.setStyle(edge_style_selected);
-        }
-        unselect["vertex"] = function (e) {
-            selected.targetElement.classList.remove("selected");
-            selected.layer.setStyle(vertex_style_default);
-        }
-        unselect["edge"] = function (e) {
-            selected.targetElement.classList.remove("selected");
-            selected.layer.setStyle(edge_style_default);
-        }
-
-        
-        function element_click(e)
-        {
-            var s = e.target;
-            while (!s.targetObj)
-                s = s.parentNode;
-            select(s.targetObj);
-        }
-        function element_value_change(e)
-        {
-            //alert(e);
-            var s = e.target;
-            var o = s.parentNode.targetObj;
-            o[s.name] = prompt(s.name, o[s.name]);
-            updateVertex(o);
-        }
-        function layer_click(e)
-        {
-            select(e.target.targetObj);
-        }
-
-        function create_new_element(btn)
-        {
-            var e = btn.ownerDocument.createElement("div");
-            e.classList.add("listelement");
-            //e.innerHTML = "test";
-            btn.parentNode.insertBefore(e, btn);
-            return e;
-        }
-        function create_new_vertex(btn) {
-            if (!this.c)
-                this.c = 0;
-            var e = create_new_element(btn);
-            e.addEventListener("click", element_click);
-            var obj = { type: "vertex", id: "v" + this.c++, name: "New vertex", loc: getDefaultLocation() };
-            obj.targetElement = e;
-            obj.layer = L.circleMarker(obj.loc, vertex_style_default)
-                .on("click", layer_click)
-                .addTo(mymap);
-            obj.node = V.add(obj);
-            obj.layer.targetObj = obj;
-            e.targetObj = obj;
-            //alert(obj.loc);
-            var doc = btn.ownerDocument;
-            var s;
-
-            s = doc.createElement("span");
-            s.innerHTML = "id: ";
-            e.appendChild(s);
-
-            s = doc.createElement("span");
-            s.classList.add("input");
-            s.name = "id";
-            s.addEventListener("click", element_value_change);
-            s.innerHTML = obj.id;
-            e.input_id = s;
-            e.appendChild(s);
-
-            s = doc.createElement("span");
-            s.innerHTML = ", name: ";
-            e.appendChild(s);
-
-            s = doc.createElement("span");
-            s.classList.add("input");
-            s.name = "name";
-            s.addEventListener("click", element_value_change);
-            s.innerHTML = obj.name;
-            e.input_name = s;
-            e.appendChild(s);
-
-            updateVertex(obj);
-        }
-
-        function create_new_edge(btn) {
-            var e = create_new_element(btn);
-            e.addEventListener("click", element_click);
-            var obj = { type: "edge", name: "New Edge", vs: undefined, ve: undefined, w: null, f: {} };
-            obj.targetElement = e;
-            obj.layer = L.polyline([getDefaultLocation()], edge_style_default)
-                .on("click", layer_click)
-                .addTo(mymap);
-            obj.node = E.add(obj);
-            obj.layer.targetObj = obj;
-            e.targetObj = obj;
-            //alert(obj.loc);
-            var doc = btn.ownerDocument;
-            var s;
-
-            s = doc.createElement("span");
-            s.innerHTML = "name: ";
-            e.appendChild(s);
-
-            s = doc.createElement("span");
-            s.classList.add("input");
-            s.name = "name";
-            s.addEventListener("click", element_value_change);
-            s.innerHTML = obj.name;
-            e.input_name = s;
-            e.appendChild(s);
-
-            updateVertex(obj);
-        }
-
-    </script>
-
     <div id="uipanel">
         <div class="listcontainer">
             <div id="vlist" class="list">
-                <div class="newbutton" onclick="create_new_vertex(this)">Create Vertex</div>
+                <div id="vbtn" class="newbutton" onclick="create_new_vertex(this)">Create Vertex</div>
             </div>
         </div><div class="listcontainer">
-            <div id="vlist" class="list">
-                <div class="newbutton" onclick="create_new_edge(this)">Create Edge</div>
+            <div id="elist" class="list">
+                <div id="ebtn" class="newbutton" onclick="create_new_edge(this)">Create Edge</div>
             </div>
         </div>
     </div>
-
-    <!-- Log div -->
-    <div id="debugMsgBox"></div>
+    <div id="json_panel">
+        <textarea id="json_string"></textarea
+        ><div id="btn_container">
+            <button id="btn_out">Store</button>
+            <button id="btn_in">Parse</button>
+        </div>
+    </div>
 
     <!-- 자바스크립트 -->
     <!-- 로그 시작 -->
@@ -317,7 +150,7 @@
     <script src="graphentities.js"></script>
     <script src="graphcalculations.js"></script>
     <script src="path.js"></script>
-    <script src="geodata.js"></script>
+    <!--<script src="geodata.js"></script>-->
     <script src="timetable.js"></script>
     <script src="userdata.js"></script>
     <script src="weather.js"></script>
@@ -333,22 +166,65 @@
         accessToken: 'pk.eyJ1IjoiY2hhbnNvbDk4IiwiYSI6ImNqZ25henV1dTJibjgycXBxeGczaWk2enMifQ.w474LPaUpTnZiQnw5E3Ujg'
         }).addTo(mymap);
 
+        var pane_vertices = mymap.createPane("vertices", mymap.getPane("overlayPane"));
+        var pane_edges = mymap.createPane("edges", mymap.getPane("overlayPane"));
+        var pane_selected = mymap.createPane("selected", mymap.getPane("overlayPane"));
+        pane_vertices.style.zIndex = 1002;
+        pane_edges.style.zIndex = 1001;
+        pane_selected.style.zIndex = 1003;
+
         // 지도에 마커 생성.
         // 초기 위치는 연세대 정문.
         var currentLocationMarker=L.marker(L.latLng(CoordinateConversions.centerCoords.lat,
                                                     CoordinateConversions.centerCoords.long),
                                             {"title":"Your location","autoPan":true});
-        currentLocationMarker.addTo(mymap);
+        //currentLocationMarker.addTo(mymap);
 
         mymap.on("click", function (e) {
-            if (e.sourceTarget == mymap)
-                setLocation(selected, e.latlng);
+            //if (e.sourceTarget == mymap && selected && selected.type == "vertex")
+                //setLocation(selected, e.latlng);
         });
 
-        function getDefaultLocation()
-        {
-            return mymap.getCenter();
+        function getDefaultLocation() {
+            var latlng = mymap.getCenter();
+            return [latlng.lat, latlng.lng, 0];
         }
+
+        var jsonout = document.getElementById("json_string");
+
+        function json_output()
+        {
+            var data = escape(getCurrentJSON());
+            jsonout.value = data;
+            storeData(data);
+        }
+        function json_input()
+        {
+            clearAll();
+            applyData(jsonout.value);
+        }
+
+        document.getElementById("btn_out").addEventListener("click", function () {
+            json_output();
+        });
+        document.getElementById("btn_in").addEventListener("click", function () {
+            try {
+                json_input();
+            } catch (e) {
+                Log.error(e.message);
+                return;
+            }
+            json_output();
+        });
+
+        //document.body.addEventListener("load", function () {
+        (function() {
+            var data = loadData();
+            if (data)
+            {
+                applyData(data);
+            }
+        })();
 
     </script>
 </body>

@@ -1,46 +1,53 @@
 //위치 정보 관련
 var GPS=(function(){
     var callbackFunctions=[];
-    
+
     var locationHistory=[]; //history of the past locations.
     var locationHistorySize=100;
-  
+
     var accuracyRejectionThreshold=100;
-    
+
     function locationCallback(position){
         var lat=position.coords.latitude;
         var long=position.coords.longitude;
         var alt=position.coords.altitude;
         if (alt===null) alt=0;
         var acc=position.coords.accuracy;
-        
+
         if (acc>accuracyRejectionThreshold){
-            Log.debug("GPS data rejected due to low accuracy. (accuracy="+acc+"m)");
+            Log.verbose("GPS data rejected due to low accuracy. (accuracy="+acc+"m)");
             return;
         }
-        
-        Log.verbose("LAT "+lat+" | LONG "+long+" | ALT "+alt+" | ACC "+acc);
-        
-        var newLocation=new CoordinateSystem(position.coords.latitude,position.coords.longitude,position.coords.altitude);
+
+        Log.verbose("GPS Data Acquired.\nLAT "+lat+"\nLONG "+long+"\nALT "+alt+"\nACC "+acc);
+
+        var newLocation= Coordinates.fromGeoloationCoords(position.coords);
+
+        updateLocation(newLocation);
+
+    }
+    function updateLocation(newLocation){ //location is a Coordinatesystem
         newLocation.timestamp=Date.now();
-        
+
         locationHistory.unshift(newLocation);
         while (locationHistory.length>locationHistorySize){
             locationHistory.pop();
         }
-        
+
         for(var i=0;i<callbackFunctions.length;i++){
             callbackFunctions[i](newLocation);
         }
-        
-        
     }
     function locationErrorCallback(positionError){
         Log.warning("Error Callback: "+positionError.code+" | "+positionError.message);
     }
-    
-    
+
+    var watchID=null;
     function startTracking(){
+        if (watchID!==null){
+            Log.warning("GPS is already being tracked! startTracking() request ignored.");
+            return;
+        }
         /*
         GPS 시작.
         */
@@ -49,7 +56,7 @@ var GPS=(function(){
 
         // 위치정보 요청
         if ("geolocation" in navigator) {
-            Log.info("Geolocation available.");
+            Log.info("Geolocation available!");
 
             var options = {
                 enableHighAccuracy: true,
@@ -57,12 +64,23 @@ var GPS=(function(){
                 maximumAge: 0
             };
 
-            var watchID = navigator.geolocation.watchPosition(locationCallback,locationErrorCallback,options);
+            watchID = navigator.geolocation.watchPosition(locationCallback,locationErrorCallback,options);
             Log.debug("watchPosition done");
         } else {
             Log.error("Geolocation NOT available.");
         }
-
+    }
+    function stopTracking(){
+        if (watchID===null){
+            Log.warning("stopTracking() called but GPS is not being tracked! ignoring.");
+            return;
+        }
+        navigator.geolocation.clearWatch(watchID);
+        watchID=null;
+    }
+    function forceCurrentLocation(coordinateSystem){
+        //FOR DEBUG & TESTING PURPOSES ONLY!
+        updateLocation(coordinateSystem);
     }
     function getCurrentLocation(){
         /*
@@ -81,6 +99,8 @@ var GPS=(function(){
     return {
         "startTracking":startTracking,
         "getCurrentLocation":getCurrentLocation,
-        "addLocationListener":addLocationListener
+        "addLocationListener":addLocationListener,
+        "stopTracking":stopTracking,
+        "forceCurrentLocation":forceCurrentLocation
     }
 })();
