@@ -1,7 +1,6 @@
 function Vector(x,y,z){
     if (Number.isNaN(x+y+z)){
-        Log.error("NaN in Vector! See JS console for stack trace.");
-        throw new Error();
+        Log.error("NaN in Vector!");
     } 
     this.x=x;
     this.y=y;

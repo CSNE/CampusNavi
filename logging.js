@@ -117,6 +117,7 @@ var Log = (function () {
         cssText+= ".loggingDisplay .level3 {color:green;}\n";
         cssText+= ".loggingDisplay .level4 {color:orange;}\n";
         cssText+= ".loggingDisplay .level5 {color:red;}\n";
+        cssText+= ".loggingDisplay .stacktrace {font-size:0.7em;}\n";
         cssText+= ".loggingDisplay {overflow:scroll;}\n";
         cssText+= ".loggingDisplay {font-family:consolas, monospace;}\n";
         //cssText+= ".loggingDisplay {display: flex;flex-flow: column;  height: 100%;}\n";
@@ -148,7 +149,7 @@ var Log = (function () {
         if (display!=null){
             display.insertBefore(elem,display.firstChild);
         }else{
-            throw "No display element! Make sure init() is called with proper HTML element."
+            throw "No display element! Make sure init() was called."
         }
     }
 
@@ -239,6 +240,35 @@ var Log = (function () {
         }
 
     }
+    function printStackTrace(error){
+        if (display!=null){
+            var message=error.stack;
+
+            var elem=display.ownerDocument.createElement("div");
+            elem.classList.add("level5");
+            elem.classList.add("stacktrace");
+            
+            // newlines are converted to <br>
+            var messageSplit=message.split("\n");
+            elem.innerHTML+="------Stack Trace------<br>";
+            for(var i=0;i<messageSplit.length;i++){
+                if (i!=0) {
+                    elem.innerHTML+="<br>";
+                }
+                elem.innerHTML+=messageSplit[i]
+            }
+            elem.innerHTML+="<br>-----------------------";
+            
+            elem.style.display =
+                currentVisibilityOptions[5] ?
+                "block" : "none";
+
+            prependChild(elem);
+            levelElements[5].push(elem);
+        }else{
+            throw "No display element! Make sure init() is called with proper HTML element."
+        }
+    }
     function verbose(message){
         print(1,message);
     }
@@ -252,6 +282,7 @@ var Log = (function () {
         print(4,message);
     }
     function error(message){
+        printStackTrace(new Error());
         print(5,message);
     }
 
