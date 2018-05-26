@@ -127,7 +127,10 @@
       }
       #navigation_routename{grid-area:routename;}
       #navigation_targettime{grid-area:targettime;}
-      #navigation_canvas{grid-area:canvas;}
+      #navigation_canvas{
+        grid-area:canvas;
+        height:100px;
+      }
       #navigation_timeremaining{grid-area:timeremaining;}
       #navigation_eta{grid-area:eta;}
 
@@ -202,7 +205,11 @@
 
             <div id="navigation_routename"></div>
             <div id="navigation_targettime"></div>
-            <div id="navigation_canvas"></div>
+            <div id="navigation_canvas">
+              <canvas id="navigation_canvas_element" style="height:100%;width:100%; margin:0;">
+                Canvas not supported! Update your browser before you turn into a fossil.
+              </canvas>
+            </div>
             <div id="navigation_timeremaining"></div>
             <div id="navigation_eta"></div>
           </div>
@@ -290,6 +297,21 @@
         opt.setAttribute("value",GraphDatabase.vertices[i].name);
         destinationsDataList.appendChild(opt);
       }
+      
+      //Icons
+      var route_icon_path = {
+        walk: "icons/baseline-directions_walk-24px.png",
+        run: "icons/baseline-directions_run-24px.png",
+        fly: "icons/baseline-directions_run-24px.png"
+      };
+      var route_icon_HTMLImageElement={
+        walk: new Image(),
+        run: new Image(),
+        fly: new Image()
+      }
+      route_icon_HTMLImageElement.walk.src=route_icon_path.walk;
+      route_icon_HTMLImageElement.run.src=route_icon_path.run;
+      route_icon_HTMLImageElement.fly.src=route_icon_path.fly;
 
       //HTML DOM 변수들.
       var uipanel_search=document.getElementById("uipanel_search");
@@ -316,6 +338,94 @@
       var navigation_eta=document.getElementById("navigation_eta");
 
       var navigation_button_goback=document.getElementById("uipanel_navigation_goback");
+      
+      
+      //Canvas
+      var canvasContainer=document.getElementById("navigation_canvas");
+      var canvas=document.getElementById("navigation_canvas_element");
+          
+      var canvasContext=canvas.getContext("2d");
+      
+      
+      function displayProgessOnCanvas(completionRatio,imageElementObject){
+        canvas.height=canvasContainer.offsetHeight;
+        canvas.width=canvasContainer.offsetWidth;
+        
+        var currentCanvasW=canvas.width;
+        var currentCanvasH=canvas.height;
+        
+        var rectMarginX=20;
+        var rectMarginY=20;
+        
+        var rectHeight=10;
+        
+        var rectWidth=currentCanvasW-rectMarginX*2;
+        var rectCompletedWidth=Math.round(rectWidth*completionRatio);
+        var rectUncompletedWidth=rectWidth-rectCompletedWidth;
+        
+        var rectCompletedStartX=rectMarginX;
+        var rectCompletedStartY=currentCanvasH-rectMarginY-rectHeight;
+        var rectUnCompletedStartX=rectMarginX+rectCompletedWidth;
+        var rectUnCompletedStartY=rectCompletedStartY;
+        
+        
+        canvasContext.clearRect(0,0,currentCanvasW,currentCanvasH);
+        
+        //Completed Part
+        canvasContext.fillStyle="#000000";
+        canvasContext.fillRect(rectCompletedStartX,
+                               rectCompletedStartY,
+                               rectCompletedWidth,
+                               rectHeight);
+        
+        //Uncompleted Part
+        canvasContext.fillStyle="#707070";
+        canvasContext.fillRect(rectUnCompletedStartX,
+                               rectUnCompletedStartY,
+                               rectUncompletedWidth,
+                               rectHeight);
+        
+        
+        //Icon
+        var imageSizeX=30;
+        var imageSizeY=30;
+        var imageMarginY=0;
+        
+        var imageCenterX=rectUnCompletedStartX;
+        var imageEndY=rectUnCompletedStartY-imageMarginY;
+        
+        var imageStartX=imageCenterX-imageSizeX/2;
+        var imageStartY=imageEndY-imageSizeY;
+        
+        canvasContext.drawImage(imageElementObject,
+                                imageStartX,
+                                imageStartY,
+                                imageSizeX,
+                                imageSizeY);
+        
+        var imageEndX=imageStartX+imageSizeX;
+        
+        //Text
+        var textMarginY=5;
+        var textY=imageEndY-textMarginY;
+        
+        canvasContext.fillStyle="#000000";
+        canvasContext.font="16px sans-serif";
+        if (completionRatio<0.5){
+          canvasContext.textAlign="left";
+          canvasContext.fillText((completionRatio*100).toFixed(1)+"%",
+                                 imageEndX,
+                                 textY);
+          
+        }else{
+          canvasContext.textAlign="right";
+          canvasContext.fillText((completionRatio*100).toFixed(1)+"%",
+                                 imageStartX,
+                                 textY);
+        }
+        
+      }
+      
 
 
       //UI 이벤트 처리 함수들.
@@ -334,11 +444,7 @@
         uipanel_navigation.style.display="block";
       }
 
-      var route_icon_path = {
-        walk: "icons/baseline-directions_walk-24px.png",
-        run: "icons/baseline-directions_run-24px.png",
-        fly: "icons/baseline-directions_run-24px.png"
-      };
+      
 
       // UI Mode: Search --> RouteListing
       function enterRouteListingMode(paths){
@@ -407,7 +513,9 @@
           navigation_timeremaining.innerHTML="남은시간: "+(data.timeLeft/1000).toFixed()+"sec.";
           var d=new Date(data.arrivalTime);
           navigation_eta.innerHTML="예상도착시간: "+d.getMinutes()+":"+d.getSeconds();
-        })
+          displayProgessOnCanvas(data.routeCompletionRatio,
+                                 route_icon_HTMLImageElement[path.pref.time_name]);
+        });
       }
 
 
