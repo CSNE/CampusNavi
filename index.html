@@ -483,7 +483,7 @@
       function enterNavigationMode(path){
         Log.info("Navigation mode entered."+path.from.name+">>"+path.to.name+"["+path.pref.time_name+"]")
         
-          var navContext=new NavigationContext(path);
+        var navContext=new NavigationContext(path);
           
         GPS.addLocationListener(function(location){
           navContext.updateLocation(location);
@@ -511,11 +511,24 @@
         
         navContext.addContextUpdateListener(function(data){
           navigation_timeremaining.innerHTML="남은시간: "+(data.timeLeft/1000).toFixed()+"sec.";
-          var d=new Date(data.arrivalTime);
-          navigation_eta.innerHTML="예상도착시간: "+d.getMinutes()+":"+d.getSeconds();
+          navigation_eta.innerHTML="예상도착시간: "+Util.timeStampToFormattedTime(data.arrivalTime);
           displayProgessOnCanvas(data.routeCompletionRatio,
                                  route_icon_HTMLImageElement[path.pref.time_name]);
         });
+        
+        //TODO this is a memory leak!
+        //All the objects are not actually released
+        //and event listeners are not removed.
+        //find a better solution.
+        var exited=false;
+        var exitNavigationMode=function(){
+          if (exited) return;
+          exited=true;
+          navContext.deactivate();
+          path.removeFromMap(mymap);
+        }
+        navigation_button_goback.addEventListener("click",exitNavigationMode);
+        
       }
 
 

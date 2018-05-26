@@ -112,6 +112,7 @@ function NavigationContext(path){
     //The calculated, useful values are stored in .currentStatus
     //and is also available with a callback function (see .addContextUpdateListener())
     this.updateLocation=function(location){
+        if (!this.active) return;
         //We need to do a lot of shit here
         var result=findClosestEdgeInPath(path,location);
         var totalTimeInitialEstimate=path.timeRequired;
@@ -226,6 +227,13 @@ function NavigationContext(path){
         for(var i=0;i<this.callbacks.length;i++){
             this.callbacks[i](data);
         }
+    }
+    
+    //TODO deactivating this way does not remove the actual object
+    //and thus is a memory leak!
+    this.active=true;
+    this.deactivate=function(){
+      this.active=false;
     }
     
     Log.debug("Navigation Context Created.\nTarget path is "+this.path.from.name+" >> "+this.path.to.name);

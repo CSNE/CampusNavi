@@ -4,9 +4,23 @@ var Util = (function () {
         var sec = Math.round(seconds % 60);
         return "" + min + "min" + sec + "sec.";
     }
+    function timeStampToFormattedTime(timestamp){
+        var d=new Date(timestamp);
+        
+        var h=""+d.getHours();
+        var m=""+d.getMinutes();
+        var s=""+d.getSeconds();
+        
+        while (h.length<2) h="0"+h;
+        while (m.length<2) m="0"+m;
+        while (s.length<2) s="0"+s;
+        
+        return h+":"+m+":"+s;
+    }
 
     return {
-        "humanReadableTime": humanReadableTime
+        "humanReadableTime": humanReadableTime,
+        "timeStampToFormattedTime":timeStampToFormattedTime
     }
 })();
 
