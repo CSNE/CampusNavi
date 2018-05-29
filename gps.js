@@ -19,15 +19,20 @@ var GPS=(function(){
             return;
         }
 
-        Log.verbose("GPS Data Acquired.\nLAT "+lat+"\nLONG "+long+"\nALT "+alt+"\nACC "+acc);
+        
 
         var newLocation= Coordinates.fromGeoloationCoords(position.coords);
+      
+      
+        Log.verbose("GPS Data Acquired. Accuracy= "+acc+"m");
 
         updateLocation(newLocation);
 
     }
     function updateLocation(newLocation){ //location is a Coordinatesystem
         newLocation.timestamp=Date.now();
+      
+        Log.verbose("GPS Location updated.\n"+newLocation.toString());
 
         locationHistory.unshift(newLocation);
         while (locationHistory.length>locationHistorySize){

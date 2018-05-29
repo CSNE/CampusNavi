@@ -497,6 +497,7 @@
         GPS.addLocationListener(function(location){
           navContext.updateLocation(location);
           if (!navContext.DEBUG_VARIABLE) Log.error("NULL???");
+          Log.debug("Debug Marker at\n"+navContext.DEBUG_VARIABLE.closestLocation.toString());
           debugMarker.setLatLng(navContext.DEBUG_VARIABLE.closestLocation.toLatLng());
         });
         displayNavigationPanel();
@@ -589,6 +590,7 @@
         Log.info("Entering fake location mode");
         GPS.stopTracking();
         mymap.on("click",function(e){
+          e.latlng.alt=0; //e.latlng.alt==NaN for mouse clicks.          
           var location=Coordinates.fromLatLng(e.latlng);
           GPS.forceCurrentLocation(location);
         })
