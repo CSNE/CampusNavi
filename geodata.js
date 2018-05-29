@@ -116,6 +116,8 @@ function createDataJson()
         var vo = new Vertex(v.loc[0], v.loc[1], v.loc[2]);
         vo.name = v.name;
         v_by_id[v.id] = vo;
+        //Log.verbose("Vertex[\"" + vo.name + "\"]: (" + vo.coordinates.x + ", " + vo.coordinates.y + ", " + vo.coordinates.z + ")");
+        //Log.verbose("Vertex[\"" + vo.name + "\"]: (" + v.loc + ")");
         masterGraph.addVertex(vo);
     }
 
@@ -149,7 +151,7 @@ function createDataJson()
         {
             var d = e.vStart.coordinates.getDistance(e.vEnd.coordinates);
             e.timeRequired = { "walk": d, "run": d / 2, "fly": d / 30 };
-            Log.verbose("<" + e.vStart.name + ", " + e.vEnd.name + ">: " + d);
+            //Log.verbose("<" + e.vStart.name + ", " + e.vEnd.name + ">: " + d);
         }
     }
     //

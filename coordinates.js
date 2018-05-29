@@ -18,48 +18,67 @@ var CoordinateConversions=(function(){
     // 연세대 정문 좌표임.
     // 경도-위도-고도 좌표계를 XYZ 좌표계로 변환시 원점 기준이 됨.
     // 따라서 연세대 정문은 (0,0,0) 으로 됨.
-    var cartesianCenterCoords={"lat":37.5602,"long":126.9368,"alt":50};
+    var cartesianCenterCoords={"lat":37.5602,"long":126.9368,"alt":0};
 
     //지구 반지름 등 경도-위도 좌표계를 변환하기 위한 상수들
     var earthRadius=6.3781e6;
     var earthCircumference=2*Math.PI*earthRadius;
     var metersPerDegreeLatitude=earthCircumference/360;
     var earthCircumferenceAtLatitude=2*Math.PI*earthRadius*sind(cartesianCenterCoords.lat);
-    var metersPerDegreeLongitude=earthCircumferenceAtLatitude/360;
+    var metersPerDegreeLongitude = earthCircumferenceAtLatitude / 360;
     
+    var transform = Matrix44Identity(), inverset;
+    var center = coordsToCartesian(cartesianCenterCoords);
+    //rotate translate
+    transform = MatrixMultiply(MatrixTranslate([-center.x, -center.y, -center.z]), transform);
+    transform = MatrixMultiply(Matrix44Rotate([0, 0, -1], cartesianCenterCoords.long * Math.PI / 180 + Math.PI * 0.5), transform);
+    transform = MatrixMultiply(Matrix44Rotate([-1, 0, 0], Math.PI * 0.5 - cartesianCenterCoords.lat * Math.PI / 180), transform);
+
+    inverset = MatrixInverse(transform);
+    //Log.debug(JSON.stringify(coordsToCartesian({ "lat": 37.5602, "long": 126.9368, "alt": 1000 })));
+
+    //37.560743,126.936078
+    //37.56012270944868,126.93672716617586
     // 위도-경도-고도 좌표를 받아 XYZ 좌표계로 변환.
     // 예시: coordsToCartesian({"lat":37.5,"long":126.9,"alt":10})
     function coordsToCartesian(coords) {
         
+        /*
         var y=(coords.lat-cartesianCenterCoords.lat)*metersPerDegreeLatitude;
         var x=(coords.long-cartesianCenterCoords.long)*metersPerDegreeLongitude;
         var z=coords.alt-cartesianCenterCoords.alt;
 
         return {"x":x,"y":y,"z":z};
-        /*
+        /*/
+        //+x: latlng 0, 0
+        //+z: N
         var r = earthRadius + coords.alt;
         var rp = r * cosd(coords.lat);
+        var v = [rp * cosd(coords.long), rp * sind(coords.long), r * sind(coords.lat)];
+        v = VectorTransform(transform, v);
         return {
-            "x": rp * cosd(coords.long),
-            "y": rp * sind(coords.long),
-            "z": r * sind(coords.lat)
+            "x": v[0],
+            "y": v[1],
+            "z": v[2]
         };
-        */
+        //*/
     }
 
     // XYZ 좌표계를 위도-경도-고도 좌표계로 변환.
     // 예시: cartesianToCoords({"x":10,"y":20,"z":30})
     function cartesianToCoords(coords) {
         
+        /*
         var lat=coords.y/metersPerDegreeLatitude+cartesianCenterCoords.lat;
         var long=coords.x/metersPerDegreeLongitude+cartesianCenterCoords.long;
         var alt=coords.z+cartesianCenterCoords.alt;
 
         return {"lat":lat,"long":long,"alt":alt};
-        /*
-        var r = coords.x * coords.x + coords.y * coords.y + coords.z * coords.z;
-        var alt = r - earthRadius;
-        */
+        /*/
+        var v = VectorTransform(inverset, [coords.x, coords.y, coords.z]);
+        var r = VectorNorm(v);
+        return { "lat": Math.asin(v[2] / r), "long": Math.atan2(v[1], v[0]), "alt": r - earthRadius };
+        //*/
     }
 
 
