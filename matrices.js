@@ -168,6 +168,120 @@ function VectorDot(a, b)
 
 function MatrixInverse(m)
 {
-    //Inverse
-    return m;
+    if (m.r != m.c)
+        return null;
+    var am = MatrixConcatColumns(m, MatrixIdentity(m.r));
+    //Log.debug(JSON.stringify(am));
+    //Log.debug(MatrixToString(am));
+    for (var i = 0; i < m.r; i++)
+    {
+        if (am[i][i] == 0)
+        {
+            for (var j = i + 1; j < m.r; j++)
+            {
+                if (am[j][i] != 0)
+                {
+                    var t = am[i];
+                    am[i] = am[j];
+                    am[j] = t;
+                    break;
+                }
+            }
+            if (am[i][i] == 0) {
+                //alert([i, j]);
+                //alert(JSON.stringify(m));
+                return null;
+            }
+        }
+        //Log.debug(MatrixToString(am));
+        for (var j = i + 1; j < am.c; j++)
+        {
+            am[i][j] /= am[i][i];
+        }
+        am[i][i] = 1;
+        //Log.debug(MatrixToString(am));
+        for (var j = 0; j < m.r; j++)
+        {
+            if (i != j)
+            {
+                for (var k = i + 1; k < am.c; k++)
+                {
+                    am[j][k] -= am[j][i] * am[i][k];
+                }
+                am[j][i] = 0;
+                //Log.debug(MatrixToString(am));
+            }
+        }
+    }
+    //Log.debug(JSON.stringify(MatrixMultiply(MatrixSliceColumns(am, m.r, m.r), m)));
+    //Log.debug(JSON.stringify(MatrixMultiply(m, MatrixSliceColumns(am, m.r, m.r))));
+    //Log.debug(MatrixToString(am));
+    //Log.debug(MatrixToString(MatrixSliceColumns(am, m.r, m.r)));
+    return MatrixSliceColumns(am, m.r, m.r);
+}
+
+function MatrixConcatColumns(a, b)
+{
+    if (a.r != b.r)
+        return null;
+    var ret = MatrixZero(a.r, a.c + b.c);
+    for (var i = 0; i < a.r; i++)
+    {
+        for (var j = 0; j < a.c; j++)
+        {
+            ret[i][j] = a[i][j];
+        }
+        for (var j = 0; j < b.c; j++)
+        {
+            ret[i][a.c + j] = b[i][j];
+        }
+    }
+    return ret;
+}
+
+function MatrixSliceColumns(m, o, c)
+{
+    var ret = MatrixZero(m.r, c);
+    for (var i = 0; i < m.r; i++)
+    {
+        for (var j = 0; j < c; j++)
+        {
+            ret[i][j] = m[i][o + j];
+        }
+    }
+    return ret;
+}
+
+function MatrixToArray(m)
+{
+    var ret = [];
+    for (var i = 0; i < m.r; i++)
+    {
+        ret[i] = m[i];
+    }
+    return ret;
+}
+
+function MatrixToStringArray(m)
+{
+    var ret = [];
+    for (var i = 0; i < m.r; i++) {
+        ret[i] = VectorToStringArray(m[i]);
+    }
+    return ret;
+}
+
+function VectorToStringArray(v)
+{
+    var ret = [];
+    for (var i = 0; i < v.length; i++)
+    {
+        ret[i] = v[i].toPrecision(4);
+    }
+    return ret;
+}
+
+function MatrixToString(m)
+{
+    return MatrixToStringArray(m).join("\n");
 }

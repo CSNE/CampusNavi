@@ -35,7 +35,12 @@ var CoordinateConversions=(function(){
     transform = MatrixMultiply(Matrix44Rotate([-1, 0, 0], Math.PI * 0.5 - cartesianCenterCoords.lat * Math.PI / 180), transform);
 
     inverset = MatrixInverse(transform);
+
+    //Log.debug(MatrixToString(inverset));
+
     //Log.debug(JSON.stringify(coordsToCartesian({ "lat": 37.5602, "long": 126.9368, "alt": 1000 })));
+    //Log.debug(JSON.stringify(cartesianToCoords(coordsToCartesian({ "lat": 37.5602, "long": 126.9368, "alt": 1000 }))));
+    //Log.debug(MatrixToString(MatrixMultiply(transform, inverset)));
 
     //37.560743,126.936078
     //37.56012270944868,126.93672716617586
@@ -76,8 +81,13 @@ var CoordinateConversions=(function(){
         return {"lat":lat,"long":long,"alt":alt};
         /*/
         var v = VectorTransform(inverset, [coords.x, coords.y, coords.z]);
+        //Log.debug([JSON.stringify(coords), JSON.stringify(v)].toString());
         var r = VectorNorm(v);
-        return { "lat": Math.asin(v[2] / r), "long": Math.atan2(v[1], v[0]), "alt": r - earthRadius };
+        return {
+            "lat": Math.asin(v[2] / r) * 180 / Math.PI,
+            "long": Math.atan2(v[1], v[0]) * 180 / Math.PI,
+            "alt": r - earthRadius
+        };
         //*/
     }
 
