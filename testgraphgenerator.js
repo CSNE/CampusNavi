@@ -59,6 +59,18 @@ function setLocation(e, loc) {
 function updateEdge(e) {
     e.layer.setLatLngs([e.vs ? e.vs.loc : getDefaultLocation(), e.ve ? e.ve.loc : getDefaultLocation()])
     updateInputs(e.targetElement.inputs, e);
+    if (e.vs && e.ve)
+        Log.verbose("last edge length: " + getDistance(e.vs.loc, e.ve.loc));
+}
+
+function getDistance(a, b)
+{
+    Log.debug(a.toString());
+    Log.debug(b.toString());
+    var ca = CoordinateConversions.coordsToCartesian({ "lat": a[0], "long": a[1], "alt": a[2] });
+    var cb = CoordinateConversions.coordsToCartesian({ "lat": b[0], "long": b[1], "alt": b[2] });
+    var v = [ca.x - cb.x, ca.y - cb.y, ca.z - cb.z];
+    return Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
 var vertex_style_default = { bubblingMouseEvents: false, pane: "vertices", radius: 12, stroke: false, fill: true, fillOpacity: 1, fillColor: "blue" };
@@ -140,7 +152,7 @@ function applyData(data) {
     var eb = document.getElementById("ebtn");
     for (var i = 0; i < obj.vertices.length; i++) {
         var o = obj.vertices[i];
-        if (o.loc.lat) {
+        if (o.loc.lat !== undefined) {
             o.loc = [o.loc.lat, o.loc.lng, 0];
         }
         var e = { id: o.id, name: o.name, loc: o.loc, json: {} };
@@ -279,29 +291,31 @@ function element_value_change(e) {
             break;
     }
     x = prompt(s.name, x);
-    switch (s.valuetype) {
-        case "string":
-            o[s.name] = x;
-            break;
-        case "json":
-            try {
-                x = JSON.parse(x);
-                if (x) {
+    if (x !== null)
+    {
+        switch (s.valuetype) {
+            case "string":
+                o[s.name] = x;
+                break;
+            case "json":
+                try {
+                    x = JSON.parse(x);
                     o[s.name] = x;
                 }
-            }
-            catch (e) {
-                Log.error(e);
-            }
-            break;
-        case "vertex":
-            x = findVertexById(x);
-            if (x) {
-                o[s.name].edges.remove(o);
-                o[s.name] = x;
-                x.edges.add(o);
-            }
-            break;
+                catch (e) {
+                    Log.error(e);
+                }
+                break;
+            case "vertex":
+                x = findVertexById(x);
+                if (x !== null) {
+                    if (o[s.name])
+                        o[s.name].edges.remove(o);
+                    o[s.name] = x;
+                    x.edges.add(o);
+                }
+                break;
+        }
     }
     update(o);
 }
@@ -328,7 +342,7 @@ function layer_vertex_dragend_if_up(e) {
 }
 
 function map_drag(e) {
-    setLocation(selected, e.latlng);
+    setLocation(selected, [e.latlng.lat, e.latlng.lng, 0]);
 }
 
 var event_vertex = { mousedown: layer_click, dblclick: layer_dblclick };

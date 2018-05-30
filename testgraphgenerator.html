@@ -145,6 +145,7 @@
     <!-- 로그 시작 -->
     <script src="logging.js"></script>
     <script> Log.init(document.getElementById("debugMsgBox"));</script>
+    <script src="matrices.js"></script>
     <script src="coordinates.js"></script>
     <!--<script src="gps.js"></script>-->
     <script src="graphentities.js"></script>
@@ -175,9 +176,9 @@
 
         // 지도에 마커 생성.
         // 초기 위치는 연세대 정문.
-        var currentLocationMarker=L.marker(L.latLng(CoordinateConversions.centerCoords.lat,
-                                                    CoordinateConversions.centerCoords.long),
-                                            {"title":"Your location","autoPan":true});
+        //var currentLocationMarker=L.marker(L.latLng(CoordinateConversions.centerCoords.lat,
+        //                                            CoordinateConversions.centerCoords.long),
+        //                                    {"title":"Your location","autoPan":true});
         //currentLocationMarker.addTo(mymap);
 
         mymap.on("click", function (e) {
