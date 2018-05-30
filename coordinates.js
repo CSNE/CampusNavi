@@ -152,6 +152,11 @@ var Coordinates=(function(){
         this.toLatLng=function(){
           return L.latLng(this.lat,this.long,this.alt);
         }
+        
+        this.toString=function(){
+          return "LAT "+this.lat+"\nLONG "+this.long+"\nALT "+this.alt+
+                    "\nX "+this.x+"\nY "+this.y+"\nZ "+this.z;
+        }
 
         //Log.debug([this.x, this.y, this.z]);
     }
