@@ -61,11 +61,12 @@
 
       #uipanel_search_grid{
         display: grid;
-        grid-template-rows: auto auto;
-        grid-template-columns: 1fr auto auto auto;
-        grid-template-areas: "frominput fromlabel changebtn findbtn" 
-                             "toinput   tolabel   changebtn findbtn" 
-                             "timeinput timelabel changebtn findbtn" ;
+        grid-template-rows: auto auto auto auto;
+        grid-template-columns: 1fr auto auto;
+        grid-template-areas: "nearbtn   nearbtn   nearbtn" 
+                             "frominput fromlabel importttbtn" 
+                             "toinput   tolabel   changebtn" 
+                             "timeinput timelabel findbtn" ;
       }
       #uipanel_search_grid *{
         place-self: center;
@@ -148,6 +149,11 @@
       #navigation_timeremaining{grid-area:timeremaining;}
       #navigation_eta{grid-area:eta;}
 
+      
+      #uipanel_near{
+        display:flex;
+        flex-direction: column;
+      }
 
 
 
@@ -180,7 +186,11 @@
             <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
             <div style="grid-area: fromlabel;">부터</div>
-
+            
+            <input type="button" value="주변 검색" id="uipanel_search_goto_near" style="grid-area: nearbtn;" />
+            
+            <input type="button" value="자동 설정" id="uipanel_search_button_importtt" style="grid-area: importttbtn;" />
+            
             <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="4" style="grid-area: changebtn;" />
 
             <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="5" style="grid-area: findbtn;" />
@@ -197,6 +207,12 @@
             </datalist>
           </div>
         </form>
+        
+        <div id="uipanel_near" style="display:none">
+          <button id="uipanel_near_goback" onclick="displaySearchPanel();">Go back</button>
+          <button> 가장 가까운 편의점</button>
+          <button> 가장 가까운 식당</button>
+        </div>
 
 
 
@@ -299,6 +315,9 @@
         "fillColor": "#FF8080"
       });
       debugMarker.addTo(mymap);
+      
+      
+      
 
       GPS.startTracking();
       GPS.addLocationListener(function(coords){
@@ -336,12 +355,15 @@
 
       //HTML DOM 변수들.
       var uipanel_search=document.getElementById("uipanel_search");
+      var uipanel_near=document.getElementById("uipanel_near");
       var uipanel_routes=document.getElementById("uipanel_routes");
       var uipanel_navigation=document.getElementById("uipanel_navigation");
 
 
       var uipanel_route_list=document.getElementById("uipanel_route_list");
-
+      
+      var search_button_near = document.getElementById("uipanel_search_goto_near");
+      var search_button_importTT = document.getElementById("uipanel_search_button_importtt");
       var search_button_find = document.getElementById("uipanel_search_button_find");
       var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
       var search_input_from=document.getElementById("uipanel_search_input_from");
@@ -490,17 +512,30 @@
       function displaySearchPanel(){
         uipanel_search.style.display="block";
         uipanel_routes.style.display="none";
+        uipanel_near.style.display="none";
         uipanel_navigation.style.display="none";
         cleanRouteList();
+        mymap.invalidateSize();
+      }function displayNearPanel(){
+        uipanel_search.style.display="none";
+        uipanel_routes.style.display="none";
+        uipanel_near.style.display="flex";
+        uipanel_navigation.style.display="none";
+        cleanRouteList();
+        mymap.invalidateSize();
       }function displayRouteListingPanel(){
         uipanel_search.style.display="none";
         uipanel_routes.style.display="block";
+        uipanel_near.style.display="none";
         uipanel_navigation.style.display="none";
+        mymap.invalidateSize();
       }function displayNavigationPanel(){
         uipanel_search.style.display="none";
         uipanel_routes.style.display="none";
+        uipanel_near.style.display="none";
         uipanel_navigation.style.display="block";
         cleanRouteList();
+        mymap.invalidateSize();
       }
 
       function cleanRouteList(){
@@ -603,6 +638,10 @@
 
       route_button_goback.addEventListener("click",displaySearchPanel);
       navigation_button_goback.addEventListener("click",displaySearchPanel);
+      
+      search_button_importTT.addEventListener("click",function(){
+        Log.warning("Functionality not yet implemented!");
+      })
 
       uipanel_search.addEventListener("submit", function () {
         var fromName = search_input_from.value;
@@ -648,6 +687,11 @@
 
 
         enterRouteListingMode([path1,path2,path3],timeLimitTimestamp);
+      });
+      
+      
+      search_button_near.addEventListener("click", function () {
+        displayNearPanel();
       });
 
       // 바꾸기 버튼
