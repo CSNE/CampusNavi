@@ -209,8 +209,8 @@
 
             <div id="navigation_routename"></div>
             <div id="navigation_targettime"></div>
-            <div id="navigation_canvas">
-              <canvas id="navigation_canvas_element" style="height:100%;width:100%; margin:0;">
+            <div id="navigation_canvas" style="position:relative;">
+              <canvas id="navigation_canvas_element" style="position:absolute;top:0;bottom:0;left:0;right:0;">
                 Canvas not supported! Update your browser before you turn into a fossil.
               </canvas>
             </div>
@@ -356,17 +356,28 @@
       function displayProgessOnCanvas(completionRatio,imageElementObject){
         
         //2x for HiDpi screens
+        /*
         canvas.height=canvasContainer.offsetHeight*2;
         canvas.width=canvasContainer.offsetWidth*2;
         
+        canvas.style.width=canvasContainer.offsetWidth;
+        canvas.style.height=canvasContainer.offsetHeight;
+        */
+        var cW=canvasContainer.offsetWidth;
+        var cH=canvasContainer.offsetHeight;
+        var pixelMultiplier=2;//window.devicePixelRatio;
+        canvas.width=cW*pixelMultiplier;
+        canvas.height=cH*pixelMultiplier;        
+        canvas.style.width=cW+"px";
+        canvas.style.height=cH+"px";
         
         var currentCanvasW=canvas.width;
         var currentCanvasH=canvas.height;
         
-        var rectMarginX=40;
-        var rectMarginY=40;
+        var rectMarginX=20*pixelMultiplier;
+        var rectMarginY=20*pixelMultiplier;
         
-        var rectHeight=20;
+        var rectHeight=10*pixelMultiplier;
         
         var rectWidth=currentCanvasW-rectMarginX*2;
         var rectCompletedWidth=Math.round(rectWidth*completionRatio);
@@ -396,9 +407,9 @@
         
         
         //Icon
-        var imageSizeX=60;
-        var imageSizeY=60;
-        var imageMarginY=0;
+        var imageSizeX=30*pixelMultiplier;
+        var imageSizeY=30*pixelMultiplier;
+        var imageMarginY=0*pixelMultiplier;
         
         var imageCenterX=rectUnCompletedStartX;
         var imageEndY=rectUnCompletedStartY-imageMarginY;
@@ -415,11 +426,11 @@
         var imageEndX=imageStartX+imageSizeX;
         
         //Text
-        var textMarginY=10;
+        var textMarginY=5*pixelMultiplier;
         var textY=imageEndY-textMarginY;
         
         canvasContext.fillStyle="#000000";
-        canvasContext.font="36px sans-serif";
+        canvasContext.font=(18*pixelMultiplier)+"px sans-serif";
         if (completionRatio<0.5){
           canvasContext.textAlign="left";
           canvasContext.fillText((completionRatio*100).toFixed(1)+"%",
@@ -443,6 +454,7 @@
         uipanel_search.style.display="block";
         uipanel_routes.style.display="none";
         uipanel_navigation.style.display="none";
+        cleanRouteList();
       }function displayRouteListingPanel(){
         uipanel_search.style.display="none";
         uipanel_routes.style.display="block";
@@ -451,18 +463,21 @@
         uipanel_search.style.display="none";
         uipanel_routes.style.display="none";
         uipanel_navigation.style.display="block";
+        cleanRouteList();
       }
 
-      
+      function cleanRouteList(){
+        //remove all route listings
+        while (uipanel_route_list.firstChild) {
+          uipanel_route_list.removeChild(uipanel_route_list.firstChild);
+        }
+      }
 
       // UI Mode: Search --> RouteListing
       function enterRouteListingMode(paths){
         displayRouteListingPanel();
         
-        //remove all route listings
-        while (uipanel_route_list.firstChild) {
-          uipanel_route_list.removeChild(uipanel_route_list.firstChild);
-        }
+        cleanRouteList();
         
         Log.debug("Listing "+paths.length+" paths.");
         paths.forEach(function(currentPath){
