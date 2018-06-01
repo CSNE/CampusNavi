@@ -59,5 +59,9 @@ function Path(graph, from, to, pref)
             this.layers[i].removeFrom(map);
         }
     }
+    
+    this.timeRequiredInMillisec=function(){
+      return this.timeRequired*1000;
+    }
 
 }

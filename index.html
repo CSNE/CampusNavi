@@ -64,7 +64,8 @@
         grid-template-rows: auto auto;
         grid-template-columns: 1fr auto auto auto;
         grid-template-areas: "frominput fromlabel changebtn findbtn" 
-          "toinput   tolabel   changebtn findbtn" ;
+                             "toinput   tolabel   changebtn findbtn" 
+                             "timeinput timelabel changebtn findbtn" ;
       }
       #uipanel_search_grid *{
         place-self: center;
@@ -73,10 +74,11 @@
       .route_element{
         display: grid;
 
-        grid-template-rows: auto auto;
+        grid-template-rows: auto auto auto;
         grid-template-columns: auto 1fr auto;
-        grid-template-areas: "icon name gobtn" 
-          "icon time gobtn" ;
+        grid-template-areas: "icon name        gobtn" 
+                             "icon time        gobtn" 
+                             "icon arrivaltime gobtn" ;
         border:1px solid black;
       }
       .route_element *{
@@ -89,6 +91,14 @@
         height:24px;
       }
       .route_time{grid-area:time;}
+      .route_arrivaltime{grid-area:arrivaltime;}
+      
+      .route_element .arrival_ontime{
+        color:green;
+      }
+      .route_element .arrival_late{
+        color:red;
+      }
       .route_begin{grid-area:gobtn}
 
       #debugpanel{
@@ -122,8 +132,8 @@
         grid-template-rows: auto auto auto;
         grid-template-columns: auto 1fr auto;
         grid-template-areas: "routename      .        targettime" 
-          "canvas         canvas   canvas" 
-          "timeremaining  .        eta" ;
+                             "canvas         canvas   canvas" 
+                             "timeremaining  .        eta" ;
         border:1px solid black;
       }
       #uipanel_navigation_grid *{
@@ -171,13 +181,17 @@
 
             <div style="grid-area: fromlabel;">부터</div>
 
-            <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="3" style="grid-area: changebtn;" />
+            <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="4" style="grid-area: changebtn;" />
 
-            <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="4" style="grid-area: findbtn;" />
+            <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="5" style="grid-area: findbtn;" />
 
             <input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
 
             <div style="grid-area: tolabel;">까지</div>
+            
+            <input type="time" id="uipanel_search_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
+
+            <div style="grid-area: timelabel;">까지</div>
 
             <datalist id="destinationsData">
             </datalist>
@@ -193,6 +207,7 @@
               <img class="route_icon">
               <div class="route_name"></div>
               <div class="route_time"></div>
+              <div class="route_arrivaltime"></div>
               <button class="route_begin">Go!</button>
             </div>
           </template>
@@ -331,6 +346,7 @@
       var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
       var search_input_from=document.getElementById("uipanel_search_input_from");
       var search_input_to=document.getElementById("uipanel_search_input_to");
+      var search_input_time=document.getElementById("uipanel_search_input_time");
 
       var routeTemplate = document.getElementById("route_template");
 
@@ -345,6 +361,27 @@
 
       var navigation_button_goback=document.getElementById("uipanel_navigation_goback");
       
+      //TODO fix dis
+      //This code WILL BREAK if:
+      //the program is run anytime between 23:27~23:59
+      //set time
+      var nearestNiceTime=new Date();
+      var nearestNiceMinute=nearestNiceTime.getMinutes();
+      var nearestNiceHour=nearestNiceTime.getHours();
+      
+      nearestNiceMinute=nearestNiceMinute+3; //add 3
+      nearestNiceMinute=Math.ceil(nearestNiceMinute/30)*30 //go to upcoming 30-min time
+      if (nearestNiceMinute>=60){
+        nearestNiceMinute=nearestNiceMinute-60;
+        nearestNiceHour++;
+      }
+      nearestNiceTime.setHours(nearestNiceHour);
+      nearestNiceTime.setMinutes(nearestNiceMinute);
+      nearestNiceTime.setSeconds(0);
+      
+      
+      
+      search_input_time.value=nearestNiceTime.toTimeString().split(" ")[0]
       
       //Canvas
       var canvasContainer=document.getElementById("navigation_canvas");
@@ -474,7 +511,7 @@
       }
 
       // UI Mode: Search --> RouteListing
-      function enterRouteListingMode(paths){
+      function enterRouteListingMode(paths, timelimit){
         displayRouteListingPanel();
         
         cleanRouteList();
@@ -485,6 +522,13 @@
           var newElement = document.importNode(routeTemplate.content, true);
           newElement.querySelectorAll(".route_name")[0].innerHTML=currentPath.pref.time_name;
           newElement.querySelectorAll(".route_time")[0].innerHTML=Util.humanReadableTime(currentPath.timeRequired);
+          
+          var arrivalTimeDateObj=new Date(Date.now()+currentPath.timeRequiredInMillisec());
+          var late=arrivalTimeDateObj.getTime()>timelimit;
+          
+          newElement.querySelector(".route_arrivaltime").innerHTML=Util.timeStampToFormattedTime(arrivalTimeDateObj.getTime());
+          
+          newElement.querySelector(".route_arrivaltime").classList.add((late?"arrival_late":"arrival_ontime"));
           newElement.querySelector(".route_icon").setAttribute("src",route_icon_path[currentPath.pref.time_name]);
           newElement.querySelector(".route_begin").addEventListener("click",function(){
             Log.info("begin navigation.");
@@ -565,6 +609,28 @@
         var fromVertex = GraphDatabase.findVertexWithName(fromName);
         var toName = search_input_to.value;
         var toVertex = GraphDatabase.findVertexWithName(toName);
+        
+        var timeLimit=search_input_time.value;
+        Log.debug(""+timeLimit);
+        
+        
+        var timeLimitHour=parseInt(timeLimit.split(":")[0]);
+        var timeLimitMin=parseInt(timeLimit.split(":")[1]);
+        
+        if (Number.isInteger(timeLimitMin) && Number.isInteger(timeLimitHour)){
+          var timeLimitDateObj=new Date();
+          timeLimitDateObj.setHours(timeLimitHour);
+          timeLimitDateObj.setMinutes(timeLimitMin);
+          timeLimitDateObj.setSeconds(0);
+        }else{
+          var timeLimitDateObj=null;
+        }
+        
+        var timeLimitTimestamp=Number.MAX_SAFE_INTEGER;
+        if (timeLimitDateObj) timeLimitTimestamp=timeLimitDateObj.getTime();
+        
+        Log.debug("Timelimit: "+Util.timeStampToFormattedTime(timeLimitDateObj.getTime()));
+        
 
         if (fromVertex === null) {
           Log.error("Invalid vertex name: \"" + fromName + "\" Cannot start navigation.")
@@ -581,7 +647,7 @@
         var path3 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "fly" });
 
 
-        enterRouteListingMode([path1,path2,path3]);
+        enterRouteListingMode([path1,path2,path3],timeLimitTimestamp);
       });
 
       // 바꾸기 버튼
