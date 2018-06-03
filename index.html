@@ -58,7 +58,6 @@
         margin:4px;
 
         font-family: sans-serif;
-
       }
 
 
@@ -69,10 +68,14 @@
         grid-template-areas: "frominput fromlabel importttbtn" 
                              "toinput   tolabel   changebtn" 
                              "timeinput timelabel findbtn" ;
+        grid-column-gap: 4px;
       }
       #uipanel_search_grid *{
         place-self: center;
+        
+        width:100%;
       }
+ 
 
       .route_element{
         display: grid;
@@ -160,7 +163,7 @@
       #uipanel_tabs{
         display:flex;
         flex-direction: row;
-        overflow-x:scroll;
+        overflow-x:auto;
       }
       #uipanel_tabs *{
         flex-grow: 1;
@@ -243,6 +246,7 @@
           <div id="uipanel_persistant_spacer"></div>
           <div id="uipanel_persistant_right">
             <sub>날씨 </sub><span id="uipanel_weather_weather_display" class="uitext_unknown">???</span>
+            <sub>온도 </sub><span id="uipanel_weather_temps_display" class="uitext_unknown">???</span>
             <sub>미세먼지 </sub><span id="uipanel_weather_air_display" class="uitext_unknown">???</span>
           </div>
           
@@ -462,6 +466,27 @@
       var uipanel_tabs_settings=document.getElementById("uipanel_tabs_settings");
       var uipanel_tabs_routelist=document.getElementById("uipanel_tabs_routelist");
       var uipanel_tabs_navigation=document.getElementById("uipanel_tabs_navigation");
+      
+      
+      var uipanel_weather_weather_display=document.getElementById("uipanel_weather_weather_display");
+      var uipanel_weather_air_display=document.getElementById("uipanel_weather_air_display");
+      var uipanel_weather_temps_display=document.getElementById("uipanel_weather_temps_display");
+        
+        
+        
+      Weather.fetch(function(){
+        uipanel_weather_weather_display.innerHTML=Weather.getCurrentWeatherNameKorean();
+        uipanel_weather_weather_display.classList.remove("uitext_unknown");
+        uipanel_weather_weather_display.classList.add("uitext_"+Weather.getCurrentWeatherGrade());
+        
+        uipanel_weather_air_display.innerHTML=Weather.getCurrentDustLevelsInShinchon();
+        uipanel_weather_air_display.classList.remove("uitext_unknown");
+        uipanel_weather_air_display.classList.add("uitext_"+Weather.getCurrentDustGrade());
+        
+        uipanel_weather_temps_display.innerHTML=Weather.getCurrentWeatherInShinchon().temperature;
+        uipanel_weather_temps_display.classList.remove("uitext_unknown");
+        uipanel_weather_temps_display.classList.add("uitext_"+Weather.getCurrentTemperatureGrade());
+      });
       
       //TODO fix dis
       //This code WILL BREAK if:
