@@ -69,19 +69,24 @@ var GraphCalculations=(function(){
 
     var default_wfunc = function (e) {
         var m = 1;
+        //Log.debug(JSON.stringify(e.flags));
         for (var i = 0; i < this.factors.length; i++)
         {
             var sat = true;
-            for (var c in this.factors[i].condition)
+            for (var j = 0; j < this.factors[i].condition.length ; j++)
             {
+                var c = this.factors[i].condition[j];
                 if (c.value ^ e.flags[c.name])
                 {
+                    //Log.debug([JSON.stringify(c), JSON.stringify(e.flags)].toString());
                     sat = false;
                     break;
                 }
             }
-            if (sat)
+            if (sat) {
                 m *= this.factors[i].multiplier;
+                //Log.debug([JSON.stringify(c), JSON.stringify(e.flags)].toString());
+            }
         }
         return e.timeRequired[this.time_name] * m;
     };
