@@ -54,9 +54,7 @@ border-spacing: 0;
 Adds a custom look for H1 headers with psuedoelements.
 All H1 headers will have a gradient line below it.
 */
-*{
-  font-family: sans-serif;
-}
+
 h1 {
   text-align: center;
 }
