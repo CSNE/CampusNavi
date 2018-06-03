@@ -93,7 +93,7 @@ var Weather=(function(){
         getCurrentWeatherInShinchon 함수를 호출할 때 요청하면 값을 제대로 반환할 수가 없어서 웹페이지 로드되지마자 일단 요청.
     */
         // 날씨 요청
-        var apiURI = "http://api.openweathermap.org/data/2.5/weather?lat="+"37" + "&lon=" + "127"+"&appid="+"f4e5095b023d96581b869c74b663f6b2";
+        var apiURI = "https://api.openweathermap.org/data/2.5/weather?lat="+"37" + "&lon=" + "127"+"&appid="+"f4e5095b023d96581b869c74b663f6b2";
         $.ajax({
             url: apiURI,
             dataType: "json",
