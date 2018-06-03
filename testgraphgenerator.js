@@ -67,8 +67,8 @@ function getDistance(a, b)
 {
     Log.debug(a.toString());
     Log.debug(b.toString());
-    var ca = CoordinateConversions.coordsToCartesian({ "lat": a[0], "long": a[1], "alt": a[2] });
-    var cb = CoordinateConversions.coordsToCartesian({ "lat": b[0], "long": b[1], "alt": b[2] });
+    var ca = CoordinateConversions.coordsToCartesian({ "lat": a[0], "lng": a[1], "alt": a[2] });
+    var cb = CoordinateConversions.coordsToCartesian({ "lat": b[0], "lng": b[1], "alt": b[2] });
     var v = [ca.x - cb.x, ca.y - cb.y, ca.z - cb.z];
     return Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
