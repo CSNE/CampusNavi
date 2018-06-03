@@ -100,7 +100,7 @@ var Weather=(function(){
             type: "GET",
             async: "true",
             success: function(resp) {
-                Log.debug("Got response from openweathermap");
+                Log.debug("Got response from openweathermap.org");
                 shinchonWeatherData = {
                     "weather": resp.weather[0].main,
                     "weatherid": resp.weather[0].id,
@@ -121,6 +121,9 @@ var Weather=(function(){
 
                 // console.log(ret1);
                 // document.getElementById("hi").innerHTML = ret["weather"];
+            },
+            error:function(jqXHR,textStatus,errorThrown){
+                Log.error("Error from openweathermap.org:\n"+textStatus+"\n"+errorThrown);
             }
         });
 
@@ -146,6 +149,9 @@ var Weather=(function(){
                 if (shinchonWeatherData!==null && shinchonAqiData!==null && callback!==undefined){
                     callback();
                 } 
+            },
+            error:function(jqXHR,textStatus,errorThrown){
+                Log.error("Error from waqi.info:\n"+textStatus+"\n"+errorThrown);
             }
         });
 
