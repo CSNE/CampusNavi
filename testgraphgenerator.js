@@ -1,4 +1,5 @@
 ﻿var V = new List(), E = new List();
+var extra_json;
 
 function findVertexById(id) {
     for (var i = V.iterator() ; !i.end() ; i.next()) {
@@ -83,32 +84,6 @@ var edge_attrs = {};
 ["id", "name", "loc", "shown", "place"].forEach(function (e) { vertex_attrs[e] = true; });
 ["name", "vs", "ve", "w", "f"].forEach(function (e) { edge_attrs[e] = true; });
 
-function getCurrentJSON() {
-    var obj = {
-        vertices: [],
-        edges: []
-    };
-    for (var i = V.iterator() ; !i.end() ; i.next()) {
-        var o = i.get();
-        var e = { id: o.id, name: o.name, loc: o.loc, shown: o.shown, place: o.place };
-        for (var j in o.json) {
-            if (!vertex_attrs[j])
-                e[j] = o.json[j];
-        }
-        obj.vertices.push(e);
-    }
-    for (var i = E.iterator() ; !i.end() ; i.next()) {
-        var o = i.get();
-        var e = { name: o.name, vs: o.vs.id, ve: o.ve.id, w: o.w, f: o.f };
-        for (var j in o.json) {
-            if (!edge_attrs[j])
-                e[j] = o.json[j];
-        }
-        obj.edges.push(e);
-    }
-    return JSON.stringify(obj);
-}
-
 function loadData() {
     if (localStorage) {
         vertex_id_counter = parseInt(localStorage.getItem("test_graphgenerator_vertex_id_counter"));
@@ -147,9 +122,48 @@ function applyData(data) {
         }
         create_new_edge(eb, e);
     }
+
+    for (var i in obj)
+    {
+        if (i != "vertices" && i != "edges")
+        {
+            extra_json[i] = obj[i];
+        }
+    }
+
     if (vertex_id_counter != vertex_id_counter)
         vertex_id_counter = obj.vertices.length * 2;
     document.getElementById("json_string").innerHTML = data;
+}
+
+function getCurrentJSON() {
+    var obj = {
+        vertices: [],
+        edges: []
+    };
+    for (var i = V.iterator() ; !i.end() ; i.next()) {
+        var o = i.get();
+        var e = { id: o.id, name: o.name, loc: o.loc, shown: o.shown, place: o.place };
+        for (var j in o.json) {
+            if (!vertex_attrs[j])
+                e[j] = o.json[j];
+        }
+        obj.vertices.push(e);
+    }
+    for (var i = E.iterator() ; !i.end() ; i.next()) {
+        var o = i.get();
+        var e = { name: o.name, vs: o.vs.id, ve: o.ve.id, w: o.w, f: o.f };
+        for (var j in o.json) {
+            if (!edge_attrs[j])
+                e[j] = o.json[j];
+        }
+        obj.edges.push(e);
+    }
+    for (var i in extra_json)
+    {
+        obj[i] = extra_json[i];
+    }
+    return JSON.stringify(obj);
 }
 
 function clearAll() {

@@ -423,23 +423,32 @@
       });
 
 
-    var places = {};
-    Geodata.addUpdateListener(function () {
+      var places = {};
+      Geodata.addUpdateListener(function () {
         //Datalist에 꼭짓점 이름들을 넣음.
         //place정보를 저장함
         var destinationsDataList = document.getElementById("destinationsData");
         while (destinationsDataList.hasChildNodes())
-            destinationsDataList.removeChild(destinationsDataList.lastChild);
+          destinationsDataList.removeChild(destinationsDataList.lastChild);
         for (var i = 0; i < Geodata.graph.vertices.length; i++) {
-            var v = Geodata.graph.vertices[i];
-            if (v.shown) {
-                var opt = document.createElement("option");
-                opt.setAttribute("value", v.name);
-                destinationsDataList.appendChild(opt);
+          var v = Geodata.graph.vertices[i];
+          if (v.shown) {
+            var opt = document.createElement("option");
+            opt.setAttribute("value", v.name);
+            destinationsDataList.appendChild(opt);
+
+            if (v.place) {
+              for (var j = 0; j < v.place.length; j++) {
+                var p = v.place[j];
+                if (!places[p])
+                  places[p] = [];
+                places[p].push(v);
+              }
             }
+          }
         }
         
-    });
+      });
 
       Geodata.load("mapdata.json");
       
