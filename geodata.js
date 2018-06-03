@@ -39,9 +39,11 @@ function createDataXml()
 }
 
 function getDataAjax(url)
-{
+{ 
+    if (document.location.protocol==="file:") return null;
     //*
     try {
+        
         var req = new XMLHttpRequest();
         //req.addEventListener("readystatechange", function () {
 
@@ -68,7 +70,7 @@ function createDataJson()
 {
     var masterGraph = new Graph();
 
-    var json = getDataAjax("mapdata.json"), obj;
+    var json = getDataAjax("mapdata.json");
     
     if (json)
         obj = JSON.parse(json);
