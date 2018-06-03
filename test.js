@@ -32,7 +32,7 @@ mymap.on("click", function (e) {
         var v = g.vertices[i];
         //Log.debug(v.coordinates);
         //Log.debug(
-        L.marker([v.coordinates.lat, v.coordinates.long], { "title": v.name, "autoPan": true }).addTo(mymap)
+        L.marker([v.coordinates.lat, v.coordinates.lng], { "title": v.name, "autoPan": true }).addTo(mymap)
         //);
     }
 })();

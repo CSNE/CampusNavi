@@ -9,7 +9,7 @@ var GPS=(function(){
 
     function locationCallback(position){
         var lat=position.coords.latitude;
-        var long=position.coords.longitude;
+        var lng=position.coords.longitude;
         var alt=position.coords.altitude;
         if (alt===null) alt=0;
         var acc=position.coords.accuracy;

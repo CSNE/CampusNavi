@@ -68,13 +68,13 @@ function Edge(vStart, vEnd, id) {
     //Log.debug(this.vStart.coordinates.getDistance(this.vEnd.coordinates));
 }
 
-function Vertex(lat, long, alt, id) {
+function Vertex(lat, lng, alt, id) {
     // 꼭짓점을 표현하는 클래스
 
     this.id = id;//실질적인 comparable identifier
 
     // 위도, 경도, 고도를 받음. path 그리기에 적절하게 표현 (배열)
-    this.coordinates = Coordinates.fromLatLongAlt(lat, long, alt);
+    this.coordinates = Coordinates.fromLatLongAlt(lat, lng, alt);
 
     //이 꼭짓점에서 나가는 edges
     this.out_edges = [];

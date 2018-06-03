@@ -286,11 +286,26 @@
         tileSize:256
       }).addTo(mymap);
 
+
+        // Pane 생성
+      (function () {
+          function ovp(name, z) {
+              var p = mymap.createPane(name, mymap.getPane("overlayPane"));
+              p.style.zIndex = z;
+          }
+          ovp("vertices", 1003);
+          ovp("edges", 1002);
+          ovp("underground", 1001);
+          ovp("markers", 1010);
+          ovp("debug", 2000);
+      })();
+
       // 지도에 마커 생성.
       // 초기 위치는 연세대 정문.
       var currentLocationMarker=L.circleMarker(L.latLng(CoordinateConversions.centerCoords.lat,
-                                                        CoordinateConversions.centerCoords.long),
+                                                        CoordinateConversions.centerCoords.lng),
                                                {
+        "pane": "markers",
         "title": "Your location", "autoPan": true,
         "radius": 6,
         "weight": 1,
@@ -303,8 +318,9 @@
       currentLocationMarker.addTo(mymap);
 
       var debugMarker=L.circleMarker(L.latLng(CoordinateConversions.centerCoords.lat,
-                                                        CoordinateConversions.centerCoords.long),
+                                                        CoordinateConversions.centerCoords.lng),
                                                {
+        "pane": "debug",
         "title": "Your location", "autoPan": true,
         "radius": 6,
         "weight": 1,
@@ -332,10 +348,13 @@
 
       //Datalist에 꼭짓점 이름들을 넣음.
       var destinationsDataList=document.getElementById("destinationsData");
-      for(var i=0;i<GraphDatabase.vertices.length;i++){
-        var opt=document.createElement("option");
-        opt.setAttribute("value",GraphDatabase.vertices[i].name);
-        destinationsDataList.appendChild(opt);
+      for (var i = 0; i < GraphDatabase.vertices.length; i++) {
+          var v = GraphDatabase.vertices[i];
+          if (v.shown) {
+              var opt = document.createElement("option");
+              opt.setAttribute("value", v.name);
+              destinationsDataList.appendChild(opt);
+          }
       }
       
       //Icons
@@ -683,7 +702,7 @@
 
         var path1 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "walk" });
         var path2 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "run" });
-        var path3 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "fly" });
+        var path3 = new Path(GraphDatabase, fromVertex, toVertex, { "time_name": "walk", "factors": [{ "condition": [{"name": "inside", "value": false}], multiplier: 2}] });
 
 
         enterRouteListingMode([path1,path2,path3],timeLimitTimestamp);

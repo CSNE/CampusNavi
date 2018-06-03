@@ -67,9 +67,34 @@ var GraphCalculations=(function(){
 
     var state_toString = function () { return "<" + this.e.vStart.name + ", " + this.e.vEnd.name + ">: " + this.w; };
 
+    var default_wfunc = function (e) {
+        var m = 1;
+        for (var i = 0; i < this.factors.length; i++)
+        {
+            var sat = true;
+            for (var c in this.factors[i].condition)
+            {
+                if (c.value ^ e.flags[c.name])
+                {
+                    sat = false;
+                    break;
+                }
+            }
+            if (sat)
+                m *= this.factors[i].multiplier;
+        }
+        return e.timeRequired[this.time_name] * m;
+    };
+
     //returns: ret.p.p.p....p.v in src, p.p.....p.e: edge in path p.e: last edge
     var findShortestPathWithIdSet = function (graph, src, dst, pref)
     {
+        if (!pref.time_name)
+            pref.time_name = "walk";
+        if (!pref.factors)
+            pref.factors = [];
+        if (!pref.wfunc)
+            pref.wfunc = default_wfunc;
         var q = new Heap(), vv = {}, ve = {};
         for (var k in src)
         {
@@ -92,7 +117,7 @@ var GraphCalculations=(function(){
                     if (!ve[e.id])
                     {
                         ve[e.id] = true;
-                        q.enqueue({ "w": p.w + e.timeRequired[pref.time_name], "v": e.vEnd, "p": p, "e": e, toString: state_toString });
+                        q.enqueue({ "w": p.w + pref.wfunc(e), "v": e.vEnd, "p": p, "e": e, toString: state_toString });
                     }
                 }
             }
