@@ -715,7 +715,7 @@
       "id": "v150",
       "name": "제2공학관 동문",
       "loc": [ 37.56224890403263, 126.93577632308009, 0 ],
-      "shown": false,
+      "shown": true,
       "place": [ "cafeteria", "coffee", "convenient" ]
     },
     {

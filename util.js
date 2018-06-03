@@ -18,9 +18,30 @@ var Util = (function () {
         return h+":"+m+":"+s;
     }
 
+    function colonSeparatedTimeToTimeStamp(timeinday)
+    {
+        var h = parseInt(timeinday.split(":")[0]);
+        var m = parseInt(timeinday.split(":")[1]);
+
+        if (Number.isInteger(m) && Number.isInteger(h)) {
+            var date = new Date();
+            date.setHours(h);
+            date.setMinutes(m);
+            date.setSeconds(0);
+        } else {
+            var date = null;
+        }
+
+        var ret = Number.MAX_SAFE_INTEGER;
+        if (date) ret = date.getTime();
+
+        return ret;
+    }
+
     return {
         "humanReadableTime": humanReadableTime,
-        "timeStampToFormattedTime":timeStampToFormattedTime
+        "timeStampToFormattedTime": timeStampToFormattedTime,
+        "colonSeparatedTimeToTimeStamp": colonSeparatedTimeToTimeStamp
     }
 })();
 

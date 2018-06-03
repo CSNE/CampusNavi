@@ -62,6 +62,7 @@ var GraphCalculations=(function(){
         {
             sdst[dst[i].id] = true;
         }
+        Log.debug(JSON.stringify(sdst));
         return findShortestPathWithIdSet(graph, ssrc, sdst, pref);
     }
 
@@ -103,7 +104,7 @@ var GraphCalculations=(function(){
         var q = new Heap(), vv = {}, ve = {};
         for (var k in src)
         {
-            q.enqueue({ "w": 0, "v": graph.vertices[k], "p": undefined, "e": undefined, toString: function () { return "<, " + this.v.name + ">: " + this.w } });
+            q.enqueue({ "w": 0, "v": graph.vertices[k], "p": undefined, "e": undefined});
         }
         while (!q.isEmpty())
         {
@@ -114,6 +115,7 @@ var GraphCalculations=(function(){
                 vv[v.id] = true;
                 if (dst[v.id])
                 {
+                    Log.debug(v.id.toString());
                     return p;
                 }
                 for (var i = 0; i < v.out_edges.length; i++)

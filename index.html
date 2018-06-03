@@ -284,10 +284,23 @@
           </div>
         </form>
         
-        <div id="uipanel_near" style="display:none">
-          <button> 가장 가까운 편의점</button>
-          <button> 가장 가까운 식당</button>
-        </div>
+        <form id="uipanel_near" action="javascript:" style="display: none;">
+          <div id="uipanel_near_grid">
+            <input type="text" list="destinationsData" id="uipanel_near_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
+            <div style="grid-area: fromlabel;">부터</div>
+
+            <input type="button" value="자동 설정" id="uipanel_near_button_importtt" style="grid-area: importttbtn;" />
+
+            <input type="button" value="바꾸기" id="uipanel_near_swap_src_dst" tabindex="4" style="grid-area: changebtn;" />
+            <input type="submit" value="탐색" id="uipanel_near_button_find" tabindex="5" style="grid-area: findbtn;" />
+            <select id="uipanel_near_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
+            </select>
+            <div style="grid-area: tolabel;">까지</div>
+
+            <input type="time" id="uipanel_near_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
+            <div style="grid-area: timelabel;">까지</div>
+          </div>
+        </form>
 
 
 
@@ -448,7 +461,16 @@
             }
           }
         }
-        
+        Log.debug(JSON.stringify(Geodata.obj.places) || "");
+        var s = document.getElementById("uipanel_near_input_to");
+        while (s.hasChildNodes())
+          s.removeChild(s.lastChild);
+        for (var i in Geodata.obj.places) {
+          var opt = document.createElement("option");
+          opt.setAttribute("value", i);
+          opt.innerHTML = Geodata.obj.places[i];
+          s.appendChild(opt);
+        }
       });
 
       Geodata.load("mapdata.json");
@@ -485,7 +507,11 @@
       var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
       var search_input_from=document.getElementById("uipanel_search_input_from");
       var search_input_to=document.getElementById("uipanel_search_input_to");
-      var search_input_time=document.getElementById("uipanel_search_input_time");
+      var search_input_time = document.getElementById("uipanel_search_input_time");
+
+      var near_input_from = document.getElementById("uipanel_near_input_from");
+      var near_input_to = document.getElementById("uipanel_near_input_to");
+      var near_input_time = document.getElementById("uipanel_near_input_time");
 
       var routeTemplate = document.getElementById("route_template");
 
@@ -826,59 +852,69 @@
         var fromVertex = Geodata.graph.findVertexWithName(fromName);
         var toName = search_input_to.value;
         var toVertex = Geodata.graph.findVertexWithName(toName);
-        
-        var timeLimit=search_input_time.value;
-        Log.debug(""+timeLimit);
-        
-        
-        var timeLimitHour=parseInt(timeLimit.split(":")[0]);
-        var timeLimitMin=parseInt(timeLimit.split(":")[1]);
-        
-        if (Number.isInteger(timeLimitMin) && Number.isInteger(timeLimitHour)){
-          var timeLimitDateObj=new Date();
-          timeLimitDateObj.setHours(timeLimitHour);
-          timeLimitDateObj.setMinutes(timeLimitMin);
-          timeLimitDateObj.setSeconds(0);
-        }else{
-          var timeLimitDateObj=null;
-        }
-        
-        var timeLimitTimestamp=Number.MAX_SAFE_INTEGER;
-        if (timeLimitDateObj) timeLimitTimestamp=timeLimitDateObj.getTime();
-        
-        Log.debug("Timelimit: "+Util.timeStampToFormattedTime(timeLimitDateObj.getTime()));
-        
 
-        if (fromVertex === null) {
+        var timeLimit = search_input_time.value;
+
+        var timeLimitTimestamp = Util.colonSeparatedTimeToTimeStamp(timeLimit);
+
+
+        if (!fromVertex) {
           Log.error("Invalid vertex name: \"" + fromName + "\" Cannot start navigation.")
           return;
         }
-        if (toVertex === null) {
+        if (!toVertex) {
           Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
           return;
         }
 
+        search_query(fromVertex, toVertex, timeLimitTimestamp);
+      });
 
-        var path1 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "walk" });
-        path1.name="걷기";
-        var path2 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "run" });
-        path2.name="뛰기";
-        
+      uipanel_near.addEventListener("submit", function () {
+        var fromName = near_input_from.value;
+        var fromVertex = Geodata.graph.findVertexWithName(fromName);
+        var toName = near_input_to.value;
+        var toVertex = places[toName];
+        Log.debug(toVertex.toString());
+
+        var timeLimit = near_input_time.value;
+
+        var timeLimitTimestamp = Util.colonSeparatedTimeToTimeStamp(timeLimit);
+
+
+        if (!fromVertex) {
+          Log.error("Invalid vertex name: \"" + fromName + "\" Cannot start navigation.")
+          return;
+        }
+        if (!toVertex) {
+          Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
+          return;
+        }
+
+        search_query(fromVertex, toVertex, timeLimitTimestamp);
+      });
+
+      function search_query(fromVertex, toVertex, timeLimitTimestamp) {
+        var path1 = new Path(Geodata.graph, fromVertex, toVertex, { "time_name": "walk" });
+        path1.name = "걷기";
+        var path2 = new Path(Geodata.graph, fromVertex, toVertex, { "time_name": "run" });
+        path2.name = "뛰기";
+
         var path3 = new Path(Geodata.graph, fromVertex, toVertex, pref_walk_inside);
-        path3.name="실내통로 우선";
-        
+        path3.name = "실내통로 우선";
+
         var pathlist;
-        var msg="";
-        if (Weather.getCompositeGrade()=="bad"){
-            msg="날씨가 좋지 않아 실내 통로를 우선 탐색합니다.";
-            pathlist=[path3,path1];
-        }else{
-            pathlist=[path1,path2];
+        var msg = "";
+        if (Weather.getCompositeGrade() == "bad") {
+          msg = "날씨가 좋지 않아 실내 통로를 우선 탐색합니다.";
+          pathlist = [path3, path1];
+        } else {
+          pathlist = [path1, path2];
         }
 
 
-        enterRouteListingMode(pathlist,timeLimitTimestamp,msg);
-      });
+        enterRouteListingMode(pathlist, timeLimitTimestamp, msg);
+      }
       
       // 바꾸기 버튼
       search_button_swap.addEventListener("click", function () {
