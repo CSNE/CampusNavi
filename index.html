@@ -799,7 +799,7 @@
         },100);
 
 
-        navigation_routename.innerHTML=path.from.name+" -> "+path.to.name;
+        navigation_routename.innerHTML=path.parray[0].v.name+" -> "+path.parray[path.parray.length - 1].v.name;
         navigation_targettime.innerHTML="목표도착시각: "+Util.timeStampToFormattedTime(timelimit);
         navigation_timeremaining.innerHTML="남은시간: ";
         navigation_eta.innerHTML="예상도착시간: ";
