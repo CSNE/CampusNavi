@@ -27,11 +27,13 @@
     this.vertices=[]
     if (this.p) {
 
+        var w = 0;
         for (var i = 0; i < this.parray.length; i++) {
             var n = this.parray[i];
             var e=n.e;
 
             if (e) {
+                w += e.timeRequired[pref.time_name];
                 this.edges.push(e);
                 this.layers.push(L.polyline([e.vStart.coordinates, e.vEnd.coordinates], { "pane": e.flags.inside ? "underground" : "edges", "color": e.flags.inside ? "darkgrey" : "red" }));
             }
@@ -40,7 +42,7 @@
             this.layers.push(L.circleMarker(n.v.coordinates, { "pane": "vertices", "radius": 4, "stroke": false, "fill": true, "fillColor": "blue", "fillOpacity": 1 }));
         }
 
-        this.timeRequired = this.p.w;
+        this.timeRequired = w;
         //Log.debug("Found path from " + from.name + " to " + to.name + "(" +pref.time_name+", "+ this.p.w.toFixed() + "초)");
     }
     else

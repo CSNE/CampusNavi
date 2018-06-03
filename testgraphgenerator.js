@@ -147,6 +147,8 @@ function applyData(data) {
         }
         create_new_edge(eb, e);
     }
+    if (vertex_id_counter != vertex_id_counter)
+        vertex_id_counter = obj.vertices.length * 2;
     document.getElementById("json_string").innerHTML = data;
 }
 
@@ -376,7 +378,7 @@ function create_new_vertex(btn, obj) {
     e.addEventListener("dblclick", element_dblclick);
 
     if (!obj)
-        obj = { id: "v" + vertex_id_counter++, name: "New vertex", loc: getDefaultLocation(), json: {} };
+        obj = { id: "v" + vertex_id_counter++, name: "New vertex", loc: getDefaultLocation(), "shown": false, json: {} };
     obj.type = "vertex";
     obj.edges = new List();
 
