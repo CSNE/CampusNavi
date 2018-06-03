@@ -125,14 +125,14 @@ function NavigationContext(path){
         if (result.type==="edge"){
 
             var pathToStartVertex= new Path(
-                GraphDatabase,
+                Geodata.graph,
                 this.path.from,
                 result.edge.vStart,
                 this.path.pref);
             var timeToStartVertex=pathToStartVertex.timeRequired;
 
             var pathToEndVertex= new Path(
-                GraphDatabase,
+                Geodata.graph,
                 this.path.from,
                 result.edge.vEnd,
                 this.path.pref);
@@ -152,7 +152,7 @@ function NavigationContext(path){
                         "Time to current position: "+estimatedTimeAtCurrentLocation);
         }else if(result.type==="vertex"){
             var pathToVertex= new Path(
-                GraphDatabase,
+                Geodata.graph,
                 this.path.from,
                 result.vertex,
                 this.path.pref);

@@ -423,16 +423,20 @@
       });
 
 
-      //Datalist에 꼭짓점 이름들을 넣음.
-      var destinationsDataList=document.getElementById("destinationsData");
-      for (var i = 0; i < GraphDatabase.vertices.length; i++) {
-          var v = GraphDatabase.vertices[i];
-          if (v.shown) {
-              var opt = document.createElement("option");
-              opt.setAttribute("value", v.name);
-              destinationsDataList.appendChild(opt);
+      Geodata.addUpdateListener(function () {
+          //Datalist에 꼭짓점 이름들을 넣음.
+          var destinationsDataList = document.getElementById("destinationsData");
+          while (destinationsDataList.hasChildNodes())
+              destinationsDataList.removeChild(destinationsDataList.lastChild);
+          for (var i = 0; i < Geodata.graph.vertices.length; i++) {
+              var v = Geodata.graph.vertices[i];
+              if (v.shown) {
+                  var opt = document.createElement("option");
+                  opt.setAttribute("value", v.name);
+                  destinationsDataList.appendChild(opt);
+              }
           }
-      }
+      });
       
       //Icons
       var route_icon_path = {
@@ -791,9 +795,9 @@
 
       uipanel_search.addEventListener("submit", function () {
         var fromName = search_input_from.value;
-        var fromVertex = GraphDatabase.findVertexWithName(fromName);
+        var fromVertex = Geodata.graph.findVertexWithName(fromName);
         var toName = search_input_to.value;
-        var toVertex = GraphDatabase.findVertexWithName(toName);
+        var toVertex = Geodata.graph.findVertexWithName(toName);
         
         var timeLimit=search_input_time.value;
         Log.debug(""+timeLimit);
@@ -827,9 +831,9 @@
         }
 
 
-        var path1 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "walk" });
-        var path2 = new Path(GraphDatabase, fromVertex, toVertex,{ "time_name": "run" });
-        var path3 = new Path(GraphDatabase, fromVertex, toVertex, { "time_name": "walk", "factors": [{ "condition": [{"name": "inside", "value": false}], multiplier: 2}] });
+        var path1 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "walk" });
+        var path2 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "run" });
+        var path3 = new Path(Geodata.graph, fromVertex, toVertex, { "time_name": "walk", "factors": [{ "condition": [{"name": "inside", "value": false}], multiplier: 2}] });
 
 
         enterRouteListingMode([path1,path2,path3],timeLimitTimestamp);
