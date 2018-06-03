@@ -230,6 +230,7 @@
         <button onclick="debug_button_3_onclick()">Weather: Okay</button>
         <button onclick="debug_button_4_onclick()">Weather: Bad</button>
         <button onclick="debug_button_5_onclick()">Log.error()</button>        
+        <button onclick="debug_button_6_onclick()">Override timetable time</button>        
       </div>
       <div id="logcontainer"></div>
     </div>
@@ -474,6 +475,13 @@
       });
 
       Geodata.load("mapdata.json");
+        
+        
+      var timeTableData=new TimeTable();
+      timeTableData.loadTimeTable();
+      
+      var nl=timeTableData.nextLecture();
+      Log.debug(""+nl.startTime+nl.endTime+nl.location+nl.className);
       
       //Icons
       var route_icon_path = {
@@ -842,7 +850,23 @@
 
       
       search_button_importTT.addEventListener("click", function () {
-          Log.warning("Functionality not yet implemented!");
+          var nextLecture=timeTableData.nextLecture();
+          if (nextLecture===null){
+              search_input_to.value="정문";
+          }
+          else{
+              search_input_to.value=nextLecture.location;
+              search_input_time.value=timeToString(nextLecture.startTime);
+          }
+          
+          var lastLecture=timeTableData.lastLecture();
+          if (lastLecture===null){
+              search_input_from.value="정문";
+          }
+          else{
+              search_input_from.value=lastLecture.location;
+          }
+          
       });
 
       var pref_walk_inside = { "time_name": "walk", "factors": [{ "condition": [{ "name": "inside", "value": false }], multiplier: 2 }] };
@@ -961,6 +985,18 @@
       function debug_button_5_onclick(){
         Log.debug("Button 5 clicked");
         Log.error("Test Error");
+      }
+      function debug_button_6_onclick(){
+        Log.debug("Button 6 clicked");
+        var d=new Date();
+        d.setFullYear(2018);
+        d.setMonth(05);
+        d.setDate(04);
+        d.setHours(12);
+        d.setMinutes(55);
+        d.setSeconds(00);
+        timeTableData.debug_override_time=d;
+        Log.info("Time overridden: 2018/06/04 12:55:00");
       }
 
     </script>

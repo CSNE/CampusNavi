@@ -274,13 +274,14 @@ function TimeTable(){
 	*/
 		this.elements[weekDay] = classes;
 	}
-	
+	this.debug_override_time=null;
     this.nextLecture=function(){
     /*
         곧 시작하는 수업을 반환함; 현재 시각 기준 시작하지 않은 수업 중 가장 일찍 시작하는 수업 반환(tte)
 		만약 모든 수업이 끝났거나 오늘 수업이 없는 경우 null 반환
     */
 		var date = new Date(); // 날짜 및 시간
+        if (this.debug_override_time) date=this.debug_override_time; //for debug & demo
 		
 		var todayClass = this.elements[date.getDay()];
 		if(todayClass == null) return null; // 오늘 수업 없으면 null 반환
@@ -301,6 +302,7 @@ function TimeTable(){
         방금 끝난 수업을 반환함.
     */
 		var date = new Date(); // 날짜 및 시간
+        if (this.debug_override_time) date=this.debug_override_time; //for debug & demo
 		
 		var todayClass = this.elements[date.getDay()];
 		if(todayClass == null) return null; // 오늘 수업 없으면 null 반환
