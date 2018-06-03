@@ -75,6 +75,21 @@
         
         width:100%;
       }
+      
+      #uipanel_near_grid{
+        display: grid;
+        grid-template-rows: auto auto auto;
+        grid-template-columns: auto 1fr auto auto;
+        grid-template-areas: "frominput frominput fromlabel locsetbtn" 
+                             "tolabel2  toinput   tolabel   changebtn" 
+                             "timeinput timeinput timelabel findbtn" ;
+        grid-column-gap: 4px;
+      }
+      #uipanel_near_grid *{
+        place-self: center;
+        
+        width:100%;
+      }
  
 
       .route_element{
@@ -275,6 +290,7 @@
             <input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
 
             <div style="grid-area: tolabel;">까지</div>
+
             
             <input type="time" id="uipanel_search_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
 
@@ -289,14 +305,13 @@
           <div id="uipanel_near_grid">
             <input type="text" list="destinationsData" id="uipanel_near_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
             <div style="grid-area: fromlabel;">부터</div>
-
-            <input type="button" value="자동 설정" id="uipanel_near_button_importtt" style="grid-area: importttbtn;" />
-
-            <input type="button" value="바꾸기" id="uipanel_near_swap_src_dst" tabindex="4" style="grid-area: changebtn;" />
+            
+            <input type="button" value="현재 위치" id="uipanel_near_location_set" style="grid-area: locsetbtn;" />
             <input type="submit" value="탐색" id="uipanel_near_button_find" tabindex="5" style="grid-area: findbtn;" />
             <select id="uipanel_near_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
             </select>
             <div style="grid-area: tolabel;">까지</div>
+            <div style="grid-area: tolabel2;">가장 가까운</div>
 
             <input type="time" id="uipanel_near_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
             <div style="grid-area: timelabel;">까지</div>
@@ -520,6 +535,8 @@
       var near_input_from = document.getElementById("uipanel_near_input_from");
       var near_input_to = document.getElementById("uipanel_near_input_to");
       var near_input_time = document.getElementById("uipanel_near_input_time");
+        
+      var near_button_setlocation = document.getElementById("uipanel_near_location_set");
 
       var routeTemplate = document.getElementById("route_template");
 
@@ -945,6 +962,12 @@
         var s = search_input_from.value;
         search_input_from.value = search_input_to.value;
         search_input_to.value = s;
+      });
+      
+      
+      near_button_setlocation.addEventListener("click",function(){
+        var nearest=GraphCalculations.nearestVertexToPoint(Geodata.graph,GPS.getCurrentLocation(),true);
+        near_input_from.value=nearest.name;
       });
 
       //Debug Panel

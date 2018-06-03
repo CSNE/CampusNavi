@@ -44,6 +44,23 @@ var GraphCalculations=(function(){
         }
 
     }
+  
+    var nearestVertexToPoint=function(graph,point,shouldBeShown){
+        var currentMinValue=1000000;
+        var currentVertex;
+        var currentDistance;
+        var result;
+        for(var i=0;i<graph.vertices.length;i++){
+            currentVertex=graph.vertices[i];
+            if (shouldBeShown && (!currentVertex.shown)) continue;
+            currentDistance=currentVertex.coordinates.to2DVector().sub(point.to2DVector()).length();
+            if (currentDistance<currentMinValue) {
+                currentMinValue=currentDistance;
+                result=currentVertex;
+            }            
+        }
+        return result;
+    }
 
     var findShortestPath = function (graph, src, dst, pref) {
         //src, dst는 각각 정점의 집합(배열) 또는 하나의 정점
@@ -133,7 +150,8 @@ var GraphCalculations=(function(){
 
     return {
         "findShortestPath":findShortestPath,
-        "findShortestPathWithIdSet":findShortestPathWithIdSet
+        "findShortestPathWithIdSet":findShortestPathWithIdSet,
+        "nearestVertexToPoint":nearestVertexToPoint
     }
 
 })();

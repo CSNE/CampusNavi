@@ -1,8 +1,10 @@
 //위치 정보 관련
 var GPS=(function(){
     var callbackFunctions=[];
-
-    var locationHistory=[]; //history of the past locations.
+    
+    //history of the past locations.
+    //insert (0,0,0) as default.
+    var locationHistory=[Coordinates.fromXYZ(0,0,0)]; 
     var locationHistorySize=100;
 
     var accuracyRejectionThreshold=100;
