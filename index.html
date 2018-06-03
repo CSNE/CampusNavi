@@ -56,21 +56,26 @@
 
       .uipanel *{
         margin:4px;
+
+        font-family: sans-serif;
       }
 
 
       #uipanel_search_grid{
         display: grid;
-        grid-template-rows: auto auto auto auto;
+        grid-template-rows: auto auto auto;
         grid-template-columns: 1fr auto auto;
-        grid-template-areas: "nearbtn   nearbtn   nearbtn" 
-                             "frominput fromlabel importttbtn" 
+        grid-template-areas: "frominput fromlabel importttbtn" 
                              "toinput   tolabel   changebtn" 
                              "timeinput timelabel findbtn" ;
+        grid-column-gap: 4px;
       }
       #uipanel_search_grid *{
         place-self: center;
+        
+        width:100%;
       }
+ 
 
       .route_element{
         display: grid;
@@ -154,6 +159,59 @@
         display:flex;
         flex-direction: column;
       }
+      
+      #uipanel_tabs{
+        display:flex;
+        flex-direction: row;
+        overflow-x:auto;
+      }
+      #uipanel_tabs *{
+        flex-grow: 1;
+        margin:4px;
+        margin-bottom: 0;
+        padding:4px;
+        border: 1px solid black;
+        border-bottom:none;
+        background-color: white;
+      }
+      
+      #uipanel_tabs .selected_tab{
+        background-color: orange !important;
+      }
+      
+      #uipanel_tabs .unclickable_tab{
+        background-color: lightgray;
+      }
+      
+      .clickable{
+        cursor: pointer;
+      }
+      
+      #uipanel_persistant{
+        display:flex;
+        flex-direction: row;
+      }
+      
+      #uipanel_persistant *{
+        margin:0;
+      }
+
+      #uipanel_persistant_spacer{
+        flex-grow: 1;
+      }
+      
+      .uitext_good{
+        color:green;
+      }
+      .uitext_okay{
+        color:orange;
+      }
+      .uitext_bad{
+        color:red;
+      }
+      .uitext_unknown{
+        color:gray;
+      }
 
 
 
@@ -180,14 +238,32 @@
       <div id="mapid"></div>
 
       <div class="uipanel" >
+        
+        <div id="uipanel_persistant">
+          <div id="uipanel_persistant_left">
+            <strong>CampusNavi</strong>
+          </div>
+          <div id="uipanel_persistant_spacer"></div>
+          <div id="uipanel_persistant_right">
+            <sub>날씨 </sub><span id="uipanel_weather_weather_display" class="uitext_unknown">???</span>
+            <sub>온도 </sub><span id="uipanel_weather_temps_display" class="uitext_unknown">???</span>
+            <sub>미세먼지 </sub><span id="uipanel_weather_air_display" class="uitext_unknown">???</span>
+          </div>
+          
+        </div>
+        <div id="uipanel_tabs">
+          <div id="uipanel_tabs_search" class="clickable selected_tab">Search</div>
+          <div id="uipanel_tabs_nearby" class="clickable">Nearby</div>
+          <div id="uipanel_tabs_settings" class="clickable">Settings</div>
+          <div id="uipanel_tabs_routelist" class="unclickable_tab">Route</div>
+          <div id="uipanel_tabs_navigation" class="unclickable_tab">Navigation</div>
+        </div>
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
         <form id="uipanel_search" action="javascript:">
           <div id="uipanel_search_grid">
             <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
             <div style="grid-area: fromlabel;">부터</div>
-            
-            <input type="button" value="주변 검색" id="uipanel_search_goto_near" style="grid-area: nearbtn;" />
             
             <input type="button" value="자동 설정" id="uipanel_search_button_importtt" style="grid-area: importttbtn;" />
             
@@ -209,7 +285,6 @@
         </form>
         
         <div id="uipanel_near" style="display:none">
-          <button id="uipanel_near_goback" onclick="displaySearchPanel();">Go back</button>
           <button> 가장 가까운 편의점</button>
           <button> 가장 가까운 식당</button>
         </div>
@@ -217,7 +292,6 @@
 
 
         <div id="uipanel_routes" style="display:none">
-          <button id="uipanel_routes_goback">Go back</button>
           <template id="route_template">
             <div class="route_element">
               <img class="route_icon">
@@ -235,7 +309,6 @@
         </div>
 
         <div id="uipanel_navigation" style="display:none">
-          <button id="uipanel_navigation_goback">Go back</button>
           <div id="uipanel_navigation_container">
 
             <div id="navigation_routename"></div>
@@ -248,6 +321,9 @@
             <div id="navigation_timeremaining"></div>
             <div id="navigation_eta"></div>
           </div>
+        </div>
+        <div id="uipanel_settings" style="display:none">
+          <a href="timetableeditor.html">Timetable Edit</a>
         </div>
       </div>
 
@@ -377,11 +453,12 @@
       var uipanel_near=document.getElementById("uipanel_near");
       var uipanel_routes=document.getElementById("uipanel_routes");
       var uipanel_navigation=document.getElementById("uipanel_navigation");
+      var uipanel_settings=document.getElementById("uipanel_settings");
 
 
       var uipanel_route_list=document.getElementById("uipanel_route_list");
       
-      var search_button_near = document.getElementById("uipanel_search_goto_near");
+
       var search_button_importTT = document.getElementById("uipanel_search_button_importtt");
       var search_button_find = document.getElementById("uipanel_search_button_find");
       var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
@@ -391,7 +468,7 @@
 
       var routeTemplate = document.getElementById("route_template");
 
-      var route_button_goback=document.getElementById("uipanel_routes_goback");
+
 
 
       var navigation_routename=document.getElementById("navigation_routename");
@@ -400,7 +477,36 @@
       var navigation_timeremaining=document.getElementById("navigation_timeremaining");
       var navigation_eta=document.getElementById("navigation_eta");
 
-      var navigation_button_goback=document.getElementById("uipanel_navigation_goback");
+
+      
+      
+      var uipanel_tabs_search=document.getElementById("uipanel_tabs_search");
+      var uipanel_tabs_nearby=document.getElementById("uipanel_tabs_nearby");
+      var uipanel_tabs_settings=document.getElementById("uipanel_tabs_settings");
+      var uipanel_tabs_routelist=document.getElementById("uipanel_tabs_routelist");
+      var uipanel_tabs_navigation=document.getElementById("uipanel_tabs_navigation");
+      
+      
+      var uipanel_weather_weather_display=document.getElementById("uipanel_weather_weather_display");
+      var uipanel_weather_air_display=document.getElementById("uipanel_weather_air_display");
+      var uipanel_weather_temps_display=document.getElementById("uipanel_weather_temps_display");
+        
+        
+        
+      Weather.fetch(function(){
+        Log.info("Weather data successfully acquired. Displaying.")
+        uipanel_weather_weather_display.innerHTML=Weather.getCurrentWeatherNameKorean();
+        uipanel_weather_weather_display.classList.remove("uitext_unknown");
+        uipanel_weather_weather_display.classList.add("uitext_"+Weather.getCurrentWeatherGrade());
+        
+        uipanel_weather_air_display.innerHTML=Weather.getCurrentDustLevelsInShinchon();
+        uipanel_weather_air_display.classList.remove("uitext_unknown");
+        uipanel_weather_air_display.classList.add("uitext_"+Weather.getCurrentDustGrade());
+        
+        uipanel_weather_temps_display.innerHTML=Weather.getCurrentWeatherInShinchon().temperature;
+        uipanel_weather_temps_display.classList.remove("uitext_unknown");
+        uipanel_weather_temps_display.classList.add("uitext_"+Weather.getCurrentTemperatureGrade());
+      });
       
       //TODO fix dis
       //This code WILL BREAK if:
@@ -527,34 +633,40 @@
 
 
       //UI 이벤트 처리 함수들.
-
+      function undisplayAll(){
+        uipanel_search.style.display="none";
+        uipanel_routes.style.display="none";
+        uipanel_near.style.display="none";
+        uipanel_navigation.style.display="none";
+        uipanel_settings.style.display="none";
+        uipanel_tabs_search.classList.remove("selected_tab");
+        uipanel_tabs_nearby.classList.remove("selected_tab");
+        uipanel_tabs_settings.classList.remove("selected_tab");
+        uipanel_tabs_routelist.classList.remove("selected_tab");
+        uipanel_tabs_navigation.classList.remove("selected_tab");
+        cleanRouteList();
+        mymap.invalidateSize();
+      }
       function displaySearchPanel(){
+        undisplayAll();
         uipanel_search.style.display="block";
-        uipanel_routes.style.display="none";
-        uipanel_near.style.display="none";
-        uipanel_navigation.style.display="none";
-        cleanRouteList();
-        mymap.invalidateSize();
+        uipanel_tabs_search.classList.add("selected_tab");
       }function displayNearPanel(){
-        uipanel_search.style.display="none";
-        uipanel_routes.style.display="none";
+        undisplayAll();
         uipanel_near.style.display="flex";
-        uipanel_navigation.style.display="none";
-        cleanRouteList();
-        mymap.invalidateSize();
+        uipanel_tabs_nearby.classList.add("selected_tab");
       }function displayRouteListingPanel(){
-        uipanel_search.style.display="none";
+        undisplayAll();
         uipanel_routes.style.display="block";
-        uipanel_near.style.display="none";
-        uipanel_navigation.style.display="none";
-        mymap.invalidateSize();
+        uipanel_tabs_routelist.classList.add("selected_tab");
       }function displayNavigationPanel(){
-        uipanel_search.style.display="none";
-        uipanel_routes.style.display="none";
-        uipanel_near.style.display="none";
+        undisplayAll();
         uipanel_navigation.style.display="block";
-        cleanRouteList();
-        mymap.invalidateSize();
+        uipanel_tabs_navigation.classList.add("selected_tab");
+      }function displaySettingsPanel(){
+        undisplayAll();
+        uipanel_settings.style.display="block";
+        uipanel_tabs_settings.classList.add("selected_tab");
       }
 
       function cleanRouteList(){
@@ -563,6 +675,12 @@
           uipanel_route_list.removeChild(uipanel_route_list.firstChild);
         }
       }
+      
+      
+      //Tabs
+      uipanel_tabs_search.addEventListener("click",displaySearchPanel);
+      uipanel_tabs_nearby.addEventListener("click",displayNearPanel);
+      uipanel_tabs_settings.addEventListener("click",displaySettingsPanel);
 
       // UI Mode: Search --> RouteListing
       function enterRouteListingMode(paths, timelimit){
@@ -650,13 +768,12 @@
           navContext.deactivate();
           path.removeFromMap(mymap);
         }
-        navigation_button_goback.addEventListener("click",exitNavigationMode);
+
         
       }
 
 
-      route_button_goback.addEventListener("click",displaySearchPanel);
-      navigation_button_goback.addEventListener("click",displaySearchPanel);
+
       
       search_button_importTT.addEventListener("click",function(){
         Log.warning("Functionality not yet implemented!");
@@ -708,11 +825,6 @@
         enterRouteListingMode([path1,path2,path3],timeLimitTimestamp);
       });
       
-      
-      search_button_near.addEventListener("click", function () {
-        displayNearPanel();
-      });
-
       // 바꾸기 버튼
       search_button_swap.addEventListener("click", function () {
         var s = search_input_from.value;

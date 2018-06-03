@@ -47,3 +47,35 @@ table {
 border-collapse: collapse;
 border-spacing: 0;
 }
+
+/* START OF CUSTOM CSS */
+
+/*
+Adds a custom look for H1 headers with psuedoelements.
+All H1 headers will have a gradient line below it.
+*/
+
+h1 {
+  text-align: center;
+}
+
+h1::after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 100%;
+  margin-top: 0pt;
+  margin-bottom: 4pt;
+  background: linear-gradient( 90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0));
+}
+
+/* We also customize the look of H2.*/
+
+h2::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 60%;
+  margin-top: 0pt;
+  margin-bottom: 4pt;
+  background: linear-gradient( 90deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
