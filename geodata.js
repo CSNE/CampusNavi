@@ -15,6 +15,7 @@ var Geodata = (function () {
             obj = JSON.parse(json);
         else
             obj = _test_json;
+        Geodata.obj = obj;
 
         /**** parsing ****/
         var v_by_id = {};
@@ -22,8 +23,12 @@ var Geodata = (function () {
         for (var i = 0; i < obj.vertices.length; i++) {
             var v = obj.vertices[i];
             var vo = new Vertex(v.loc[0], v.loc[1], v.loc[2]);
-            vo.name = v.name;
             vo.shown = v.shown;
+            if (vo.shown)
+            {
+                vo.name = v.name;
+                vo.place = v.place;
+            }
             v_by_id[v.id] = vo;
             //Log.verbose("Vertex[\"" + vo.name + "\"]: (" + vo.coordinates.x + ", " + vo.coordinates.y + ", " + vo.coordinates.z + ")");
             //Log.verbose("Vertex[\"" + vo.name + "\"]: (" + v.loc + ")");
@@ -110,6 +115,7 @@ var Geodata = (function () {
     }
     return {
         "json": null,
+        "obj": null,
         "graph": null,
         "addUpdateListener": addUpdateListener,
         "load": load

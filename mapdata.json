@@ -149,7 +149,7 @@
     {
       "id": "v28",
       "name": "대강당",
-      "loc": [ 37.56444605563752, 126.93844109773639, 0 ],
+      "loc": [ 37.564431379662246, 126.9385725259781, 0 ],
       "shown": true
     },
     {
@@ -161,7 +161,7 @@
     {
       "id": "v30",
       "name": "학생회관",
-      "loc": [ 37.56342360051705, 126.93810582160951, 0 ],
+      "loc": [ 37.56341509599367, 126.93817019462587, 0 ],
       "shown": true,
       "place": [ "cafeteria", "coffee", "convenient" ]
     },
@@ -192,7 +192,7 @@
     {
       "id": "v35",
       "name": "공학원",
-      "loc": [ 37.56074811415264, 126.93615317344667, 0 ],
+      "loc": [ 37.56076482660825, 126.93607673048973, 0 ],
       "shown": true
     },
     {
@@ -264,7 +264,7 @@
     {
       "id": "v47",
       "name": "47",
-      "loc": [ 37.5638891723545, 126.9340878725052, 0 ],
+      "loc": [ 37.56388922168981, 126.9340878725052, 0 ],
       "shown": false
     },
     {
@@ -524,7 +524,7 @@
     {
       "id": "v92",
       "name": "92",
-      "loc": [ 37.56408442250737, 126.93832308053972, 0 ],
+      "loc": [ 37.56407419367678, 126.93837940692903, 0 ],
       "shown": false
     },
     {
@@ -908,7 +908,7 @@
     {
       "id": "v161",
       "name": "161",
-      "loc": [ 37.56391473509464, 126.9382640719414, 0 ],
+      "loc": [ 37.56389560004185, 126.93832308053972, 0 ],
       "shown": false
     },
     {
@@ -936,10 +936,80 @@
       "shown": false
     },
     {
-      "id": "v166",
-      "name": "166",
-      "loc": [ 37.56320035645686, 126.93771690130235, 0 ],
-      "shown": false,
+      "id": "v310",
+      "name": "대강당 자판기",
+      "loc": [ 37.56399340137116, 126.93844377994539, 0 ],
+      "shown": true,
+      "place": [ "vending machine" ]
+    },
+    {
+      "id": "v311",
+      "name": "New vertex",
+      "loc": [ 37.56091259782026, 126.93536996841432, 0 ],
+      "shown": false
+    },
+    {
+      "id": "v312",
+      "name": "New vertex",
+      "loc": [ 37.56063619099803, 126.93527206778529, 0 ],
+      "shown": false
+    },
+    {
+      "id": "v313",
+      "name": "공학원문",
+      "loc": [ 37.56041081236862, 126.93531364202501, 0 ],
+      "shown": true
+    },
+    {
+      "id": "v314",
+      "name": "New vertex",
+      "loc": [ 37.56119538220028, 126.9354531168938, 0 ],
+      "shown": false
+    },
+    {
+      "id": "v315",
+      "name": "공학원 자판기 2",
+      "loc": [ 37.5606468220486, 126.93523585796358, 0 ],
+      "shown": true,
+      "place": [ "vending machine" ]
+    },
+    {
+      "id": "v316",
+      "name": "New vertex",
+      "loc": [ 37.56081054003607, 126.93583533167839, 0 ],
+      "shown": false
+    },
+    {
+      "id": "v317",
+      "name": "공학원 자판기 1",
+      "loc": [ 37.56055858428278, 126.93575218319894, 0 ],
+      "shown": true,
+      "place": [ "vending machine" ]
+    },
+    {
+      "id": "v318",
+      "name": "New vertex",
+      "loc": [ 37.56368511413672, 126.93490058183673, 0 ],
+      "shown": false
+    },
+    {
+      "id": "v319",
+      "name": "New vertex",
+      "loc": [ 37.56384032097282, 126.93495690822603, 0 ],
+      "shown": false
+    },
+    {
+      "id": "v320",
+      "name": "과학관 자판기",
+      "loc": [ 37.56380842918359, 126.9350588321686, 0 ],
+      "shown": true,
+      "place": [ "vending machine" ]
+    },
+    {
+      "id": "v321",
+      "name": "백양누리 편의점",
+      "loc": [ 37.56321736555169, 126.93767935037616, 0 ],
+      "shown": true,
       "place": [ "convenient" ]
     }
   ],
@@ -1212,14 +1282,6 @@
       "name": "New Edge",
       "vs": "v47",
       "ve": "v43",
-      "w": null,
-      "f": { },
-      "undir": true
-    },
-    {
-      "name": "New Edge",
-      "vs": "v47",
-      "ve": "v45",
       "w": null,
       "f": { },
       "undir": true
@@ -2610,22 +2672,6 @@
     },
     {
       "name": "New Edge",
-      "vs": "v163",
-      "ve": "v166",
-      "w": null,
-      "f": { },
-      "undir": true
-    },
-    {
-      "name": "New Edge",
-      "vs": "v166",
-      "ve": "v13",
-      "w": null,
-      "f": { },
-      "undir": true
-    },
-    {
-      "name": "New Edge",
       "vs": "v13",
       "ve": "v165",
       "w": null,
@@ -2642,19 +2688,145 @@
     },
     {
       "name": "New Edge",
-      "vs": "v155",
-      "ve": "v166",
+      "vs": "v165",
+      "ve": "v155",
       "w": null,
       "f": { "inside": true },
       "undir": true
     },
     {
       "name": "New Edge",
-      "vs": "v165",
-      "ve": "v155",
+      "vs": "v310",
+      "ve": "v92",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v313",
+      "ve": "v312",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v312",
+      "ve": "v311",
+      "w": null,
+      "f": { "inside": true },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v311",
+      "ve": "v314",
+      "w": null,
+      "f": { "inside": true },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v314",
+      "ve": "v34",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v315",
+      "ve": "v312",
+      "w": null,
+      "f": { "inside": true },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v316",
+      "ve": "v35",
+      "w": null,
+      "f": { "inside": true },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v316",
+      "ve": "v311",
+      "w": null,
+      "f": { "inside": true },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v317",
+      "ve": "v316",
+      "w": null,
+      "f": { "inside": true },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v318",
+      "ve": "v47",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v318",
+      "ve": "v45",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v320",
+      "ve": "v319",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v319",
+      "ve": "v76",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v318",
+      "ve": "v319",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v163",
+      "ve": "v13",
+      "w": null,
+      "f": { },
+      "undir": true
+    },
+    {
+      "name": "New Edge",
+      "vs": "v321",
+      "ve": "v164",
       "w": null,
       "f": { "inside": true },
       "undir": true
     }
-  ]
+  ],
+  "places": {
+    "convenient": "편의점",
+    "cafeteria": "식당",
+    "coffee": "카페",
+    "vending machine": "자판기"
+  }
 }

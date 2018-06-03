@@ -99,10 +99,10 @@
       .route_time{grid-area:time;}
       .route_arrivaltime{grid-area:arrivaltime;}
       
-      .route_element .arrival_ontime{
+      .arrival_ontime{
         color:green;
       }
-      .route_element .arrival_late{
+      .arrival_late{
         color:red;
       }
       .route_begin{grid-area:gobtn}
@@ -292,6 +292,7 @@
 
 
         <div id="uipanel_routes" style="display:none">
+            <div id="uipanel_route_message"></div>
           <template id="route_template">
             <div class="route_element">
               <img class="route_icon">
@@ -423,19 +424,31 @@
       });
 
 
+      var places = {};
       Geodata.addUpdateListener(function () {
-          //Datalist에 꼭짓점 이름들을 넣음.
-          var destinationsDataList = document.getElementById("destinationsData");
-          while (destinationsDataList.hasChildNodes())
-              destinationsDataList.removeChild(destinationsDataList.lastChild);
-          for (var i = 0; i < Geodata.graph.vertices.length; i++) {
-              var v = Geodata.graph.vertices[i];
-              if (v.shown) {
-                  var opt = document.createElement("option");
-                  opt.setAttribute("value", v.name);
-                  destinationsDataList.appendChild(opt);
+        //Datalist에 꼭짓점 이름들을 넣음.
+        //place정보를 저장함
+        var destinationsDataList = document.getElementById("destinationsData");
+        while (destinationsDataList.hasChildNodes())
+          destinationsDataList.removeChild(destinationsDataList.lastChild);
+        for (var i = 0; i < Geodata.graph.vertices.length; i++) {
+          var v = Geodata.graph.vertices[i];
+          if (v.shown) {
+            var opt = document.createElement("option");
+            opt.setAttribute("value", v.name);
+            destinationsDataList.appendChild(opt);
+
+            if (v.place) {
+              for (var j = 0; j < v.place.length; j++) {
+                var p = v.place[j];
+                if (!places[p])
+                  places[p] = [];
+                places[p].push(v);
               }
+            }
           }
+        }
+        
       });
 
       Geodata.load("mapdata.json");
@@ -464,6 +477,7 @@
 
 
       var uipanel_route_list=document.getElementById("uipanel_route_list");
+      var uipanel_route_message=document.getElementById("uipanel_route_message");
       
 
       var search_button_importTT = document.getElementById("uipanel_search_button_importtt");
@@ -695,16 +709,18 @@
       uipanel_tabs_settings.addEventListener("click",displaySettingsPanel);
 
       // UI Mode: Search --> RouteListing
-      function enterRouteListingMode(paths, timelimit){
+      function enterRouteListingMode(paths, timelimit,message){
         displayRouteListingPanel();
         
         cleanRouteList();
+        
+        uipanel_route_message.innerHTML=message;
         
         Log.debug("Listing "+paths.length+" paths.");
         paths.forEach(function(currentPath){
           //let currentPath=paths[i]; //we use let here so function closures don't fuck us over
           var newElement = document.importNode(routeTemplate.content, true);
-          newElement.querySelectorAll(".route_name")[0].innerHTML=currentPath.pref.time_name;
+          newElement.querySelectorAll(".route_name")[0].innerHTML=currentPath.name;
           newElement.querySelectorAll(".route_time")[0].innerHTML=Util.humanReadableTime(currentPath.timeRequired);
           
           var arrivalTimeDateObj=new Date(Date.now()+currentPath.timeRequiredInMillisec());
@@ -716,7 +732,7 @@
           newElement.querySelector(".route_icon").setAttribute("src",route_icon_path[currentPath.pref.time_name]);
           newElement.querySelector(".route_begin").addEventListener("click",function(){
             Log.info("begin navigation.");
-            enterNavigationMode(currentPath);
+            enterNavigationMode(currentPath, timelimit);
           });
           uipanel_route_list.appendChild(newElement);
 
@@ -732,7 +748,7 @@
           });
         });
       }
-      function enterNavigationMode(path){
+      function enterNavigationMode(path, timelimit){
         Log.info("Navigation mode entered."+path.from.name+">>"+path.to.name+"["+path.pref.time_name+"]")
         
         var navContext=new NavigationContext(path);
@@ -758,7 +774,7 @@
 
 
         navigation_routename.innerHTML=path.from.name+" -> "+path.to.name;
-        navigation_targettime.innerHTML="목표도착시각: ";
+        navigation_targettime.innerHTML="목표도착시각: "+Util.timeStampToFormattedTime(timelimit);
         navigation_timeremaining.innerHTML="남은시간: ";
         navigation_eta.innerHTML="예상도착시간: ";
         
@@ -767,6 +783,14 @@
           navigation_eta.innerHTML="예상도착시간: "+Util.timeStampToFormattedTime(data.arrivalTime);
           displayProgessOnCanvas(data.routeCompletionRatio,
                                  route_icon_HTMLImageElement[path.pref.time_name]);
+          
+          if (new Date(Date.now()+data.timeLeft).getTime()>timelimit){
+            navigation_eta.classList.remove("arrival_ontime");
+            navigation_eta.classList.add("arrival_late");
+          }else{
+            navigation_eta.classList.remove("arrival_late");
+            navigation_eta.classList.add("arrival_ontime");
+          }
         });
         
           
@@ -836,11 +860,24 @@
 
 
         var path1 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "walk" });
+        path1.name="걷기";
         var path2 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "run" });
+        path2.name="뛰기";
+        
         var path3 = new Path(Geodata.graph, fromVertex, toVertex, pref_walk_inside);
+        path3.name="실내통로 우선";
+        
+        var pathlist;
+        var msg="";
+        if (Weather.getCompositeGrade()=="bad"){
+            msg="날씨가 좋지 않아 실내 통로를 우선 탐색합니다.";
+            pathlist=[path3,path1];
+        }else{
+            pathlist=[path1,path2];
+        }
 
 
-        enterRouteListingMode([path1,path2,path3],timeLimitTimestamp);
+        enterRouteListingMode(pathlist,timeLimitTimestamp,msg);
       });
       
       // 바꾸기 버튼

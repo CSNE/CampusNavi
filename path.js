@@ -6,7 +6,7 @@
     this.from=from;
     this.to=to;
 
-
+    this.name="Unnamed Path";
     if (!pref)
         pref = { "time_name": "walk" };
     this.pref=pref;
