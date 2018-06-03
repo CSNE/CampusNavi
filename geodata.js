@@ -81,14 +81,21 @@ var Geodata = (function () {
     {
         if (req.readyState == 4 && req.status == 200) {
             Geodata.json = req.responseText;
-            for (var i = 0; i < onupdate.length; i++)
-            {
-                onupdate[i]();
-            }
+            update();
+        }
+    }
+    function update()
+    {
+        for (var i = 0; i < onupdate.length; i++) {
+            onupdate[i]();
         }
     }
     function load(url)
     {
+        if (document.location.protocol === "file:") {
+            update();
+            return;
+        }
         try {
             req = new XMLHttpRequest();
             req.addEventListener("readystatechange", callback, false);
@@ -97,8 +104,7 @@ var Geodata = (function () {
             req.setRequestHeader("Accept", "application/json; charset=utf-8");
             req.send();
         }
-        catch (e)
-        {
+        catch (e) {
             Log.error(e.message);
         }
     }

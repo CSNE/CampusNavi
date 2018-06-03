@@ -789,9 +789,11 @@
 
 
       
-      search_button_importTT.addEventListener("click",function(){
-        Log.warning("Functionality not yet implemented!");
-      })
+      search_button_importTT.addEventListener("click", function () {
+          Log.warning("Functionality not yet implemented!");
+      });
+
+      var pref_walk_inside = { "time_name": "walk", "factors": [{ "condition": [{ "name": "inside", "value": false }], multiplier: 2 }] };
 
       uipanel_search.addEventListener("submit", function () {
         var fromName = search_input_from.value;
@@ -833,7 +835,7 @@
 
         var path1 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "walk" });
         var path2 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "run" });
-        var path3 = new Path(Geodata.graph, fromVertex, toVertex, { "time_name": "walk", "factors": [{ "condition": [{"name": "inside", "value": false}], multiplier: 2}] });
+        var path3 = new Path(Geodata.graph, fromVertex, toVertex, walk_inside);
 
 
         enterRouteListingMode([path1,path2,path3],timeLimitTimestamp);

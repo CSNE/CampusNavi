@@ -378,7 +378,7 @@ function create_new_vertex(btn, obj) {
     e.addEventListener("dblclick", element_dblclick);
 
     if (!obj)
-        obj = { id: "v" + vertex_id_counter++, name: "New vertex", loc: getDefaultLocation(), json: {} };
+        obj = { id: "v" + vertex_id_counter++, name: "New vertex", loc: getDefaultLocation(), "shown": false, json: {} };
     obj.type = "vertex";
     obj.edges = new List();
 
