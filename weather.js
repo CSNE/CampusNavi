@@ -71,7 +71,17 @@ var Weather=(function(){
         if (d>=200) return "bad";
 
         Log.error("Inavlid Dust Levels! "+d);
-
+    }
+    function getCompositeGrade(){
+        var d=getCurrentDustGrade();
+        var t=getCurrentTemperatureGrade();
+        var w=getCurrentWeatherGrade();
+        
+        if (d===null || t===null || w===null) return null;
+        if (d==="bad" || t==="bad" || w==="bad") return "bad";
+        if (d==="okay" || t==="okay" || w==="okay") return "okay";
+        return "good";
+        
     }
 
     function getCurrentDustLevelsInShinchon(){
@@ -193,7 +203,8 @@ var Weather=(function(){
         "getCurrentTemperatureGrade":getCurrentTemperatureGrade,
         "getCurrentWeatherNameKorean":getCurrentWeatherNameKorean,
         "debug_override_weather":debug_override_weather,
-        "addCallback":addCallback
+        "addCallback":addCallback,
+        "getCompositeGrade":getCompositeGrade
     }
 
 })();

@@ -83,7 +83,48 @@ function TimeTable(){
 	
 	this.lsUsable = (typeof(localStorage)=="undefined")? false : true;
 	
+	this.buildings = ['공학원', '제1공학관', '제2공학관', '제3공학관', '제4공학관', '간호대학', '의과대학', 
+						'경영관', '음악관', '체육관', '체육교육관', '백양관', '과학관', '과학원', '대우관',
+						'외솔관', '외솔관2', '교육과학관', '위당관', '삼성관', '신학관', '빌링슬리관', '연희관',
+						'성암관', '상남경영관'];
+	this.classPrefix = ['외', '신', '백', '교', '위', '위B', '상본', '상본B', '경영', '경영B',
+						'과', '과S', '과B', '공A', '공B', '공C', '공D', '신', '빌', '연', '성',
+						'음', '삼', '삼B', '스포츠', '체'];
+	
+	this.locationCheck = function(location) {
+	/*
+		입력받은 강의실 정보가 유효하면 0반환, 아니면 0이 아닌 값 반환
+	*/
+		var loc = location;
+		while (loc.charAt(0) == ' ') {
+            loc = loc.substring(1);
+        }
+		for(var i=0; i<this.buildings.length; i++) {
+			if(loc == this.buildings[i]) return 0;
+		}
+		for(var i=0; i<loc.length; i++) {
+			if(loc.charAt(i)>='0' && loc.charAt(i)<='9') break;
+		}
+		var prefix = loc.substring(0,i);
+		var suffix = loc.substring(i,loc.length);
+		if(i>=loc.length || suffix.length!=3) return 1;
+		
+		for(var i=0; i<this.classPrefix.length; i++) {
+			if(prefix == this.classPrefix[i]) break;
+		}
+		if(i>=this.classPrefix.length) return 2;
+		
+		for(var i=0; i<suffix.length; i++) {
+			if(suffix.charAt(i)<'0' || suffix.charAt(i)>'9') return 3;
+		}
+		
+		return 0;
+	}
+	
 	this.timeCheck = function(weekDay, startTime, endTime) {
+	/*
+		입력받은 시간이 유효하면 0반환, 아니면 0이 아닌 값 반환
+	*/
 		if(startTime >= endTime) return 1; // TimeTableElement 시간 유효성 검사
 		
 		var element;
@@ -310,7 +351,11 @@ function TimeTable(){
 		현재 페이지 localStorage에 저장되어 있는 쿠키 삭제
 	*/
 		if(this.lsUsable) {	// localStorage 객체를 사용 가능한 경우
-			localStorage.clear();
+			for(var i=0; i<7; i++) {
+				for(var j=0; j<this.elements[i].length; j++) {
+					localStorage.removeItem(i + "," + j);
+				}
+			}
 		}
 		else {		// localStorage 객체를 사용할 수 없는 경우
 			for(var i=0; i<7; i++) {
@@ -318,7 +363,7 @@ function TimeTable(){
 					deleteCookie(i + "," + j);
 				}
 			}
-			deleteCookie("visited");
+			//deleteCookie("visited");
 		}
 	}
 	
