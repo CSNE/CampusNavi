@@ -3,6 +3,7 @@
 	<head>
 		<meta charset = "utf-8"/>
 		<title>시간표 입력</title>
+		<link rel="stylesheet" type="text/css" href="timetableeditor.css">
 		<script src = "timetable.js"></script>
 		<script src = "userdata.js"></script>
 		<script>
@@ -48,7 +49,7 @@
 				else if(timetable.locationCheck(location.value)!=0) {
 					p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
 									"알파벳은 대문자로, 호수는 세자리, 공백 없이 입력해주세요<br/>"+
-									"//유효한 입력 예 : 공D504, 혹은 과학관(건물이름) 등.";
+									"//유효한 입력 예 : '공D504', 혹은 '과학관'(건물이름) 등.";
 					p.style.color = "red"; return;
 				}
 				else {
@@ -145,7 +146,7 @@
 				if(returnNum != 0) {
 					p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
 									"알파벳은 대문자로, 호수는 세자리, 공백 없이 입력해주세요<br/>"+
-									"//유효한 입력 예 : 공D504, 혹은 과학관(건물이름) 등.";
+									"//유효한 입력 예 : '공D504', 혹은 '과학관'(건물이름) 등.";
 					p.style.color = "red";
 					return 1;
 				}
@@ -238,6 +239,7 @@
 		<h1>시간표 입력</h1>
 		<p><a href = "index.html">Go Back</a></p>
 		
+		<div id = "frame1">
 		<form>
 			<ul>
 			<li>과목명 : <br/><input id = "className" autofocus type = "text" size = "25"		
@@ -284,15 +286,17 @@
 			</ul>
 			
 		</form>
+		</div>
 		
+		<br/>
 		<button id = "insertButton" type = "button">추가</button>
-		<!--<button id = "refreshButton" type = "button">시간표 그리기</button>
-		<button id = "saveButton" type = "button">시간표 저장</button>
-		<button id = "deleteButton" type = "button">수업 삭제</button>-->
 		<button id = "clearButton" type = "button">전체 시간표 삭제</button>
+		<br/>
 		
+		<div id = "frame2">
 		<p id = "paragraph"><br/></p>
-		<table border = "1">
+		<br/>
+		<table>
 			<caption>시간표</caption>
 			<thead>
 			<tr>
@@ -306,5 +310,6 @@
 			</thead>
 			<tbody id = "tbody"></tbody>
 		</table>
+		</div>
 	</body>
 </html>
