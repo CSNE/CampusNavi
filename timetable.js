@@ -351,7 +351,11 @@ function TimeTable(){
 		현재 페이지 localStorage에 저장되어 있는 쿠키 삭제
 	*/
 		if(this.lsUsable) {	// localStorage 객체를 사용 가능한 경우
-			localStorage.clear();
+			for(var i=0; i<7; i++) {
+				for(var j=0; j<this.elements[i].length; j++) {
+					localStorage.removeItem(i + "," + j);
+				}
+			}
 		}
 		else {		// localStorage 객체를 사용할 수 없는 경우
 			for(var i=0; i<7; i++) {
@@ -359,7 +363,7 @@ function TimeTable(){
 					deleteCookie(i + "," + j);
 				}
 			}
-			deleteCookie("visited");
+			//deleteCookie("visited");
 		}
 	}
 	
