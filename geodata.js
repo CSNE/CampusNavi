@@ -68,10 +68,8 @@ function createDataJson()
 {
     var masterGraph = new Graph();
 
-    var raw = getDataAjax("mapdata.txt"), json;
-    if (raw)
-        json = unescape(raw);
-    else
+    var json = getDataAjax("mapdata.json"), json;
+    if (!json)
         json = '{ "vertices": [], "edges": [] }';
 
     var obj = JSON.parse(json);

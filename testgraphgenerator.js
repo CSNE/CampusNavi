@@ -80,7 +80,7 @@ var edge_style_selected = { bubblingMouseEvents: false, pane: "selected", weight
 
 var vertex_attrs = {};
 var edge_attrs = {};
-["id", "name", "loc"].forEach(function (e) { vertex_attrs[e] = true; });
+["id", "name", "loc", "shown", "place"].forEach(function (e) { vertex_attrs[e] = true; });
 ["name", "vs", "ve", "w", "f"].forEach(function (e) { edge_attrs[e] = true; });
 
 function getCurrentJSON() {
@@ -90,7 +90,7 @@ function getCurrentJSON() {
     };
     for (var i = V.iterator() ; !i.end() ; i.next()) {
         var o = i.get();
-        var e = { id: o.id, name: o.name, loc: o.loc };
+        var e = { id: o.id, name: o.name, loc: o.loc, shown: o.shown, place: o.place };
         for (var j in o.json) {
             if (!vertex_attrs[j])
                 e[j] = o.json[j];
@@ -146,8 +146,8 @@ function storeData(data) {
     //Log.debug(document.cookie);
 }
 
-function applyData(data) {
-    var obj = JSON.parse(unescape(data));
+function applyData(rawdata) {
+    var obj = JSON.parse(rawdata);
     var vb = document.getElementById("vbtn");
     var eb = document.getElementById("ebtn");
     for (var i = 0; i < obj.vertices.length; i++) {
@@ -155,7 +155,7 @@ function applyData(data) {
         if (o.loc.lat !== undefined) {
             o.loc = [o.loc.lat, o.loc.lng, 0];
         }
-        var e = { id: o.id, name: o.name, loc: o.loc, json: {} };
+        var e = { id: o.id, name: o.name, loc: o.loc, shown: o.shown ? true : false, place: o.place, json: {} };
         for (var j in o) {
             if (!vertex_attrs[j])
                 e.json[j] = o[j];
@@ -171,7 +171,7 @@ function applyData(data) {
         }
         create_new_edge(eb, e);
     }
-    document.getElementById("json_string").innerHTML = data;
+    document.getElementById("json_string").innerHTML = escape(data);
 }
 
 function clearAll() {
@@ -362,6 +362,8 @@ var vertex_id_counter = 0;
 var element_data_vertex = [
     { label: "id: ", name: "id", type: "string" },
     { label: ", name: ", name: "name", type: "string" },
+    { label: ", shown: ", name: "shown", type: "json" },
+    { label: ", place: ", name: "place", type: "json" },
     { label: ", json: ", name: "json", type: "json" }
 ];
 var element_data_edge = [
