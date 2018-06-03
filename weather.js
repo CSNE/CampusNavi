@@ -87,6 +87,7 @@ var Weather=(function(){
 
 
     function fetch(callback) {
+        Log.debug("Fetching weather...");
         /*
         신촌 날씨 정보와 미세먼지 정보를 요청하는 함수.
         getCurrentWeatherInShinchon 함수를 호출할 때 요청하면 값을 제대로 반환할 수가 없어서 웹페이지 로드되지마자 일단 요청.
@@ -99,6 +100,7 @@ var Weather=(function(){
             type: "GET",
             async: "true",
             success: function(resp) {
+                Log.debug("Got response from openweathermap");
                 shinchonWeatherData = {
                     "weather": resp.weather[0].main,
                     "weatherid": resp.weather[0].id,
@@ -132,6 +134,7 @@ var Weather=(function(){
             type: "GET",
             async: "false",
             success: function(resp) {
+                Log.debug("Got response from waqi.info");
                 // console.log(resp);
                 // console.log(resp["data"]["aqi"]);
                 shinchonAqiData = resp["data"]["aqi"];

@@ -475,6 +475,7 @@
         
         
       Weather.fetch(function(){
+        Log.info("Weather data successfully acquired. Displaying.")
         uipanel_weather_weather_display.innerHTML=Weather.getCurrentWeatherNameKorean();
         uipanel_weather_weather_display.classList.remove("uitext_unknown");
         uipanel_weather_weather_display.classList.add("uitext_"+Weather.getCurrentWeatherGrade());
