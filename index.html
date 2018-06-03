@@ -437,6 +437,8 @@
               }
           }
       });
+
+      Geodata.load("mapdata.json");
       
       //Icons
       var route_icon_path = {
@@ -835,7 +837,7 @@
 
         var path1 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "walk" });
         var path2 = new Path(Geodata.graph, fromVertex, toVertex,{ "time_name": "run" });
-        var path3 = new Path(Geodata.graph, fromVertex, toVertex, walk_inside);
+        var path3 = new Path(Geodata.graph, fromVertex, toVertex, pref_walk_inside);
 
 
         enterRouteListingMode([path1,path2,path3],timeLimitTimestamp);

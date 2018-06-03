@@ -115,5 +115,3 @@ var Geodata = (function () {
         "load": load
     };
 }) ();
-
-Geodata.load("mapdata.json");
