@@ -120,7 +120,7 @@ function loadData() {
             //alert(pair);
             switch (pair[0].trim()) {
                 case "data":
-                    ret = pair[1].trim();
+                    ret = unescape(pair[1].trim());
                     break;
                 case "vertex_id_counter":
                     //alert();
@@ -138,7 +138,7 @@ function storeData(data) {
     var date = new Date();
     date.setFullYear(date.getFullYear() + 1);
     //Log.debug(date.toUTCString());
-    document.cookie = "data=" + data + ";" +
+    document.cookie = "data=" + escape(data) + ";" +
         "expires=" + date.toUTCString() + ";";
     //Log.debug(x);
     document.cookie = "vertex_id_counter=" + vertex_id_counter + ";" +
@@ -146,8 +146,8 @@ function storeData(data) {
     //Log.debug(document.cookie);
 }
 
-function applyData(rawdata) {
-    var obj = JSON.parse(rawdata);
+function applyData(data) {
+    var obj = JSON.parse(data);
     var vb = document.getElementById("vbtn");
     var eb = document.getElementById("ebtn");
     for (var i = 0; i < obj.vertices.length; i++) {
@@ -171,7 +171,7 @@ function applyData(rawdata) {
         }
         create_new_edge(eb, e);
     }
-    document.getElementById("json_string").innerHTML = escape(data);
+    document.getElementById("json_string").innerHTML = data;
 }
 
 function clearAll() {
