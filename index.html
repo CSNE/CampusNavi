@@ -226,10 +226,10 @@
     <div id="debugpanel" style="display:none;">
       <div id="debug_buttons_container">
         <button onclick="debug_button_1_onclick()">Fake Location Mode</button>
-        <button onclick="debug_button_2_onclick()">Debug Button 2</button>
-        <button onclick="debug_button_3_onclick()">Debug Button 3</button>
-        <button onclick="debug_button_4_onclick()">Debug Button 4</button>
-        <button onclick="debug_button_5_onclick()">Debug Button 5</button>        
+        <button onclick="debug_button_2_onclick()">Weather: Good</button>
+        <button onclick="debug_button_3_onclick()">Weather: Okay</button>
+        <button onclick="debug_button_4_onclick()">Weather: Bad</button>
+        <button onclick="debug_button_5_onclick()">Log.error()</button>        
       </div>
       <div id="logcontainer"></div>
     </div>
@@ -493,21 +493,21 @@
       var uipanel_weather_temps_display=document.getElementById("uipanel_weather_temps_display");
         
         
-        
-      Weather.fetch(function(){
-        Log.info("Weather data successfully acquired. Displaying.")
+      Weather.addCallback(function(){
+        Log.debug("Weather data successfully acquired. Displaying.")
         uipanel_weather_weather_display.innerHTML=Weather.getCurrentWeatherNameKorean();
-        uipanel_weather_weather_display.classList.remove("uitext_unknown");
+        uipanel_weather_weather_display.className='';
         uipanel_weather_weather_display.classList.add("uitext_"+Weather.getCurrentWeatherGrade());
         
         uipanel_weather_air_display.innerHTML=Weather.getCurrentDustLevelsInShinchon();
-        uipanel_weather_air_display.classList.remove("uitext_unknown");
+        uipanel_weather_air_display.className='';
         uipanel_weather_air_display.classList.add("uitext_"+Weather.getCurrentDustGrade());
         
         uipanel_weather_temps_display.innerHTML=Weather.getCurrentWeatherInShinchon().temperature;
-        uipanel_weather_temps_display.classList.remove("uitext_unknown");
+        uipanel_weather_temps_display.className='';
         uipanel_weather_temps_display.classList.add("uitext_"+Weather.getCurrentTemperatureGrade());
       });
+      Weather.fetch();
       
       //TODO fix dis
       //This code WILL BREAK if:
@@ -855,12 +855,18 @@
       }
       function debug_button_2_onclick(){
         Log.debug("Button\n 2 clicked");
+        Log.info("Override weather: Good weather");
+        Weather.debug_override_weather("Clear",22,70);
       }
       function debug_button_3_onclick(){
         Log.debug("Button 3 clicked");
+        Log.info("Override weather: Okay weather");
+        Weather.debug_override_weather("Drizzle",27,150);
       }
       function debug_button_4_onclick(){
         Log.debug("Button 4 clicked");
+        Log.info("Override weather: Bad weather");
+        Weather.debug_override_weather("Thunderstorm",33,220);
       }
       function debug_button_5_onclick(){
         Log.debug("Button 5 clicked");

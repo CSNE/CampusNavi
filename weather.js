@@ -24,13 +24,13 @@ var Weather=(function(){
     */
         return shinchonWeatherData;
     }
-  
+
     function getCurrentWeatherNameKorean(){
-        
+
         if (getCurrentWeatherInShinchon()===null) return null;
-        
+
         var w=getCurrentWeatherInShinchon().weather;
-        
+
         if (w==="Thunderstorm") return "폭풍";
         if (w==="Drizzle") return "약한비";
         if (w==="Rain") return "비";
@@ -38,25 +38,25 @@ var Weather=(function(){
         if (w==="Atmosphere") return "안개";
         if (w==="Clear") return "맑음";
         if (w==="Clouds") return "흐림";
-        
+
         Log.error("Unexpected Weather! "+w);
     }
-  
+
     function getCurrentWeatherGrade(){
         //Returns: "Good","Okay","bad"
         if (getCurrentWeatherInShinchon()===null) return null;
-        
+
         var w=getCurrentWeatherInShinchon().weather;
-        
+
         if (w==="Clear" || w==="Clouds") return "good";
         if (w==="Drizzle" || w==="Atmosphere") return "okay";
         if (w==="Thunderstorm" || w==="Rain" || w==="Snow") return "bad";
-        
+
         Log.error("Unexpected Weather! "+w);
     }function getCurrentTemperatureGrade(){
         //Returns: "Good","Okay","bad"
         if (getCurrentWeatherInShinchon()===null) return null;
-        
+
         var t=getCurrentWeatherInShinchon().temperature;
         if (t<25 && t>5) return "good";
         if (t>30 || t<-5) return "bad";
@@ -64,14 +64,14 @@ var Weather=(function(){
     }function getCurrentDustGrade(){
         //Returns: "Good","Okay","bad"
         if (getCurrentDustLevelsInShinchon()===null) return null;
-        
+
         var d=getCurrentDustLevelsInShinchon();
         if (d<125) return "good";
         if (d<200) return "okay";
         if (d>=200) return "bad";
-        
+
         Log.error("Inavlid Dust Levels! "+d);
-        
+
     }
 
     function getCurrentDustLevelsInShinchon(){
@@ -85,8 +85,25 @@ var Weather=(function(){
         return shinchonAqiData;
     }
 
+    function debug_override_weather(weather,temps,aqi){
+        shinchonWeatherData={"weather":weather,"temperature":temps};
+        shinchonAqiData=aqi;
+        
+        callCallbacks();
+    }
 
-    function fetch(callback) {
+    var callbacks=[];
+
+    function addCallback(callback){
+        callbacks.push(callback);
+    }
+    function callCallbacks(){
+        for(var i=0;i<callbacks.length;i++){
+            callbacks[i]();
+        }
+    }
+
+    function fetch() {
         Log.debug("Fetching weather...");
         /*
         신촌 날씨 정보와 미세먼지 정보를 요청하는 함수.
@@ -101,23 +118,27 @@ var Weather=(function(){
             async: "true",
             success: function(resp) {
                 Log.debug("Got response from openweathermap.org");
-                shinchonWeatherData = {
-                    "weather": resp.weather[0].main,
-                    "weatherid": resp.weather[0].id,
-                    "temperature": Math.round(resp.main.temp- 273.15),
-                    "humidity": resp.main.humidity,
-                    "weatherIcon": "http://openweathermap.org/img/w/" + resp.weather[0].icon + ".png",
-                    "wind": resp.wind.speed,
-                    "cloud": (resp.clouds.all) +"%"
-                };
-                
-                if (shinchonWeatherData.weather===undefined 
-                    || shinchonWeatherData.weather===null
-                    || shinchonWeatherData.weather===NaN) Log.error("Weather Fetch Failed. "+shinchonWeatherData.weather);
-              
-                if (shinchonWeatherData!==null && shinchonAqiData!==null && callback!==undefined){
-                    callback();
-                } 
+                try{
+                    shinchonWeatherData = {
+                        "weather": resp.weather[0].main,
+                        "weatherid": resp.weather[0].id,
+                        "temperature": Math.round(resp.main.temp- 273.15),
+                        "humidity": resp.main.humidity,
+                        "weatherIcon": "http://openweathermap.org/img/w/" + resp.weather[0].icon + ".png",
+                        "wind": resp.wind.speed,
+                        "cloud": (resp.clouds.all) +"%"
+                    };
+
+                    if (shinchonWeatherData.weather===undefined 
+                        || shinchonWeatherData.weather===null
+                        || shinchonWeatherData.weather===NaN) Log.error("Weather Fetch Failed. "+shinchonWeatherData.weather);
+
+                    if (shinchonWeatherData!==null && shinchonAqiData!==null){
+                        callCallbacks();
+                    } 
+                }catch(err){
+                    Log.error("Error while parsing response.\n"+err)
+                }
 
                 // console.log(ret1);
                 // document.getElementById("hi").innerHTML = ret["weather"];
@@ -140,15 +161,21 @@ var Weather=(function(){
                 Log.debug("Got response from waqi.info");
                 // console.log(resp);
                 // console.log(resp["data"]["aqi"]);
-                shinchonAqiData = resp["data"]["aqi"];
-              
-                if (shinchonAqiData===undefined 
-                    || shinchonAqiData===null
-                    || shinchonAqiData===NaN) Log.error("AQI Fetch Failed. "+shinchonAqiData);
+                try{
+                    shinchonAqiData = resp["data"]["aqi"];
 
-                if (shinchonWeatherData!==null && shinchonAqiData!==null && callback!==undefined){
-                    callback();
-                } 
+                    if (shinchonAqiData===undefined 
+                        || shinchonAqiData===null
+                        || shinchonAqiData===NaN) Log.error("AQI Fetch Failed. "+shinchonAqiData);
+
+                    if (shinchonWeatherData!==null && shinchonAqiData!==null){
+                        callCallbacks();
+                    } 
+
+                }catch(err){
+                    Log.error("Error while parsing response.\n"+err)
+                }
+
             },
             error:function(jqXHR,textStatus,errorThrown){
                 Log.error("Error from waqi.info:\n"+textStatus+"\n"+errorThrown);
@@ -164,7 +191,9 @@ var Weather=(function(){
         "getCurrentWeatherGrade":getCurrentWeatherGrade,
         "getCurrentDustGrade":getCurrentDustGrade,
         "getCurrentTemperatureGrade":getCurrentTemperatureGrade,
-        "getCurrentWeatherNameKorean":getCurrentWeatherNameKorean
+        "getCurrentWeatherNameKorean":getCurrentWeatherNameKorean,
+        "debug_override_weather":debug_override_weather,
+        "addCallback":addCallback
     }
 
 })();
