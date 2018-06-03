@@ -147,6 +147,8 @@ function applyData(data) {
         }
         create_new_edge(eb, e);
     }
+    if (vertex_id_counter != vertex_id_counter)
+        vertex_id_counter = obj.vertices.length * 2;
     document.getElementById("json_string").innerHTML = data;
 }
 
