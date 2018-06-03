@@ -160,6 +160,7 @@
       #uipanel_tabs{
         display:flex;
         flex-direction: row;
+        overflow-x:scroll;
       }
       #uipanel_tabs *{
         flex-grow: 1;
@@ -177,6 +178,36 @@
       
       #uipanel_tabs .unclickable_tab{
         background-color: lightgray;
+      }
+      
+      .clickable{
+        cursor: pointer;
+      }
+      
+      #uipanel_persistant{
+        display:flex;
+        flex-direction: row;
+      }
+      
+      #uipanel_persistant *{
+        margin:0;
+      }
+
+      #uipanel_persistant_spacer{
+        flex-grow: 1;
+      }
+      
+      .uitext_good{
+        color:green;
+      }
+      .uitext_okay{
+        color:orange;
+      }
+      .uitext_bad{
+        color:red;
+      }
+      .uitext_unknown{
+        color:gray;
       }
 
 
@@ -206,11 +237,13 @@
       <div class="uipanel" >
         
         <div id="uipanel_persistant">
-          <div>
-            Title Banner Here
+          <div id="uipanel_persistant_left">
+            <strong>CampusNavi</strong>
           </div>
-          <div>
-            WEATHER INFORMATION
+          <div id="uipanel_persistant_spacer"></div>
+          <div id="uipanel_persistant_right">
+            <sub>날씨 </sub><span id="uipanel_weather_weather_display" class="uitext_unknown">???</span>
+            <sub>미세먼지 </sub><span id="uipanel_weather_air_display" class="uitext_unknown">???</span>
           </div>
           
         </div>
@@ -218,12 +251,11 @@
           <div id="uipanel_tabs_search" class="clickable selected_tab">Search</div>
           <div id="uipanel_tabs_nearby" class="clickable">Nearby</div>
           <div id="uipanel_tabs_settings" class="clickable">Settings</div>
-          <div id="uipanel_tabs_routelist" class="clickable unclickable_tab">Route</div>
-          <div id="uipanel_tabs_navigation" class="clickable unclickable_tab">Navigation</div>
+          <div id="uipanel_tabs_routelist" class="unclickable_tab">Route</div>
+          <div id="uipanel_tabs_navigation" class="unclickable_tab">Navigation</div>
         </div>
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
         <form id="uipanel_search" action="javascript:">
-          <h2>SEARCH</h2>
           <div id="uipanel_search_grid">
             <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
@@ -287,7 +319,7 @@
           </div>
         </div>
         <div id="uipanel_settings" style="display:none">
-          SETTINGS!
+          <a href="timetableeditor.html">Timetable Edit</a>
         </div>
       </div>
 
