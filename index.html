@@ -634,7 +634,12 @@
 
 
       //UI 이벤트 처리 함수들.
+      
+      //Called whenever a state change occurs.
+      var uiStateChangeListener=[];
+      
       function undisplayAll(){
+        for(var i=0;i<uiStateChangeListener.length;i++) uiStateChangeListener[i]();
         uipanel_search.style.display="none";
         uipanel_routes.style.display="none";
         uipanel_near.style.display="none";
@@ -758,6 +763,8 @@
                                  route_icon_HTMLImageElement[path.pref.time_name]);
         });
         
+          
+          
         //TODO this is a memory leak!
         //All the objects are not actually released
         //and event listeners are not removed.
@@ -769,6 +776,8 @@
           navContext.deactivate();
           path.removeFromMap(mymap);
         }
+        
+        uiStateChangeListener.push(exitNavigationMode);
 
         
       }
