@@ -40,7 +40,7 @@ function createDataXml()
 
 function getDataAjax(url)
 { 
-    if (document.location.protocol==="file:") return null;
+    if (1||document.location.protocol==="file:") return null;
     //*
     try {
         
