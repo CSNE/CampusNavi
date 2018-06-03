@@ -3,6 +3,8 @@ function Graph() {
     this.edges = [];
     this.vertices = [];
 
+    this.vmap = {};
+
     this.addEdge = function (e) {
         // 그래프에 간선을 더합니다.
         // 이름이 같은 간선이 있다면 에러 로그가 찍힙니다. O(n^2)
@@ -24,6 +26,11 @@ function Graph() {
         if (v.name===this.vertices[i].name) Log.error("Duplicate vertex. name="+v.name);
       }
       //*/
+        if (v.shown) {
+            if (this.vmap[v.name])
+                Log.error("Duplicate vertex. name=" + v.name);
+            this.vmap[v.name] = v;
+        }
         v.id = this.vertices.length;
         this.vertices.push(v);
     }
@@ -33,11 +40,8 @@ function Graph() {
         return GraphCalculations.findShortestPath(this, from, to, pref);
     }
     
-    this.findVertexWithName=function(name){
-      for(var i=0;i<this.vertices.length;i++){
-        if (this.vertices[i].name===name) return this.vertices[i];
-      }
-      return null;
+    this.findVertexWithName = function (name) {
+        return this.vmap[name];
     }
 
 }
