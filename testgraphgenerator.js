@@ -110,40 +110,16 @@ function getCurrentJSON() {
 }
 
 function loadData() {
-    //Log.debug("loadData");
-    var ret = null;
-    //Log.debug(document.cookie);
-    if (document.cookie) {
-        var arr = document.cookie.split(";");
-        for (var i = 0; i < arr.length; i++) {
-            var pair = arr[i].split("=");
-            //alert(pair);
-            switch (pair[0].trim()) {
-                case "data":
-                    ret = unescape(pair[1].trim());
-                    break;
-                case "vertex_id_counter":
-                    //alert();
-                    vertex_id_counter = parseInt(pair[1].trim());
-                    break;
-            }
-        }
+    if (localStorage) {
+        vertex_id_counter = parseInt(localStorage.getItem("test_graphgenerator_vertex_id_counter"));
+        return localStorage.getItem("test_graphgenerator_data");
     }
-    return ret;
-    //Log.info("no cookie");
+    return null;
 }
 
 function storeData(data) {
-    //Log.debug("storeData");
-    var date = new Date();
-    date.setFullYear(date.getFullYear() + 1);
-    //Log.debug(date.toUTCString());
-    document.cookie = "data=" + escape(data) + ";" +
-        "expires=" + date.toUTCString() + ";";
-    //Log.debug(x);
-    document.cookie = "vertex_id_counter=" + vertex_id_counter + ";" +
-        "expires=" + date.toUTCString() + ";";
-    //Log.debug(document.cookie);
+    localStorage.setItem("test_graphgenerator_data", data);
+    localStorage.setItem("test_graphgenerator_vertex_id_counter", vertex_id_counter);
 }
 
 function applyData(data) {
