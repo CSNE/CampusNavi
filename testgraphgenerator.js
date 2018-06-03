@@ -123,6 +123,7 @@ function applyData(data) {
         create_new_edge(eb, e);
     }
 
+    extra_json = {};
     for (var i in obj)
     {
         if (i != "vertices" && i != "edges")
