@@ -174,8 +174,8 @@
                 }
                 else if(timetable.locationCheck(location.value)!=0) {
                     p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
-                        "정식 강의실 약어 혹은 강의동(건물)이름을 입력해주세요<br/>"+
-                        "//유효한 입력 예 : '공D504', 혹은 '과학관'(건물이름) 등.";
+                        "정식 강의동 약어(+강의실 호수)를 입력해주세요<br/>"+
+                        "//유효한 입력 예 : '공D504', 혹은 '과232' 등.";
                     p.style.color = "red"; return;
                 }
                 else {
@@ -265,8 +265,8 @@
                 var p = document.getElementById("paragraph");
                 if(returnNum != 0) {
                     p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
-                        "정식 강의실 약어 혹은 강의동(건물)이름을 입력해주세요<br/>"+
-                        "//유효한 입력 예 : '공D504', 혹은 '과학관'(건물이름) 등.";
+                        "정식 강의동 약어(+강의실 호수)를 입력해주세요<br/>"+
+                        "//유효한 입력 예 : '공D504', 혹은 '과232' 등.";
                     p.style.color = "red";
                     return 1;
                 }
