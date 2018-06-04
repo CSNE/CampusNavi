@@ -39,17 +39,25 @@
         flex-grow:1;
       }
 
-
+      /* PC */
       @media screen and (min-aspect-ratio: 4/3){
         #maincontent {
           flex-direction: row;
         }
+        .uipanel{
+          border-left:solid 1px gray;
+        }
 
       }
-
+      
+      /* Mobile */
       @media screen and (max-aspect-ratio: 4/3){
         #maincontent {
           flex-direction: column;
+        }
+        
+        .uipanel{
+          border-top:solid 1px gray;
         }
       }
 
@@ -179,6 +187,12 @@
         display:flex;
         flex-direction: row;
         overflow-x:auto;
+        
+        margin-left:0;
+        padding-left:4px;
+        margin-right:0;
+        padding-right:4px;
+        border-bottom: solid 1px black;
       }
       #uipanel_tabs *{
         flex-grow: 1;
@@ -205,10 +219,27 @@
       #uipanel_persistant{
         display:flex;
         flex-direction: row;
+        
+        padding-top:4px;
+        padding-bottom: 4px;
+        margin-left:0;
+        padding-left:8px;
+        margin-right:0;
+        padding-right:8px;
+        
+        border-bottom: solid 1px black;
       }
       
       #uipanel_persistant *{
         margin:0;
+      }
+      
+      #uipanel_persistant_right{
+        display:flex;
+        
+      }
+      #uipanel_persistant_right_texts{
+        align-self: flex-end;
       }
 
       #uipanel_persistant_spacer{
@@ -227,8 +258,14 @@
       .uitext_unknown{
         color:gray;
       }
-
-
+      
+      .buttonanchor{
+        appearance: button;
+      }
+      .centerer{
+        display: flex;
+        justify-content: center;
+      }
 
     </style>
 
@@ -257,13 +294,15 @@
         
         <div id="uipanel_persistant">
           <div id="uipanel_persistant_left">
-            <strong>CampusNavi</strong>
+            <strong style="font-size:1.3em;">CampusNavi</strong>
           </div>
           <div id="uipanel_persistant_spacer"></div>
           <div id="uipanel_persistant_right">
-            <sub>날씨 </sub><span id="uipanel_weather_weather_display" class="uitext_unknown">???</span>
-            <sub>온도 </sub><span id="uipanel_weather_temps_display" class="uitext_unknown">???</span>
-            <sub>미세먼지 </sub><span id="uipanel_weather_air_display" class="uitext_unknown">???</span>
+            <span id="uipanel_persistant_right_texts">
+              <sub>날씨 </sub><span id="uipanel_weather_weather_display" class="uitext_unknown">???</span>
+              <sub>&nbsp;&nbsp;온도 </sub><span id="uipanel_weather_temps_display" class="uitext_unknown">???</span>
+              <sub>&nbsp;&nbsp;미세먼지 </sub><span id="uipanel_weather_air_display" class="uitext_unknown">???</span>
+            </span>
           </div>
           
         </div>
@@ -353,7 +392,11 @@
           </div>
         </div>
         <div id="uipanel_settings" style="display:none">
-          <a href="timetableeditor.html">Timetable Edit</a>
+          <div class="centerer">
+            <button onclick="location.href='timetableeditor.html'" style="margin:0 auto;width:100%;height:50px;font-size:1.5em;">
+              Timetable Editor
+            </button>
+          </div>
         </div>
       </div>
 

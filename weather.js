@@ -29,15 +29,16 @@ var Weather=(function(){
 
         if (getCurrentWeatherInShinchon()===null) return null;
 
-        var w=getCurrentWeatherInShinchon().weather;
-
-        if (w==="Thunderstorm") return "폭풍";
-        if (w==="Drizzle") return "약한비";
-        if (w==="Rain") return "비";
-        if (w==="Snow") return "눈";
-        if (w==="Atmosphere") return "안개";
-        if (w==="Clear") return "맑음";
-        if (w==="Clouds") return "흐림";
+        var wi=getCurrentWeatherInShinchon().weatherid;
+        
+        //https://openweathermap.org/weather-conditions
+        if (200<=wi && wi<300) return "폭풍";
+        if (300<=wi && wi<400) return "약한비";
+        if (500<=wi && wi<600) return "비";
+        if (600<=wi && wi<700) return "눈";
+        if (700<=wi && wi<800) return "안개";
+        if (800===wi) return "맑음";
+        if (800<wi && wi<900) return "흐림";
 
         Log.error("Unexpected Weather! "+w);
     }
@@ -46,11 +47,11 @@ var Weather=(function(){
         //Returns: "Good","Okay","bad"
         if (getCurrentWeatherInShinchon()===null) return null;
 
-        var w=getCurrentWeatherInShinchon().weather;
+        var wi=getCurrentWeatherInShinchon().weatherid;
 
-        if (w==="Clear" || w==="Clouds") return "good";
-        if (w==="Drizzle" || w==="Atmosphere") return "okay";
-        if (w==="Thunderstorm" || w==="Rain" || w==="Snow") return "bad";
+        if (800<=wi && wi<900) return "good"; //800, 80x
+        if ((300<=wi && wi<400) || (700<=wi && wi<800)) return "okay"; //3xx, 7xx
+        if ((200<=wi && wi<300) || (500<=wi && wi<600) || (600<=wi && wi<700)) return "bad"; //2xx, 5xx, 6xx
 
         Log.error("Unexpected Weather! "+w);
     }function getCurrentTemperatureGrade(){
@@ -119,8 +120,10 @@ var Weather=(function(){
         신촌 날씨 정보와 미세먼지 정보를 요청하는 함수.
         getCurrentWeatherInShinchon 함수를 호출할 때 요청하면 값을 제대로 반환할 수가 없어서 웹페이지 로드되지마자 일단 요청.
     */
+        var weatherReturned=false;
+        var aqiReturned=false;
         // 날씨 요청
-        var apiURI = "https://api.openweathermap.org/data/2.5/weather?lat="+"37" + "&lon=" + "127"+"&appid="+"f4e5095b023d96581b869c74b663f6b2";
+        var apiURI = "https://api.openweathermap.org/data/2.5/weather?lat="+"37.5602" + "&lon=" + "126.9368"+"&appid="+"f4e5095b023d96581b869c74b663f6b2";
         $.ajax({
             url: apiURI,
             dataType: "json",
@@ -138,12 +141,19 @@ var Weather=(function(){
                         "wind": resp.wind.speed,
                         "cloud": (resp.clouds.all) +"%"
                     };
+                    Log.verbose("weather:     "+shinchonWeatherData.weather+"\n"+
+                                "weatherid:   "+shinchonWeatherData.weatherid+"\n"+
+                                "temperature: "+shinchonWeatherData.temperature+"\n"+
+                                "humidity:    "+shinchonWeatherData.humidity+"\n"+
+                                "wind:        "+shinchonWeatherData.wind+"\n"+
+                                "cloud:       "+shinchonWeatherData.cloud);
 
                     if (shinchonWeatherData.weather===undefined 
                         || shinchonWeatherData.weather===null
                         || shinchonWeatherData.weather===NaN) Log.error("Weather Fetch Failed. "+shinchonWeatherData.weather);
-
-                    if (shinchonWeatherData!==null && shinchonAqiData!==null){
+                    
+                    weatherReturned=true;
+                    if (weatherReturned && aqiReturned){
                         callCallbacks();
                     } 
                 }catch(err){
@@ -177,8 +187,9 @@ var Weather=(function(){
                     if (shinchonAqiData===undefined 
                         || shinchonAqiData===null
                         || shinchonAqiData===NaN) Log.error("AQI Fetch Failed. "+shinchonAqiData);
-
-                    if (shinchonWeatherData!==null && shinchonAqiData!==null){
+                    Log.verbose("AQI: "+shinchonAqiData);
+                    aqiReturned=true;
+                    if (weatherReturned && aqiReturned){
                         callCallbacks();
                     } 
 

@@ -112,6 +112,7 @@ var Log = (function () {
         css.type = "text/css";
         var cssText="";
         cssText+= ".loggingContainer {display:flex;flex-flow: column;}\n";
+        cssText+= ".loggingContainer *{text-align:left;line-height:1.2;}\n";
         cssText+= ".loggingDisplay .level1 {color:gray;}\n";
         cssText+= ".loggingDisplay .level2 {color:black;}\n";
         cssText+= ".loggingDisplay .level3 {color:green;}\n";
