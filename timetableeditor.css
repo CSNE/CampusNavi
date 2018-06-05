@@ -1,33 +1,76 @@
 /*
-	timetableeditor.css
+timetableeditor.css
 */
 
 /*html, body {
-	margin : 0;
-	padding : 0;
-	text-align : center;
+margin : 0;
+padding : 0;
+text-align : center;
 }*/
-body {text-align : center;}
-	
-h1 {font-size : 40px;}
-
-a{
-	font-size : 20px;
-	text-decoration : none;
+html, body {
+  height:100%;
+}
+.content {
+  height:100%;
+  max-width: 600px;
+  margin: auto auto;
+  text-align: center;
+  
+  display:flex;
+  flex-direction: column;
 }
 
-#frame1, #frame2 {
-	display : inline-block;
-	margin : 10px;
-	padding : 5px;
-	text-align : left;
-	border-style : solid;
-	border-color : black;
-	border-width : 3px;
+.content > *{
+  text-align: center;
+  
+  margin-top:4px;
+  margin-bottom: 4px;
 }
 
-#frame2 {
-	text-align : center;
+#topFrame{
+  margin-top:16px;
+}
+#buttonFrame{
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
+#displayFrame{
+  flex-grow:1;
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+  overflow: auto;
+  padding:8px;
 }
 
-table, th, td {border : 1px solid black;}
+.timetableTable{
+  width:100%;
+}
+.timetableTable td{
+  border:1px solid black;
+}
+
+.inputTable{
+  margin-left: auto;
+  margin-right: auto;
+}
+.inputTable td:nth-child(1) {
+  text-align: right;
+}
+
+.inputTable td:nth-child(2) {
+  text-align: left;
+}
+
+.inputTable td{
+  border : 0;
+}
+
+.inputTable td{
+  padding: 4px;
+}
+
+.timetableTable input[type="button"]{
+  width:100%;
+  
+}
+
