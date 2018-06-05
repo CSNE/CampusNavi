@@ -2,6 +2,9 @@
 <html lang="kr">
     <head>
         <meta charset = "utf-8"/>
+        
+        <!-- Disable Zoom -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <title>시간표 입력</title>
         <link rel="stylesheet" type="text/css" href="timetableeditor.css">
 
@@ -14,49 +17,49 @@
         <div id = "frame1">
             <form>
                 <datalist id="destinationsData"></datalist>
-                <ul>
-                    <li>과목명 : <br/><input id = "className" autofocus type = "text" size = "25"		
-                                          maxlength = "15"/></li>
-                    <li>강의실 : <br/><input  id = "location" type = "text" size = "25" list="destinationsData" 			
-                                          maxlength = "20"/>
-                    </li>
-                    <li>요일 : <select id = "weekDay">
-                        <option selected>월</option>
-                        <option>화</option>
-                        <option>수</option>
-                        <option>목</option>
-                        <option>금</option>
-                        </select>
-                    </li>
-                    <li>수업 시작 시간 :
-                        <select id = "startTimeHour">
-                            <option selected>9</option><option>10</option><option>11</option>
-                            <option>12</option><option>13</option><option>14</option><option>15</option>
-                            <option>16</option><option>17</option><option>18</option><option>19</option>
-                            <option>20</option>
-                        </select> 시&#09;
-                        <select id = "startTimeMinute">
-                            <option selected>0</option><option>5</option><option>10</option>
-                            <option>15</option><option>20</option><option>25</option><option>30</option>
-                            <option>35</option><option>40</option><option>45</option><option>50</option>
-                            <option>55</option>
-                        </select> 분<br/>
-                    </li>
-                    <li>수업 끝 시간 :
-                        <select id = "endTimeHour">
-                            <option>9</option><option selected>10</option><option>11</option>
-                            <option>12</option><option>13</option><option>14</option><option>15</option>
-                            <option>16</option><option>17</option><option>18</option><option>19</option>
-                            <option>20</option>
-                        </select> 시&#09;
-                        <select id = "endTimeMinute">
-                            <option selected>0</option><option>5</option><option>10</option>
-                            <option>15</option><option>20</option><option>25</option><option>30</option>
-                            <option>35</option><option>40</option><option>45</option><option>50</option>
-                            <option>55</option>
-                        </select> 분<br/>
-                    </li>
-                </ul>
+
+                <div>과목명 : <br/><input id = "className" autofocus type = "text" size = "25"		
+                                        maxlength = "15"/></div>
+                <div>강의실 : <br/><input  id = "location" type = "text" size = "25" list="destinationsData" 			
+                                        maxlength = "20"/>
+                </div>
+                <div>요일 : <select id = "weekDay">
+                    <option selected>월</option>
+                    <option>화</option>
+                    <option>수</option>
+                    <option>목</option>
+                    <option>금</option>
+                    </select>
+                </div>
+                <div>수업 시작 시간 :
+                    <select id = "startTimeHour">
+                        <option selected>9</option><option>10</option><option>11</option>
+                        <option>12</option><option>13</option><option>14</option><option>15</option>
+                        <option>16</option><option>17</option><option>18</option><option>19</option>
+                        <option>20</option>
+                    </select> 시&#09;
+                    <select id = "startTimeMinute">
+                        <option selected>0</option><option>5</option><option>10</option>
+                        <option>15</option><option>20</option><option>25</option><option>30</option>
+                        <option>35</option><option>40</option><option>45</option><option>50</option>
+                        <option>55</option>
+                    </select> 분<br/>
+                </div>
+                <div>수업 끝 시간 :
+                    <select id = "endTimeHour">
+                        <option>9</option><option selected>10</option><option>11</option>
+                        <option>12</option><option>13</option><option>14</option><option>15</option>
+                        <option>16</option><option>17</option><option>18</option><option>19</option>
+                        <option>20</option>
+                    </select> 시&#09;
+                    <select id = "endTimeMinute">
+                        <option selected>0</option><option>5</option><option>10</option>
+                        <option>15</option><option>20</option><option>25</option><option>30</option>
+                        <option>35</option><option>40</option><option>45</option><option>50</option>
+                        <option>55</option>
+                    </select> 분<br/>
+                </div>
+
 
             </form>
         </div>
@@ -67,7 +70,7 @@
         <br/>
 
         <div id = "frame2">
-            <p id = "paragraph"><br/></p>
+            <div id = "paragraph"><br/></div>
             <br/>
             <table>
                 <caption>시간표</caption>
