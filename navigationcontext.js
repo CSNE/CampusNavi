@@ -5,6 +5,7 @@ function NavigationContext(path){
 
     this.history=[];
     this.historyThreshold=60*1000//milliseconds;
+    this.minimumHistorySize=10;
 
     this.currentStatus;
   
@@ -118,7 +119,6 @@ function NavigationContext(path){
         var totalTimeInitialEstimate=path.timeRequired;
         var estimatedTimeAtCurrentLocation;
         var routeCompletionRatio;
-        var completionPerMillisecond;
 
         this.DEBUG_VARIABLE=result;
 
@@ -177,14 +177,16 @@ function NavigationContext(path){
                            "routeCompletionRatio":routeCompletionRatio
                           });
 
-        while(this.history[0].timestamp<(currentTime-this.historyThreshold)){
+        while(this.history.length>this.minimumHistorySize && this.history[0].timestamp<(currentTime-this.historyThreshold)){
             this.history.shift();
         }
         
         Log.debug("History size "+this.history.length);
 
 
-        //TODO replace this with a more sophiscated algorithm.
+        //TODO replace this with a more sophisticated algorithm.
+        /*
+        var completionPerMillisecond;
         if (this.history.length>=2){
             var firstElem=this.history[0];
             var lastElem=this.history[this.history.length-1];
@@ -197,18 +199,19 @@ function NavigationContext(path){
         var ratioLeft=1-routeCompletionRatio;
         var timeLeft=ratioLeft/completionPerMillisecond; //in milliseconds
         var arrivalTime=currentTime+timeLeft;
-
+        */
+        //ADD FAKE HISTORY
+        //LINEAR REGRESSION
+        
         
         this.currentStatus={"routeCompletionRatio":routeCompletionRatio,
-                            "completionPerMillisecond":completionPerMillisecond,
                             "timeLeft":timeLeft,
                             "arrivalTime":arrivalTime,
                             "updated":currentTime};
         
         Log.verbose("Navigation Context updated.\n"+
                     "Completion Ratio: "+routeCompletionRatio+"\n"+
-                    "Time left: "+(timeLeft/1000).toFixed()+" seconds.\n"+
-                    "Ratio per minute: "+(completionPerMillisecond/1000*100).toPrecision(5)+"(percent per minute)"
+                    "Time left: "+(timeLeft/1000).toFixed()+" seconds."
                    );
         
         this.callCallbacks(this.currentStatus);
