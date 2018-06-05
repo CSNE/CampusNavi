@@ -119,9 +119,10 @@ var Weather=(function(){
         /*
         신촌 날씨 정보와 미세먼지 정보를 요청하는 함수.
         getCurrentWeatherInShinchon 함수를 호출할 때 요청하면 값을 제대로 반환할 수가 없어서 웹페이지 로드되지마자 일단 요청.
-    */
+        */
         var weatherReturned=false;
         var aqiReturned=false;
+        
         // 날씨 요청
         var apiURI = "https://api.openweathermap.org/data/2.5/weather?lat="+"37.5602" + "&lon=" + "126.9368"+"&appid="+"f4e5095b023d96581b869c74b663f6b2";
         $.ajax({
@@ -129,6 +130,7 @@ var Weather=(function(){
             dataType: "json",
             type: "GET",
             async: "true",
+            timeout:3000,
             success: function(resp) {
                 Log.debug("Got response from openweathermap.org");
                 try{
@@ -150,21 +152,21 @@ var Weather=(function(){
 
                     if (shinchonWeatherData.weather===undefined 
                         || shinchonWeatherData.weather===null
-                        || shinchonWeatherData.weather===NaN) Log.error("Weather Fetch Failed. "+shinchonWeatherData.weather);
+                        || shinchonWeatherData.weather===NaN) throw ("Weather Fetch Failed. "+shinchonWeatherData.weather);
                     
                     weatherReturned=true;
                     if (weatherReturned && aqiReturned){
                         callCallbacks();
                     } 
                 }catch(err){
-                    Log.error("Error while parsing response.\n"+err)
+                    Log.warning("Error while parsing response.\n"+err)
                 }
 
                 // console.log(ret1);
                 // document.getElementById("hi").innerHTML = ret["weather"];
             },
             error:function(jqXHR,textStatus,errorThrown){
-                Log.error("Error from openweathermap.org:\n"+textStatus+"\n"+errorThrown);
+                Log.warning("Error from openweathermap.org:\n"+textStatus+"\n"+errorThrown);
             }
         });
 
@@ -176,7 +178,8 @@ var Weather=(function(){
             url: apiKey,
             dataType: "json",
             type: "GET",
-            async: "false",
+            async: "true",
+            timeout:3000,
             success: function(resp) {
                 Log.debug("Got response from waqi.info");
                 // console.log(resp);
@@ -186,7 +189,7 @@ var Weather=(function(){
 
                     if (shinchonAqiData===undefined 
                         || shinchonAqiData===null
-                        || shinchonAqiData===NaN) Log.error("AQI Fetch Failed. "+shinchonAqiData);
+                        || shinchonAqiData===NaN) throw ("AQI Fetch Failed. "+shinchonAqiData);
                     Log.verbose("AQI: "+shinchonAqiData);
                     aqiReturned=true;
                     if (weatherReturned && aqiReturned){
@@ -194,12 +197,12 @@ var Weather=(function(){
                     } 
 
                 }catch(err){
-                    Log.error("Error while parsing response.\n"+err)
+                    Log.warning("Error while parsing response.\n"+err)
                 }
 
             },
             error:function(jqXHR,textStatus,errorThrown){
-                Log.error("Error from waqi.info:\n"+textStatus+"\n"+errorThrown);
+                Log.warning("Error from waqi.info:\n"+textStatus+"\n"+errorThrown);
             }
         });
 

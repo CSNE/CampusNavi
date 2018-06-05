@@ -618,7 +618,29 @@
         uipanel_weather_temps_display.className='';
         uipanel_weather_temps_display.classList.add("uitext_"+Weather.getCurrentTemperatureGrade());
       });
-      Weather.fetch();
+      
+      //Try Weather.fetch() 5 times, 5 seconds apart.
+      var weatherFetchTries=5;
+      function tryFetchingUntilSucceeds(){
+        weatherFetchTries--;
+        if (weatherFetchTries<0){
+          Log.error("Weather fetch failed after 5 tries!");
+          return;
+        }
+        
+        if (Weather.getCurrentWeatherInShinchon() !==null &&
+            Weather.getCurrentDustLevelsInShinchon()!==null){
+          //exit
+          Log.debug("Weather data fetched successfully.");
+          return;
+        }
+        Weather.fetch();
+        setTimeout(tryFetchingUntilSucceeds,5000);
+      }
+      tryFetchingUntilSucceeds();
+      
+        
+      
       
       //TODO fix dis
       //This code WILL BREAK if:
