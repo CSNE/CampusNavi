@@ -96,8 +96,8 @@ var Weather=(function(){
         return shinchonAqiData;
     }
 
-    function debug_override_weather(weather,temps,aqi){
-        shinchonWeatherData={"weather":weather,"temperature":temps};
+    function debug_override_weather(weatherid,temps,aqi){
+        shinchonWeatherData={"weatherid":weatherid,"temperature":temps};
         shinchonAqiData=aqi;
         
         callCallbacks();
@@ -156,6 +156,7 @@ var Weather=(function(){
                     
                     weatherReturned=true;
                     if (weatherReturned && aqiReturned){
+                        Log.info("Weather data fetch successful.");
                         callCallbacks();
                     } 
                 }catch(err){
@@ -193,6 +194,7 @@ var Weather=(function(){
                     Log.verbose("AQI: "+shinchonAqiData);
                     aqiReturned=true;
                     if (weatherReturned && aqiReturned){
+                        Log.info("Weather data fetch successful.");
                         callCallbacks();
                     } 
 

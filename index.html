@@ -605,7 +605,7 @@
         
         
       Weather.addCallback(function(){
-        Log.info("Weather data successfully acquired. Displaying.");
+        Log.debug("Displaying weather data.");
         uipanel_weather_weather_display.innerHTML=Weather.getCurrentWeatherNameKorean();
         uipanel_weather_weather_display.className='';
         uipanel_weather_weather_display.classList.add("uitext_"+Weather.getCurrentWeatherGrade());
@@ -1053,15 +1053,15 @@
       }
       function debug_button_2_onclick(){
         Log.info("Override weather: Good weather");
-        Weather.debug_override_weather("Clear",22,70);
+        Weather.debug_override_weather(800,22,70);
       }
       function debug_button_3_onclick(){
         Log.info("Override weather: Okay weather");
-        Weather.debug_override_weather("Drizzle",27,150);
+        Weather.debug_override_weather(300,27,150);
       }
       function debug_button_4_onclick(){
         Log.info("Override weather: Bad weather");
-        Weather.debug_override_weather("Thunderstorm",33,220);
+        Weather.debug_override_weather(202,33,220);
       }
       function debug_button_5_onclick(){
         Log.error("Test Error");
