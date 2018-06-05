@@ -899,8 +899,9 @@
         }
         
         uiStateChangeListener.push(exitNavigationMode);
-
-        
+          
+        //at first, assume user is in start position.
+        navContext.updateLocation(path.from.coordinates);
       }
 
 
