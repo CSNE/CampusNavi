@@ -605,7 +605,7 @@
         
         
       Weather.addCallback(function(){
-        Log.debug("Weather data successfully acquired. Displaying.")
+        Log.info("Weather data successfully acquired. Displaying.");
         uipanel_weather_weather_display.innerHTML=Weather.getCurrentWeatherNameKorean();
         uipanel_weather_weather_display.className='';
         uipanel_weather_weather_display.classList.add("uitext_"+Weather.getCurrentWeatherGrade());
@@ -631,7 +631,7 @@
         if (Weather.getCurrentWeatherInShinchon() !==null &&
             Weather.getCurrentDustLevelsInShinchon()!==null){
           //exit
-          Log.debug("Weather data fetched successfully.");
+          Log.debug("Exiting weather data fetching loop.");
           return;
         }
         Weather.fetch();
@@ -869,7 +869,7 @@
         GPS.addLocationListener(function(location){
           navContext.updateLocation(location);
           if (!navContext.DEBUG_VARIABLE) Log.error("NULL???");
-          Log.debug("Debug Marker at\n"+navContext.DEBUG_VARIABLE.closestLocation.toString());
+          //Log.debug("Debug Marker at\n"+navContext.DEBUG_VARIABLE.closestLocation.toString());
           debugMarker.setLatLng(navContext.DEBUG_VARIABLE.closestLocation.toLatLng());
         });
         displayNavigationPanel();
@@ -1042,8 +1042,6 @@
 
       //debug buttons
       function debug_button_1_onclick(){
-        Log.debug("Button 1 clicked");
-
         Log.info("Entering fake location mode");
         GPS.stopTracking();
         mymap.on("click",function(e){
@@ -1054,26 +1052,21 @@
 
       }
       function debug_button_2_onclick(){
-        Log.debug("Button\n 2 clicked");
         Log.info("Override weather: Good weather");
         Weather.debug_override_weather("Clear",22,70);
       }
       function debug_button_3_onclick(){
-        Log.debug("Button 3 clicked");
         Log.info("Override weather: Okay weather");
         Weather.debug_override_weather("Drizzle",27,150);
       }
       function debug_button_4_onclick(){
-        Log.debug("Button 4 clicked");
         Log.info("Override weather: Bad weather");
         Weather.debug_override_weather("Thunderstorm",33,220);
       }
       function debug_button_5_onclick(){
-        Log.debug("Button 5 clicked");
         Log.error("Test Error");
       }
       function debug_button_6_onclick(){
-        Log.debug("Button 6 clicked");
         var d=new Date();
         d.setFullYear(2018);
         d.setMonth(05);

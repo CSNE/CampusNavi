@@ -79,7 +79,7 @@ var GraphCalculations=(function(){
         {
             sdst[dst[i].id] = true;
         }
-        Log.debug(JSON.stringify(sdst));
+        //Log.debug(JSON.stringify(sdst));
         return findShortestPathWithIdSet(graph, ssrc, sdst, pref);
     }
 
@@ -132,7 +132,7 @@ var GraphCalculations=(function(){
                 vv[v.id] = true;
                 if (dst[v.id])
                 {
-                    Log.debug(v.id.toString());
+                    //Log.debug(v.id.toString());
                     return p;
                 }
                 for (var i = 0; i < v.out_edges.length; i++)
