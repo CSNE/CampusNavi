@@ -5,6 +5,7 @@ function NavigationContext(path){
 
     this.history=[];
     this.historyThreshold=60*1000//milliseconds;
+    this.minimumHistorySize=10;
 
     this.currentStatus;
   
@@ -101,6 +102,19 @@ function NavigationContext(path){
         }
         return result;
     }
+    
+    this.setupFakeHistory=function(){
+        var totalTimeInitialEstimate=this.path.timeRequired;
+        var currentTime=Date.now();
+        for(var t=-60;t<0;t++){
+            this.history.push({"timestamp":currentTime+t*1000, //ms
+                               "estimatedTimeAtCurrentLocation":t,
+                               "routeCompletionRatio":NaN
+                              });
+        }
+    }
+    
+    this.setupFakeHistory();
 
     //Remove this variable later on.
     this.DEBUG_VARIABLE=null;
@@ -114,11 +128,10 @@ function NavigationContext(path){
     this.updateLocation=function(location){
         if (!this.active) return;
         //We need to do a lot of shit here
-        var result=findClosestEdgeInPath(path,location);
-        var totalTimeInitialEstimate=path.timeRequired;
+        var result=findClosestEdgeInPath(this.path,location);
+        var totalTimeInitialEstimate=this.path.timeRequired;
         var estimatedTimeAtCurrentLocation;
         var routeCompletionRatio;
-        var completionPerMillisecond;
 
         this.DEBUG_VARIABLE=result;
 
@@ -172,47 +185,46 @@ function NavigationContext(path){
         routeCompletionRatio=estimatedTimeAtCurrentLocation/totalTimeInitialEstimate;
         var currentTime=Date.now();
         this.history.push({"timestamp":currentTime,
-                           "result":result,
                            "estimatedTimeAtCurrentLocation":estimatedTimeAtCurrentLocation,
                            "routeCompletionRatio":routeCompletionRatio
                           });
 
-        while(this.history[0].timestamp<(currentTime-this.historyThreshold)){
+        while(this.history.length>this.minimumHistorySize && this.history[0].timestamp<(currentTime-this.historyThreshold)){
             this.history.shift();
         }
         
-        Log.debug("History size "+this.history.length);
+        //Log.debug("History size "+this.history.length);
 
-
-        //TODO replace this with a more sophiscated algorithm.
-        if (this.history.length>=2){
-            var firstElem=this.history[0];
-            var lastElem=this.history[this.history.length-1];
-
-            completionPerMillisecond=(lastElem.routeCompletionRatio-firstElem.routeCompletionRatio)/(lastElem.timestamp-firstElem.timestamp);
-        }else{
-            completionPerMillisecond=NaN;
-        }
         
-        var ratioLeft=1-routeCompletionRatio;
-        var timeLeft=ratioLeft/completionPerMillisecond; //in milliseconds
-        var arrivalTime=currentTime+timeLeft;
 
+        //LINEAR REGRESSION
+        var points=[]
+        var xOffset=this.history[0].timestamp;
+        for(var i=0;i<this.history.length;i++){
+            points.push([this.history[i].timestamp-xOffset,this.history[i].estimatedTimeAtCurrentLocation]);
+            
+        }
+      
+        var fitted=Util.fitLine(points);
+        
+        var endIntercept=(totalTimeInitialEstimate-fitted.b)/fitted.a;
+        var arrivalTime=endIntercept+xOffset;
+        var timeLeft=arrivalTime-currentTime;
+        
         
         this.currentStatus={"routeCompletionRatio":routeCompletionRatio,
-                            "completionPerMillisecond":completionPerMillisecond,
                             "timeLeft":timeLeft,
                             "arrivalTime":arrivalTime,
                             "updated":currentTime};
         
         Log.verbose("Navigation Context updated.\n"+
                     "Completion Ratio: "+routeCompletionRatio+"\n"+
-                    "Time left: "+(timeLeft/1000).toFixed()+" seconds.\n"+
-                    "Ratio per minute: "+(completionPerMillisecond/1000*100).toPrecision(5)+"(percent per minute)"
+                    "Time left: "+(timeLeft/1000).toFixed()+" seconds."
                    );
         
         this.callCallbacks(this.currentStatus);
     }
+
     
     this.callbacks=[]
     
