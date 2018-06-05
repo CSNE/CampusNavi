@@ -102,6 +102,19 @@ function NavigationContext(path){
         }
         return result;
     }
+    
+    this.setupFakeHistory=function(){
+        var totalTimeInitialEstimate=this.path.timeRequired;
+        var currentTime=Date.now();
+        for(var t=-60;t<0;t++){
+            this.history.push({"timestamp":currentTime+t*1000, //ms
+                               "estimatedTimeAtCurrentLocation":t,
+                               "routeCompletionRatio":NaN
+                              });
+        }
+    }
+    
+    this.setupFakeHistory();
 
     //Remove this variable later on.
     this.DEBUG_VARIABLE=null;
@@ -115,8 +128,8 @@ function NavigationContext(path){
     this.updateLocation=function(location){
         if (!this.active) return;
         //We need to do a lot of shit here
-        var result=findClosestEdgeInPath(path,location);
-        var totalTimeInitialEstimate=path.timeRequired;
+        var result=findClosestEdgeInPath(this.path,location);
+        var totalTimeInitialEstimate=this.path.timeRequired;
         var estimatedTimeAtCurrentLocation;
         var routeCompletionRatio;
 
@@ -172,7 +185,6 @@ function NavigationContext(path){
         routeCompletionRatio=estimatedTimeAtCurrentLocation/totalTimeInitialEstimate;
         var currentTime=Date.now();
         this.history.push({"timestamp":currentTime,
-                           "result":result,
                            "estimatedTimeAtCurrentLocation":estimatedTimeAtCurrentLocation,
                            "routeCompletionRatio":routeCompletionRatio
                           });
@@ -181,27 +193,23 @@ function NavigationContext(path){
             this.history.shift();
         }
         
-        Log.debug("History size "+this.history.length);
+        //Log.debug("History size "+this.history.length);
 
-
-        //TODO replace this with a more sophisticated algorithm.
-        /*
-        var completionPerMillisecond;
-        if (this.history.length>=2){
-            var firstElem=this.history[0];
-            var lastElem=this.history[this.history.length-1];
-
-            completionPerMillisecond=(lastElem.routeCompletionRatio-firstElem.routeCompletionRatio)/(lastElem.timestamp-firstElem.timestamp);
-        }else{
-            completionPerMillisecond=NaN;
-        }
         
-        var ratioLeft=1-routeCompletionRatio;
-        var timeLeft=ratioLeft/completionPerMillisecond; //in milliseconds
-        var arrivalTime=currentTime+timeLeft;
-        */
-        //ADD FAKE HISTORY
+
         //LINEAR REGRESSION
+        var points=[]
+        var xOffset=this.history[0].timestamp;
+        for(var i=0;i<this.history.length;i++){
+            points.push([this.history[i].timestamp-xOffset,this.history[i].estimatedTimeAtCurrentLocation]);
+            
+        }
+      
+        var fitted=Util.fitLine(points);
+        
+        var endIntercept=(totalTimeInitialEstimate-fitted.b)/fitted.a;
+        var arrivalTime=endIntercept+xOffset;
+        var timeLeft=arrivalTime-currentTime;
         
         
         this.currentStatus={"routeCompletionRatio":routeCompletionRatio,
@@ -216,6 +224,7 @@ function NavigationContext(path){
         
         this.callCallbacks(this.currentStatus);
     }
+
     
     this.callbacks=[]
     
