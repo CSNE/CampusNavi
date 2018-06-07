@@ -49,8 +49,8 @@ var Weather=(function(){
 
         var wi=getCurrentWeatherInShinchon().weatherid;
 
-        if (800<=wi && wi<900) return "good"; //800, 80x
-        if ((300<=wi && wi<400) || (700<=wi && wi<800)) return "okay"; //3xx, 7xx
+        if ((800<=wi && wi<900) || (700<=wi && wi<800)) return "good"; //800, 80x
+        if ((300<=wi && wi<400)) return "okay"; //3xx, 7xx
         if ((200<=wi && wi<300) || (500<=wi && wi<600) || (600<=wi && wi<700)) return "bad"; //2xx, 5xx, 6xx
 
         Log.error("Unexpected Weather! "+w);

@@ -296,7 +296,7 @@
           <div id="uipanel_persistant_left">
             <strong style="font-size:1.3em;">CampusNavi</strong>
           </div>
-          <div id="uipanel_persistant_spacer"></div>
+          <div id="uipanel_persistant_spacer">&nbsp;&nbsp;</div>
           <div id="uipanel_persistant_right">
             <span id="uipanel_persistant_right_texts">
               <sub>날씨 </sub><span id="uipanel_weather_weather_display" class="uitext_unknown">???</span>
@@ -360,7 +360,7 @@
 
 
         <div id="uipanel_routes" style="display:none">
-            <div id="uipanel_route_message"></div>
+            <div id="uipanel_route_message" style="text-align: center;"></div>
           <template id="route_template">
             <div class="route_element">
               <img class="route_icon">
@@ -1010,8 +1010,11 @@
         var pathlist;
         var msg = "";
         if (Weather.getCompositeGrade() == "bad") {
-          msg = "날씨가 좋지 않아 실내 통로를 우선 탐색합니다.";
+          msg = "날씨 아주 나쁨. 실내 통로 우선 탐색.";
           pathlist = [path3, path1];
+        } else if (Weather.getCompositeGrade() == "okay") {
+          msg = "날씨 나쁨. 실내 통로 표시.";
+          pathlist = [path1, path2, path3];
         } else {
           pathlist = [path1, path2];
         }
