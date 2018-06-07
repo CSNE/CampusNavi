@@ -1010,10 +1010,10 @@
         var pathlist;
         var msg = "";
         if (Weather.getCompositeGrade() == "bad") {
-          msg = "날씨 아주 나쁨. 실내 통로 우선 탐색.";
+          msg = "날씨 나쁨. 실내 통로 우선 탐색.";
           pathlist = [path3, path1];
         } else if (Weather.getCompositeGrade() == "okay") {
-          msg = "날씨 나쁨. 실내 통로 표시.";
+          msg = "날씨 좋지 않음. 실내 통로 표시.";
           pathlist = [path1, path2, path3];
         } else {
           pathlist = [path1, path2];

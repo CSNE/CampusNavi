@@ -155,12 +155,13 @@
           }
         }});
 
-
+      var listPlaces=[];
       Geodata.addUpdateListener(function () {
         Log.debug(""+Geodata.graph.vertices.length);
         for(var i=0;i<Geodata.graph.vertices.length;i++){
           if (Geodata.graph.vertices[i].shown){
             Log.debug(Geodata.graph.vertices[i].name);
+            listPlaces.push(Geodata.graph.vertices[i].name);
           }
         }
 
@@ -298,7 +299,7 @@
 
         var returnNum = timetable.locationCheck(loc);
         var p = document.getElementById("paragraph");
-        if(returnNum != 0) {
+        if(false && (returnNum != 0)) { //DISABLED FOR NOW...
           p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
             "정식 강의동 약어(+강의실 호수)를 입력해주세요<br/>"+
             "//유효한 입력 예 : '공D504', 혹은 '과232' 등.";
