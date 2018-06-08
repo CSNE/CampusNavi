@@ -419,7 +419,7 @@
                 <option value="2">지도</option>
                 <option value="3">편의시설</option>
                 <option value="4">현재 위치</option>
-                <option value="5">건물</option>
+                <option value="5">강의실</option>
               </select>
               <div style="display: inline-block;" id="uipanel_fromto_from_display" ></div>
               <input id="uipanel_fromto_from_input1" style="display: none;flex-grow: 1;"/>
@@ -434,7 +434,7 @@
                 <option value="2">지도</option>
                 <option value="3">편의시설</option>
                 <option value="4">현재 위치</option>
-                <option value="5">건물</option>
+                <option value="5">강의실</option>
               </select>
               <div style="display: inline-block;" id="uipanel_fromto_to_display" ></div>
               <input id="uipanel_fromto_to_input1" style="display: none;flex-grow: 1;"/>
@@ -860,11 +860,10 @@
             case 3:
               name = this.e.near.value;
               v = places[name];
-              name = "가장 가까운 " + name;
-              //TODO: name("convenient") -> "편의점"
+              name = "가장 가까운 " + Geodata.obj.places[name].name;
               break;
             case 5:
-              name = this.e.inputs[0].value;
+              name = Util.getBuilding(this.e.inputs[0].value);
               v = places[name];
               name = Geodata.obj.places[name].name;
               break;

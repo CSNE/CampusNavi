@@ -1,4 +1,4 @@
-var Util = (function () {
+﻿var Util = (function () {
     function humanReadableTime(seconds) {
         var min = Math.floor(seconds / 60);
         var sec = Math.round(seconds % 60);
@@ -115,13 +115,22 @@ var Util = (function () {
         return {"a":res[0],"b":res[1]};
     }
 
-
+    var B_list = ["공B", "음B"];
+    var room_map = { "백강당": "백S" };
     function getBuilding(cr)
     {
+        for (var i = 0; i < B_list.length; i++)
+        {
+            if (cr.startsWith(B_list[i]))
+                return B_list[i];
+        }
+        var rmv = room_map[cr];
+        if (rmv)
+            return rmv;
         for (var i = 0; i < cr.length; i++)
         {
             var c = cr.charAt(i);
-            if (c >= '0' && c <= '9')
+            if (c >= '0' && c <= '9' || c == 'B')
                 return cr.substring(0, i);
         }
         return cr;
