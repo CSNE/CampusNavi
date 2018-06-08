@@ -40,7 +40,7 @@
       }
 
       /* PC */
-      @media screen and (min-aspect-ratio: 4/3){
+      @media screen and (min-width:500px){
         #maincontent {
           flex-direction: row;
         }
@@ -51,7 +51,7 @@
       }
       
       /* Mobile */
-      @media screen and (max-aspect-ratio: 4/3){
+      @media screen and (max-width:499px){
         #maincontent {
           flex-direction: column;
         }
@@ -210,7 +210,8 @@
         background: rgba(0,0,0,0.5);
         margin:0;
         color:white;
-        text-align: center;
+        align-items: center;
+        justify-content: center;
       }
       
       #uipanel_navigation_container{
@@ -384,7 +385,7 @@
       
       <div class="uipanel">
         <div id="uipanel_grayouter" style="display:none;">
-          지도를 클릭하세요.
+          <p>지도를 클릭하세요.</p>
         </div>
         <div id="uipanel_persistant">
           <div id="uipanel_persistant_left">
@@ -1115,6 +1116,9 @@
         this.clearBtn=clearBtn;
         
         this.valueListeners=[];
+        
+        this.isLocked=false;
+        
         this.addValueListener=function(callback){
           this.valueListeners.push(callback);
         }
@@ -1148,6 +1152,7 @@
         
         this.clear=function(){
           this.inputElement.value="";
+          this.isLocked=false;
           this.inputElement.classList.add("input_invalid");
           this.inputElement.classList.remove("input_valid");
           this.inputElement.classList.remove("input_disabled");
@@ -1157,6 +1162,7 @@
         
         this.setValueAndLock=function(value,name){
           this.inputElement.value=name;
+          this.isLocked=true;
           this.inputElement.classList.remove("input_invalid");
           this.inputElement.classList.remove("input_valid");
           this.inputElement.classList.add("input_disabled");
@@ -1243,7 +1249,7 @@
         
         var clicked=false;
         
-        document.getElementById("uipanel_grayouter").style.display="block";
+        document.getElementById("uipanel_grayouter").style.display="flex";
         
         mymap.on("click",function(e){
           if (clicked) return;
@@ -1550,17 +1556,16 @@
       
       // 바꾸기 버튼
       search_button_swap.addEventListener("click", function () {
-        if (search_input_from.getAttribute("disabled") || search_input_to.getAttribute("disabled")){
+        if (search_from.isLocked || search_to.isLocked){
           //pass
         }else{
-          var origF=search_input_from.value;
-          var origT=search_input_to.value;
+          var origF=search_from.getValue();
+          var origT=search_to.getValue();
           
-          search_input_from.value=origT;
-          search_input_to.value=origF;
+          search_from.setText(origF);
+          search_to.setText(origT);
           
-          searchTo();
-          searchFrom();
+          
         }
       });
 
