@@ -165,10 +165,13 @@
       }
       #uipanel_fromto_grid > *{
         place-self: center;
-        display:flex;
-        flex-direction:row;
+
         
         width:100%;
+      }
+      .uipanel_fromto_form{
+        display: flex;
+        flex-direction: row;
       }
       
       #uipanel_fromto_grid form *{
@@ -179,6 +182,9 @@
       
       #uipanel_fromto_grid form *:first-child{
         margin-left:0;
+      }
+      
+      #uipanel_fromto_grid *{
       }
       
       .uipanel{
@@ -406,7 +412,7 @@
 
         <div id="uipanel_fromto" style="">
           <div id="uipanel_fromto_grid">
-            <form id="uipanel_fromto_from" action="javascript:" style="grid-area: frominput;">
+            <form id="uipanel_fromto_from" action="javascript:" style="grid-area: frominput;" class="uipanel_fromto_form">
               <select id="uipanel_fromto_from_method" style="grid-area: frominput;">
                 <option value="0">위치 설정</option>
                 <option value="1">검색</option>
@@ -421,7 +427,7 @@
               <input type="submit" value="선택" id="uipanel_fromto_from_submit" style="display: none;"/>
             </form>
             <div style="grid-area: fromlabel;">부터</div>
-            <form id="uipanel_fromto_to" action="javascript:"  style="grid-area: toinput;">
+            <form id="uipanel_fromto_to" action="javascript:"  style="grid-area: toinput;"  class="uipanel_fromto_form">
               <select id="uipanel_fromto_to_method">
                 <option value="0">위치 설정</option>
                 <option value="1">검색</option>
