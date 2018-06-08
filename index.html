@@ -495,6 +495,11 @@
         }
       });
 
+	  
+	    
+      var timeTableData=new TimeTable();
+      //timeTableData.loadTimeTable();
+	  
 
       var places = {};
       Geodata.addUpdateListener(function () {
@@ -517,6 +522,10 @@
                   places[p] = [];
                 places[p].push(v);
               }
+			  /*if(timeTableData.locationCheck(v.id)==0) { //
+				if(!places[v.id]) places[v.id] = []; //
+				places[v.id].push(v); //
+			  }*/
             }
           }
         }
@@ -534,9 +543,6 @@
 
       Geodata.load("mapdata.json");
         
-        
-      var timeTableData=new TimeTable();
-      timeTableData.loadTimeTable();
             
       //Icons
       var route_icon_path = {
@@ -953,9 +959,50 @@
 
       uipanel_search.addEventListener("submit", function () {
         var fromName = search_input_from.value;
-        var fromVertex = Geodata.graph.findVertexWithName(fromName);
+        var fromVertex;
+		if(timeTableData.locationCheck(fromName)==0 && !timeTableData.isBuilding(fromName)) {
+			for(var i=0; i<fromName.length; i++) {
+				if(fromName.charAt(i)>='0' && fromName.charAt(i)<='9') break;
+			}
+			fromName = timeTableData.buildingPrefix[fromName.substring(0, i)];
+		}
+		if(fromName == "제2공학관" || fromName == "공B") {
+			fromVertex = [];
+			fromVertex[0] = Geodata.graph.findVertexWithName("제2공학관 북문");
+			formVertex[1] = Geodata.graph.findVertexWithName("제2공학관 남문");
+			fromVertex[2] = Geodata.graph.findVertexWithName("제2공학관 동문");
+			fromVertex[3] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
+		}
+		else if(fromName == "제3공학관"  || fromName == "공C") {
+			fromVertex = [];
+			fromVertex[0] = Geodata.graph.findVertexWithName("제3공학관 북문");
+			fromVertex[1] = Geodata.graph.findVertexWithName("제3공학관 남문");
+			fromVertex[2] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
+		}
+		else toVertex = Geodata.graph.findVertexWithName(toName);
+		
         var toName = search_input_to.value;
-        var toVertex = Geodata.graph.findVertexWithName(toName);
+        var toVertex;
+		if(timeTableData.locationCheck(toName) ==0 && !timeTableData.isBuilding(toName)) {
+			for(var i=0; i<toName.length; i++) {
+				if(toName.charAt(i)>='0' && toName.charAt(i)<='9') break;
+			}
+			toName = timeTableData.buildingPrefix[toName.substring(0, i)];
+		}
+		if(toName == "제2공학관" || toName == "공B") {
+			toVertex = [];
+			toVertex[0] = Geodata.graph.findVertexWithName("제2공학관 북문");
+			toVertex[1] = Geodata.graph.findVertexWithName("제2공학관 남문");
+			toVertex[2] = Geodata.graph.findVertexWithName("제2공학관 동문");
+			toVertex[3] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
+		}
+		else if(toName == "제3공학관" || toName == "공C") {
+			toVertex = [];
+			toVertex[0] = Geodata.graph.findVertexWithName("제3공학관 북문");
+			toVertex[1] = Geodata.graph.findVertexWithName("제3공학관 남문");
+			toVertex[2] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
+		}
+		else toVertex = Geodata.graph.findVertexWithName(toName);
 
         var timeLimit = search_input_time.value;
 

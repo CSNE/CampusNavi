@@ -83,26 +83,47 @@ function TimeTable(){
 	
 	this.lsUsable = (typeof(localStorage)=="undefined")? false : true;
 	
-	/*this.buildings = ['공학원', '제1공학관', '제2공학관', '제3공학관', '제4공학관', '대강당', 
+	this.buildings = ['공학원', '제1공학관', '제2공학관', '제3공학관', '제4공학관', '대강당', 
 						'경영관', '음악관', '체육관', '체육교육관', '백양관', '과학관', '과학원', '대우관', '대우관 별관',
 						'외솔관', '교육과학관', '위당관', '삼성관', '신학관', '빌링슬리관', '연희관',
-						'성암관', '상남경영관', '광복관' ,'스포츠과학관', '아펜젤러관'];*/
+						'성암관', '상남경영관', '광복관' ,'스포츠과학관', '아펜젤러관'];
 	this.classPrefix = ['외', '신', '백S', '교', '위', '위B', '상본', '상본B', '경영', '경영B',
 						'과', '과S', '과B', '공A', '공B', '공C', '공D', '신', '빌', '연', '성',
 						'음(A)', '음(B)', '삼', '삼B', '스포츠', '체', '광', '아'];
-	/*this.buildingPrefix = {'외':"외솔관", '신':"신학관", '백S':"백양관", '교':"교육과학관", '위':"위당관", '위B':"위당관",
+	this.buildingExceptions = {"제2공학관":"공B", "제3공학관":"공c"};
+	this.buildingPrefix = {'외':"외솔관", '신':"신학관", '백S':"백양관", '교':"교육과학관", '위':"위당관", '위B':"위당관",
 						'과':"과학관",  '과B':"과학관", '공A':"제1공학관", '공D':"제4공학관", '신':"신학관", '빌':"빌링슬리관",
 						'연':"연희관", '성':"성암관", '음A':"음악관A", '음B':"음악관B", '경영':"경영관", '경영B':"경영관",
 						'음(A)':"음악관A", '음(B)':"음악관B", '광':"광복관", '아':"아펜젤러관",
 						'삼':"정문", '삼B':"정문", '상본':"대우관", '상본B':"대우관 별관", '상별':"대우관 별관",  //
-						'공B':"정문", '공C':"정문", //
-						'과S':"과학원", '스포츠':"스포츠과학관", '체':"체육교육관"};	*/				
+						'공B':"제2공학관", //
+						'공C':"제3공학관", //
+						'과S':"과학원", '스포츠':"스포츠과학관", '체':"체육교육관"};				
+	
+	this.isBuilding = function(name) {
+	/*
+		전달받은 이름이 미리 정의된 건물 이름이면 true, 아니면 false 반환
+	*/
+		for(var i=0; i<this.buildings.length; i++) {
+			if(name==this.buildings[i]) return true;
+		}
+		return false;
+	}
+	
+	this.isException = function(name) {
+		for(var i=0; this.buildingExceptions.length; i++) {
+			if(this.buildingExcpetions.hasOwnProperty(name)) return true;
+		}
+		return false;
+	}
 	
 	this.locationCheck = function(location) {
 	/*
 		입력받은 강의실 정보가 유효하면 0반환, 아니면 0이 아닌 값 반환
 	*/
 		var loc = location;
+		
+		if(this.isBuilding(loc)) return 0;
 
 		var i;
 		/*for(i=0; i<this.buildings.length; i++) {

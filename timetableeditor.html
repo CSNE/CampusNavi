@@ -110,7 +110,7 @@
 
       <div id="buttonFrame">
         <button id = "clearButton">전체 시간표 삭제</button>
-        <button id = "clearButton" onclick="location.href='index.html'" >돌아기기</button>
+        <button id = "clearButton" onclick="location.href='index.html'" >돌아가기</button>
       </div>
 
 
@@ -155,13 +155,12 @@
           }
         }});
 
-      var listPlaces=[];
+
       Geodata.addUpdateListener(function () {
         Log.debug(""+Geodata.graph.vertices.length);
         for(var i=0;i<Geodata.graph.vertices.length;i++){
           if (Geodata.graph.vertices[i].shown){
             Log.debug(Geodata.graph.vertices[i].name);
-            listPlaces.push(Geodata.graph.vertices[i].name);
           }
         }
 
@@ -210,8 +209,9 @@
         }
         else if(timetable.locationCheck(location.value)!=0) {
           p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
-            "정식 강의동 약어(+강의실 호수)를 입력해주세요<br/>"+
-            "//유효한 입력 예 : '공D504', 혹은 '과232' 등.";
+            "정식 강의동 약어(+강의실 호수)혹은<br/>"+
+			"공백문자를 제외한 건물 이름을 입력해주세요<br/>"+
+            "//유효한 입력 예 : '공D504', 혹은 '제1공학관' 등.";
           p.style.color = "red"; return;
         }
         else {
@@ -299,10 +299,11 @@
 
         var returnNum = timetable.locationCheck(loc);
         var p = document.getElementById("paragraph");
-        if(false && (returnNum != 0)) { //DISABLED FOR NOW...
+        if(returnNum != 0) {
           p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
-            "정식 강의동 약어(+강의실 호수)를 입력해주세요<br/>"+
-            "//유효한 입력 예 : '공D504', 혹은 '과232' 등.";
+            "정식 강의동 약어(+강의실 호수)혹은<br/>"+
+			"공백문자를 제외한 건물 이름을 입력해주세요<br/>"+
+            "//유효한 입력 예 : '공D504', 혹은 '제1공학관' 등.";
           p.style.color = "red";
           return 1;
         }
