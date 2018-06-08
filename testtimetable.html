@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8"/>
+		<title>timetable test</title>
+		<script src = "timetable.js"></script>
+		<script src = "userdata.js"></script>
+		<script>
+		
+			var UserData = new UserData();
+			if(typeof(UserData)=="undefined") window.alert("UserData 사용 불가능합니다!");
+			function registerTTE() { // 수업 한 개 등록
+				var className = document.getElementById("className");
+				var location = document.getElementById("location");
+				var weekDay = document.getElementById("weekDay");
+				var startTime = document.getElementById("startTime");
+				var endTime = document.getElementById("endTime");
+				var weekDayNum;
+				switch(weekDay.value) {
+				case "일" : weekDayNum = 0; break;
+				case "월" : weekDayNum = 1; break;
+				case "화" : weekDayNum = 2; break;
+				case "수" : weekDayNum = 3; break;
+				case "목" : weekDayNum = 4; break;
+				case "금" : weekDayNum = 5; break;
+				case "토" : weekDayNum = 6; break;
+				default : weekDayNum = 1;
+				}
+				var startTimeNum = stringToTime(startTime.value);
+				var endTimeNum = stringToTime(endTime.value);
+				UserData.timetable.addTimeTableElement(new TimeTableElement(startTimeNum, endTimeNum, weekDayNum, location.value, className.value));
+				
+				/* 통합 */
+				renderTimeTable();
+				var p = document.getElementById("paragraph");
+				p.innerHTML="";
+				p.style.color = "red";
+				var date = new Date();
+				if(UserData.timetable.getWeekDayClasses(date.getDay()).length<=0) p.innerHTML+="오늘은 수업이 없습니다!<br/>";
+				else {
+					var tte = UserData.timetable.lastLecture();
+					
+					if(tte==null) p.innerHTML+="아직 끝난 수업이 없습니다!<br/>";
+					else p.innerHTML+="가장 최근에 끝난 수업 : " + tte.getClassName() + "<br/>";
+					
+					tte = UserData.timetable.nextLecture();
+					if(tte==null) p.innerHTML+="오늘은 수업이 모두 끝나 다음 수업이 없습니다!<br/>";
+					else p.innerHTML+="다음 수업 : " + tte.getClassName() + "<br/>";
+				}
+			}
+			
+			function renderTimeTable() { // 시간표 브라우저 상에서 보여주기
+				UserData.timetable.sortClasses(); // 시간표 정렬해줌
+				var tbody = document.getElementById("tbody");
+				tbody.innerHTML = "";
+				var classes=null;
+				var wd = "";
+				for(var i=0; i<7; i++){
+					classes = UserData.timetable.getWeekDayClasses(i);
+					if(classes.length<=0)continue;
+					for(var j=0; j<classes.length; j++) {
+						
+						switch(classes[j].getWeekDay()) {
+						case 0: wd = "일";break;
+						case 1: wd = "월";break;
+						case 2: wd = "화";break;
+						case 3: wd = "수";break;
+						case 4: wd = "목";break;
+						case 5: wd = "금";break;
+						case 6: wd = "토";break;
+						default : wd = "잘못된 요일 입력입니다";
+						}
+						tbody.innerHTML += "<tr><td>"+classes[j].getClassName() + "</td><td>" +
+										classes[j].getLocation() + "</td><td>" + wd + "</td><td>" +
+										timeToString(classes[j].getStartTime()) + "</td><td>" +
+										timeToString(classes[j].getEndTime()) + "</td></tr>";
+					}
+				}
+			}
+			
+			function saveTimeTable() { // 일~토요일의 수업 array를 localStorage 쿠키로 저장함
+				
+				UserData.timetable.saveTimeTable(); // 메소드 사용
+				var p = document.getElementById("paragraph");
+				p.innerHTML = "시간표가 성공적으로 저장되었습니다";
+				p.style.color = "blue";
+			}
+			
+			function clearCookie() { // 쿠키 삭제
+				UserData.timetable.clearCookie(); // 메소드 사용
+				var p = document.getElementById("paragraph");
+				p.innerHTML = "저장된 시간표가 성공적으로 삭제되었습니다";
+				p.style.color = "blue";
+			}
+			
+			function deleteTTE() {
+				var className = document.getElementById("className").value;
+				UserData.timetable.deleteTimeTableElement(className);
+				renderTimeTable();
+			}
+			
+			function init() {
+				document.getElementById("insertButton").addEventListener("click", registerTTE);
+				document.getElementById("refreshButton").addEventListener("click",renderTimeTable);
+				document.getElementById("saveButton").addEventListener("click",saveTimeTable);
+				document.getElementById("deleteButton").addEventListener("click",deleteTTE);
+				document.getElementById("clearButton").addEventListener("click",clearCookie);
+				if(localStorage.getItem("visited")) {
+					
+					var p = document.getElementById("paragraph");
+					p.innerHTML="";
+					p.style.color = "red";
+					var date = new Date();
+					if(UserData.timetable.getWeekDayClasses(date.getDay()).length<=0) p.innerHTML+="오늘은 수업이 없습니다!<br/>";
+					else {
+						var tte = UserData.timetable.lastLecture();
+						
+						if(tte==null) p.innerHTML+="아직 끝난 수업이 없습니다!<br/>";
+						else p.innerHTML+="가장 최근에 끝난 수업 : " + tte.getClassName() + "<br/>";
+						
+						tte = UserData.timetable.nextLecture();
+						if(tte==null) p.innerHTML+="오늘은 수업이 모두 끝나 다음 수업이 없습니다!<br/>";
+						else p.innerHTML+="다음 수업 : " + tte.getClassName() + "<br/>";
+					}
+				}
+				renderTimeTable();
+			}
+			window.addEventListener("load",init);
+		</script>
+	</head>
+	<body>
+		
+		<h1>시간표 클래스 테스트</h1>
+		
+		<form>
+			<ul>
+			<li>과목명 : <br/><input id = "className" autofocus type = "text" size = "25"		
+				maxlength = "15"/></li>
+			<li>장소 : <br/><input  id = "location" type = "text" size = "25"			
+				maxlength = "20"/></li>
+			<li>요일 : <br/><input id = "weekDay" type = "text" size = "25"		
+				placeholder = "한글자만 입력 ex)수" maxlength = "1"/></li>
+			<li>시작시간 : <br/><input id = "startTime" type = "text"	size = "25"
+				placeholder = "12:00" maxlength = "5" /></li>
+			<li>끝시간 : <br/><input id = "endTime" type = "text"	size = "25"
+				placeholder = "12:00" maxlength = "5" /></li>
+			</ul>
+			
+		</form>
+		
+		<button id = "insertButton" type = "button">추가</button>
+		<button id = "refreshButton" type = "button">시간표 그리기</button>
+		<button id = "saveButton" type = "button">시간표 저장</button>
+		<button id = "deleteButton" type = "button">수업 삭제</button>
+		<button id = "clearButton" type = "button">저장된 시간표 삭제</button>
+		
+		<p id = "paragraph"><br/></p>
+		<table border = "1">
+			<caption>시간표</caption>
+			<thead>
+			<tr>
+				<th>과목명</th>
+				<th>장소</th>
+				<th>요일</th>
+				<th>시작시간</th>
+				<th>끝시간</th>
+			</tr>
+			</thead>
+			<tbody id = "tbody"></tbody>
+		</table>
+	</body>
+</html>

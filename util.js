@@ -115,10 +115,23 @@ var Util = (function () {
         return {"a":res[0],"b":res[1]};
     }
 
+
+    function getBuilding(cr)
+    {
+        for (var i = 0; i < cr.length; i++)
+        {
+            var c = cr.charAt(i);
+            if (c >= '0' && c <= '9')
+                return cr.substring(0, i);
+        }
+        return cr;
+    }
+
     return {
         "humanReadableTime": humanReadableTime,
         "timeStampToFormattedTime": timeStampToFormattedTime,
         "colonSeparatedTimeToTimeStamp": colonSeparatedTimeToTimeStamp,
+        "getBuilding": getBuilding,
         "fitLine":fitLine
     }
 })();

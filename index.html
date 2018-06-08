@@ -307,13 +307,15 @@
           
         </div>
         <div id="uipanel_tabs">
-          <div id="uipanel_tabs_search" class="clickable selected_tab">Search</div>
-          <div id="uipanel_tabs_nearby" class="clickable">Nearby</div>
+          <!--<div id="uipanel_tabs_search" class="clickable selected_tab">Search</div>-->
+          <!--<div id="uipanel_tabs_nearby" class="clickable">Nearby</div>-->
+          <div id="uipanel_tabs_fromto" class="clickable selected_tab">From to</div>
           <div id="uipanel_tabs_settings" class="clickable">Settings</div>
           <div id="uipanel_tabs_routelist" class="unclickable_tab">Route</div>
           <div id="uipanel_tabs_navigation" class="unclickable_tab">Navigation</div>
         </div>
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
+        <!--
         <form id="uipanel_search" action="javascript:">
           <div id="uipanel_search_grid">
             <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
@@ -335,8 +337,6 @@
 
             <div style="grid-area: timelabel;">까지</div>
 
-            <datalist id="destinationsData">
-            </datalist>
           </div>
         </form>
         
@@ -356,7 +356,182 @@
             <div style="grid-area: timelabel;">까지</div>
           </div>
         </form>
+        -->
+        <datalist id="destinationsData"></datalist>
 
+        <div id="uipanel_fromto" style="">
+          <div id="uipanel_fromto_grid">
+            <form id="uipanel_fromto_from" action="javascript:">
+              <select id="uipanel_fromto_from_method">
+                <option value="0">위치 설정</option>
+                <option value="1">검색</option>
+                <option value="2">지도</option>
+                <option value="3">편의시설</option>
+                <option value="4">현재 위치</option>
+                <option value="5">건물</option>
+              </select>
+              <div style="display: inline-block;" id="uipanel_fromto_from_display"></div>
+              <input id="uipanel_fromto_from_input1" style="display: none;" />
+              <select id="uipanel_fromto_from_near" style="display: none;"></select>
+              <input type="submit" value="선택" id="uipanel_fromto_from_submit" style="display: none;" />
+            </form>
+            <div style="grid-area: fromlabel;">부터</div>
+            <form id="uipanel_fromto_to" action="javascript:">
+              <select id="uipanel_fromto_to_method">
+                <option value="0">위치 설정</option>
+                <option value="1">검색</option>
+                <option value="2">지도</option>
+                <option value="3">편의시설</option>
+                <option value="4">현재 위치</option>
+                <option value="5">건물</option>
+              </select>
+              <div style="display: inline-block;" id="uipanel_fromto_to_display"></div>
+              <input id="uipanel_fromto_to_input1" style="display: none;" />
+              <select id="uipanel_fromto_to_near" style="display: none;"></select>
+              <input type="submit" value="선택" id="uipanel_fromto_to_submit" style="display: none;" />
+            </form>
+            <div style="grid-area: tolabel;">까지</div>
+
+            <input type="button" value="탐색" id="uipanel_fromto_button_find" tabindex="5" style="grid-area: findbtn;" />
+            <input type="time" id="uipanel_fromto_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
+            <div style="grid-area: timelabel;">까지</div>
+
+            <input type="button" value="자동 설정" id="uipanel_fromto_button_importtt" style="grid-area: importttbtn;" />
+
+            <input type="button" value="바꾸기" id="uipanel_fromto_swap_src_dst" tabindex="4" style="grid-area: changebtn;" />
+          </div>
+          <script>
+            var vin_from, vin_to;
+            (function () {
+              function VertexInput(id, e) {
+                this.id = id;
+                this.e = e;
+                //alert(e);
+                this.value = null;
+                this.name = "";
+                this.method = 0;
+                function method_change() {
+                  var m = this.e.method.value;
+                  //alert(m);
+                  switch (m) {
+                    case "0":
+                      this.e.inputs[0].style.display = "none";
+                      this.e.near.style.display = "none";
+                      this.e.submit.style.display = "none";
+                      this.e.display.style.display = "none";
+                      this.value = null;
+                      this.name = "";
+                      this.method = 0;
+                      break;
+                    case "1":
+                      this.e.inputs[0].style.display = "initial";
+                      this.e.near.style.display = "none";
+                      this.e.submit.style.display = "initial";
+                      this.e.display.style.display = "none";
+                      this.method = 1;
+                      break;
+                    case "2":
+                      this.e.inputs[0].style.display = "none";
+                      this.e.near.style.display = "none";
+                      this.e.submit.style.display = "none";
+                      this.e.display.style.display = "none";
+                      this.method = 2;
+                      break;
+                    case "3":
+                      this.e.inputs[0].style.display = "none";
+                      this.e.near.style.display = "initial";
+                      this.e.submit.style.display = "initial";
+                      this.e.display.style.display = "none";
+                      this.method = 3;
+                      break;
+                    case "4":
+                      this.e.inputs[0].style.display = "none";
+                      this.e.near.style.display = "none";
+                      this.e.submit.style.display = "none";
+                      this.e.display.style.display = "initial";
+                      this.method = 0;
+                      this.setValue(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
+                      break;
+                    case "5":
+                      this.e.inputs[0].style.display = "initial";
+                      this.e.near.style.display = "none";
+                      this.e.submit.style.display = "initial";
+                      this.e.display.style.display = "none";
+                      this.method = 5;
+                      break;
+                    default:
+                      Log.error("unknown method: " + m);
+                      return;
+                  }
+                }
+                function submit()
+                {
+                  var v, name;
+                  switch (this.method)
+                  {
+                    case 1:
+                      name = this.e.inputs[0].value;
+                      v = Geodata.graph.findVertexWithName(name);
+                      break;
+                    case 3:
+                      name = this.e.near.value;
+                      v = places[name];
+                      name = "가장 가까운 " + name;
+                      //TODO: name("convenient") -> "편의점"
+                      break;
+                    case 5:
+                      name = this.e.inputs[0].value;
+                      v = places[name];
+                      break;
+                  }
+                  this.setValue(v, name);
+                }
+                function setValue(v, name)
+                {
+                  if (v) {
+                    this.value = v;
+                    this.name = name;
+                    this.e.inputs[0].style.display = "none";
+                    this.e.near.style.display = "none";
+                    this.e.submit.style.display = "none";
+                    this.e.display.style.display = "initial";
+                    this.method = 0;
+                    this.e.display.innerHTML = name;
+                  }
+                }
+                this.method_change = method_change;
+                this.submit = submit;
+                this.setValue = setValue;
+                var thiss = this;
+                e.method.addEventListener("change", function () {
+                  thiss.method_change();
+                });
+                e.root.addEventListener("submit", function () {
+                  thiss.submit();
+                });
+              }
+              var from_elements = {
+                "root": document.getElementById("uipanel_fromto_from"),
+                "method": document.getElementById("uipanel_fromto_from_method"),
+                "inputs": [document.getElementById("uipanel_fromto_from_input1")],
+                "near": document.getElementById("uipanel_fromto_from_near"),
+                "submit": document.getElementById("uipanel_fromto_from_submit"),
+                "display": document.getElementById("uipanel_fromto_from_display")
+              };
+
+              var to_elements = {
+                "root": document.getElementById("uipanel_fromto_to"),
+                "method": document.getElementById("uipanel_fromto_to_method"),
+                "inputs": [document.getElementById("uipanel_fromto_to_input1")],
+                "near": document.getElementById("uipanel_fromto_to_near"),
+                "submit": document.getElementById("uipanel_fromto_to_submit"),
+                "display": document.getElementById("uipanel_fromto_to_display")
+              };
+              vin_from = new VertexInput("from", from_elements);
+              vin_to = new VertexInput("from", to_elements);
+            })();
+          </script>
+        </div>
 
 
         <div id="uipanel_routes" style="display:none">
@@ -530,14 +705,21 @@
           }
         }
         Log.debug(JSON.stringify(Geodata.obj.places) || "");
-        var s = document.getElementById("uipanel_near_input_to");
-        while (s.hasChildNodes())
-          s.removeChild(s.lastChild);
-        for (var i in Geodata.obj.places) {
-          var opt = document.createElement("option");
-          opt.setAttribute("value", i);
-          opt.innerHTML = Geodata.obj.places[i];
-          s.appendChild(opt);
+        for (var j in {"uipanel_fromto_from_near": 0, "uipanel_fromto_to_near": 0}) {
+          var s = document.getElementById(j);
+          while (s.hasChildNodes())
+            s.removeChild(s.lastChild);
+          for (var i in Geodata.obj.places) {
+            var p = Geodata.obj.places[i];
+            if (!places[i])
+              places[i] = [];
+            if (p.searched) {
+              var opt = document.createElement("option");
+              opt.setAttribute("value", i);
+              opt.innerHTML = p.name;
+              s.appendChild(opt);
+            }
+          }
         }
       });
 
@@ -560,8 +742,9 @@
       route_icon_HTMLImageElement.fly.src=route_icon_path.fly;
 
       //HTML DOM 변수들.
-      var uipanel_search=document.getElementById("uipanel_search");
-      var uipanel_near=document.getElementById("uipanel_near");
+      //var uipanel_search=document.getElementById("uipanel_search");
+      //var uipanel_near=document.getElementById("uipanel_near");
+      var uipanel_fromto = document.getElementById("uipanel_fromto");
       var uipanel_routes=document.getElementById("uipanel_routes");
       var uipanel_navigation=document.getElementById("uipanel_navigation");
       var uipanel_settings=document.getElementById("uipanel_settings");
@@ -571,18 +754,10 @@
       var uipanel_route_message=document.getElementById("uipanel_route_message");
       
 
-      var search_button_importTT = document.getElementById("uipanel_search_button_importtt");
-      var search_button_find = document.getElementById("uipanel_search_button_find");
-      var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
-      var search_input_from=document.getElementById("uipanel_search_input_from");
-      var search_input_to=document.getElementById("uipanel_search_input_to");
-      var search_input_time = document.getElementById("uipanel_search_input_time");
-
-      var near_input_from = document.getElementById("uipanel_near_input_from");
-      var near_input_to = document.getElementById("uipanel_near_input_to");
-      var near_input_time = document.getElementById("uipanel_near_input_time");
-        
-      var near_button_setlocation = document.getElementById("uipanel_near_location_set");
+      var fromto_input_time = document.getElementById("uipanel_fromto_input_time");
+      var fromto_button_importTT = document.getElementById("uipanel_fromto_button_importtt");
+      var fromto_button_swap = document.getElementById("uipanel_fromto_swap_src_dst");
+      var fromto_button_find = document.getElementById("uipanel_fromto_button_find");
 
       var routeTemplate = document.getElementById("route_template");
 
@@ -598,8 +773,9 @@
 
       
       
-      var uipanel_tabs_search=document.getElementById("uipanel_tabs_search");
-      var uipanel_tabs_nearby=document.getElementById("uipanel_tabs_nearby");
+      //var uipanel_tabs_search=document.getElementById("uipanel_tabs_search");
+      //var uipanel_tabs_nearby=document.getElementById("uipanel_tabs_nearby");
+      var uipanel_tabs_fromto = document.getElementById("uipanel_tabs_fromto");
       var uipanel_tabs_settings=document.getElementById("uipanel_tabs_settings");
       var uipanel_tabs_routelist=document.getElementById("uipanel_tabs_routelist");
       var uipanel_tabs_navigation=document.getElementById("uipanel_tabs_navigation");
@@ -668,7 +844,7 @@
       
       
       
-      search_input_time.value=nearestNiceTime.toTimeString().split(" ")[0]
+      fromto_input_time.value = nearestNiceTime.toTimeString().split(" ")[0]
       
       //Canvas
       var canvasContainer=document.getElementById("navigation_canvas");
@@ -779,19 +955,22 @@
       
       function undisplayAll(){
         for(var i=0;i<uiStateChangeListener.length;i++) uiStateChangeListener[i]();
-        uipanel_search.style.display="none";
+        //uipanel_search.style.display="none";
         uipanel_routes.style.display="none";
-        uipanel_near.style.display="none";
+        //uipanel_near.style.display="none";
+        uipanel_fromto.style.display = "none";
         uipanel_navigation.style.display="none";
         uipanel_settings.style.display="none";
-        uipanel_tabs_search.classList.remove("selected_tab");
-        uipanel_tabs_nearby.classList.remove("selected_tab");
+        //uipanel_tabs_search.classList.remove("selected_tab");
+        //uipanel_tabs_nearby.classList.remove("selected_tab");
+        uipanel_tabs_fromto.classList.remove("selected_tab");
         uipanel_tabs_settings.classList.remove("selected_tab");
         uipanel_tabs_routelist.classList.remove("selected_tab");
         uipanel_tabs_navigation.classList.remove("selected_tab");
         cleanRouteList();
         mymap.invalidateSize();
       }
+      /*
       function displaySearchPanel(){
         undisplayAll();
         uipanel_search.style.display="block";
@@ -800,7 +979,14 @@
         undisplayAll();
         uipanel_near.style.display="flex";
         uipanel_tabs_nearby.classList.add("selected_tab");
-      }function displayRouteListingPanel(){
+      }
+      //*/
+      function displayFromToPanel() {
+        undisplayAll();
+        uipanel_fromto.style.display = "initial";
+        uipanel_tabs_fromto.classList.add("selected_tab");
+      }
+      function displayRouteListingPanel(){
         undisplayAll();
         uipanel_routes.style.display="block";
         uipanel_tabs_routelist.classList.add("selected_tab");
@@ -823,9 +1009,10 @@
       
       
       //Tabs
-      uipanel_tabs_search.addEventListener("click",displaySearchPanel);
-      uipanel_tabs_nearby.addEventListener("click",displayNearPanel);
-      uipanel_tabs_settings.addEventListener("click",displaySettingsPanel);
+      //uipanel_tabs_search.addEventListener("click",displaySearchPanel);
+      //uipanel_tabs_nearby.addEventListener("click",displayNearPanel);
+      uipanel_tabs_fromto.addEventListener("click", displayFromToPanel);
+      uipanel_tabs_settings.addEventListener("click", displaySettingsPanel);
 
       // UI Mode: Search --> RouteListing
       function enterRouteListingMode(paths, timelimit,message){
@@ -935,100 +1122,38 @@
 
 
       
-      search_button_importTT.addEventListener("click", function () {
+      fromto_button_importTT.addEventListener("click", function () {
           var nextLecture=timeTableData.nextLecture();
-          if (nextLecture===null){
-              search_input_to.value="정문";
+          if (nextLecture === null) {
+            vin_to.setValue(Geodata.graph.vertices[0], "정문");
           }
-          else{
-              search_input_to.value=nextLecture.location;
-              search_input_time.value=timeToString(nextLecture.startTime);
+          else {
+            var n = nextLecture.location;
+              vin_to.setValue(places[Util.getBuilding(n)], n);
+              fromto_input_time.value=timeToString(nextLecture.startTime);
           }
           
           var lastLecture=timeTableData.lastLecture();
           if (lastLecture===null){
-              search_input_from.value="정문";
+            vin_from.setValue(Geodata.graph.vertices[0], "정문");
           }
-          else{
-              search_input_from.value=lastLecture.location;
+          else {
+            var n = lastLecture.location;
+            vin_from.setValue(places[Util.getBuilding(n)], n);
           }
           
       });
 
       var pref_walk_inside = { "time_name": "walk", "factors": [{ "condition": [{ "name": "inside", "value": false }], multiplier: 2 }] };
 
-      uipanel_search.addEventListener("submit", function () {
-        var fromName = search_input_from.value;
-        var fromVertex;
-		if(timeTableData.locationCheck(fromName)==0 && !timeTableData.isBuilding(fromName)) {
-			for(var i=0; i<fromName.length; i++) {
-				if(fromName.charAt(i)>='0' && fromName.charAt(i)<='9') break;
-			}
-			fromName = timeTableData.buildingPrefix[fromName.substring(0, i)];
-		}
-		if(fromName == "제2공학관") {
-			fromVertex = [];
-			fromVertex[0] = Geodata.graph.findVertexWithName("제2공학관 북문");
-			formVertex[1] = Geodata.graph.findVertexWithName("제2공학관 남문");
-			fromVertex[2] = Geodata.graph.findVertexWithName("제2공학관 동문");
-			fromVertex[3] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
-		}
-		else if(fromName == "제3공학관") {
-			fromVertex = [];
-			fromVertex[0] = Geodata.graph.findVertexWithName("제3공학관 북문");
-			fromVertex[1] = Geodata.graph.findVertexWithName("제3공학관 남문");
-			fromVertex[2] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
-		}
-		else fromVertex = Geodata.graph.findVertexWithName(fromName);
-		
-        var toName = search_input_to.value;
-        var toVertex;
-		if(timeTableData.locationCheck(toName) ==0 && !timeTableData.isBuilding(toName)) {
-			for(var i=0; i<toName.length; i++) {
-				if(toName.charAt(i)>='0' && toName.charAt(i)<='9') break;
-			}
-			toName = timeTableData.buildingPrefix[toName.substring(0, i)];
-		}
-		if(toName == "제2공학관") {
-			toVertex = [];
-			toVertex[0] = Geodata.graph.findVertexWithName("제2공학관 북문");
-			toVertex[1] = Geodata.graph.findVertexWithName("제2공학관 남문");
-			toVertex[2] = Geodata.graph.findVertexWithName("제2공학관 동문");
-			toVertex[3] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
-		}
-		else if(toName == "제3공학관") {
-			toVertex = [];
-			toVertex[0] = Geodata.graph.findVertexWithName("제3공학관 북문");
-			toVertex[1] = Geodata.graph.findVertexWithName("제3공학관 남문");
-			toVertex[2] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
-		}
-		else toVertex = Geodata.graph.findVertexWithName(toName);
 
-        var timeLimit = search_input_time.value;
+      fromto_button_find.addEventListener("click", function () {
+        var fromName = vin_from.name;;
+        var fromVertex = vin_from.value;
+        var toName = vin_to.name;
+        var toVertex = vin_to.value;
 
-        var timeLimitTimestamp = Util.colonSeparatedTimeToTimeStamp(timeLimit);
-
-
-        if (!fromVertex) {
-          Log.error("Invalid vertex name: \"" + fromName + "\" Cannot start navigation.")
-          return;
-        }
-        if (!toVertex) {
-          Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
-          return;
-        }
-
-        search_query(fromVertex, toVertex, timeLimitTimestamp);
-      });
-
-      uipanel_near.addEventListener("submit", function () {
-        var fromName = near_input_from.value;
-        var fromVertex = Geodata.graph.findVertexWithName(fromName);
-        var toName = near_input_to.value;
-        var toVertex = places[toName];
-        Log.debug(toVertex.toString());
-
-        var timeLimit = near_input_time.value;
+        var timeLimit = fromto_input_time.value;
 
         var timeLimitTimestamp = Util.colonSeparatedTimeToTimeStamp(timeLimit);
 
@@ -1071,16 +1196,10 @@
       }
       
       // 바꾸기 버튼
-      search_button_swap.addEventListener("click", function () {
-        var s = search_input_from.value;
-        search_input_from.value = search_input_to.value;
-        search_input_to.value = s;
-      });
-      
-      
-      near_button_setlocation.addEventListener("click",function(){
-        var nearest=GraphCalculations.nearestVertexToPoint(Geodata.graph,GPS.getCurrentLocation(),true);
-        near_input_from.value=nearest.name;
+      fromto_button_swap.addEventListener("click", function () {
+        var sv = vin_from.value, sn = vin_from.name;
+        vin_from.setValue(vin_to.value, vin_to.name);
+        vin_to.setValue(sv, sn);
       });
 
       //Debug Panel
