@@ -208,7 +208,7 @@
           p.innerHTML = "수업 이름은 한자리 이상이어야 합니다!<br/>";
           p.style.color = "red"; return;
         }
-        else if(timetable.locationCheck(location.value)!=0) {
+        else if(false && timetable.locationCheck(location.value)!=0) { //DISABLED
           p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
             "정식 강의동 약어(+강의실 호수)를 입력해주세요<br/>"+
             "//유효한 입력 예 : '공D504', 혹은 '과232' 등.";
