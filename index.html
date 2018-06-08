@@ -1142,6 +1142,11 @@
           this.setValue(value);
         }
         
+        this.setText=function(txt){
+          this.inputElement.value=txt;
+          this.performSearch();
+        }
+        
         var thiss=this;
         this.inputElement.addEventListener("input",function(){
           thiss.performSearch();
@@ -1410,28 +1415,26 @@
           var nextLecture=timeTableData.nextLecture();
           if (nextLecture === null) {
             //vin_to.setValue(Geodata.graph.vertices[0], "정문");
-            search_input_to.value="정문";
+            search_to.setText("정문");
           }
           else {
             
             var n = nextLecture.location;
             //vin_to.setValue(places[Util.getBuilding(n)], n);
-            search_input_from.value=n;
+            search_to.setText(n);
             search_input_to.value=timeToString(nextLecture.startTime);
             
           }
           
           var lastLecture=timeTableData.lastLecture();
           if (lastLecture===null){
-            search_input_from.value="정문";
+            search_to.setText("정문");
           }
           else {
             var n = lastLecture.location;
-            search_input_from.value=n;
+            search_to.setText(n);
           }
         
-        searchFrom();
-        searchTo();
           
       });
 
