@@ -72,10 +72,11 @@
       #uipanel_search_grid{
         display: grid;
         grid-template-rows: auto auto auto;
-        grid-template-columns: 1fr auto auto;
-        grid-template-areas: "frominput fromlabel importttbtn" 
-                             "toinput   tolabel   changebtn" 
-                             "timeinput timelabel findbtn" ;
+        grid-template-columns: auto 1fr auto auto;
+        grid-template-areas: "setloc    frominput fromcheck fromlabel" 
+                             "setmap    toinput   tocheck   tolabel  " 
+                             ".         timeinput timeinput timelabel"
+                             "buttons   buttons   buttons   buttons";
         grid-column-gap: 4px;
       }
       #uipanel_search_grid *{
@@ -83,11 +84,16 @@
         
         width:100%;
       }
+      #uipanel_search_input_buttons{
+        display: flex;
+        flex-direction: row;
+      }
+      
       
       #uipanel_near_grid{
         display: grid;
         grid-template-rows: auto auto auto;
-        grid-template-columns: auto 1fr auto auto;
+        grid-template-columns: auto 1fr auto auto auto;
         grid-template-areas: "frominput frominput fromlabel locsetbtn" 
                              "tolabel2  toinput   tolabel   changebtn" 
                              "timeinput timeinput timelabel findbtn" ;
@@ -313,6 +319,24 @@
         display: flex;
         justify-content: center;
       }
+      
+      .input_invalid{
+        background: #FFD0D0;
+      }
+      .input_valid{
+        background:#D0FFD0;
+      }
+      .input_disabled{
+        background:#C0C0C0;
+      }
+      
+      .imageButton{
+        padding:0;
+      }
+      .imageButton *{
+        padding:0;
+        margin:0;
+      }
 
     </style>
 
@@ -358,35 +382,50 @@
           
         </div>
         <div id="uipanel_tabs">
-          <!--<div id="uipanel_tabs_search" class="clickable selected_tab">Search</div>-->
-          <!--<div id="uipanel_tabs_nearby" class="clickable">Nearby</div>-->
+          <div id="uipanel_tabs_search" class="clickable selected_tab">Search</div>
+          <div id="uipanel_tabs_nearby" class="clickable">Nearby</div>
+          <!--
           <div id="uipanel_tabs_fromto" class="clickable selected_tab">From to</div>
+          -->
           <div id="uipanel_tabs_settings" class="clickable">Settings</div>
           <div id="uipanel_tabs_routelist" class="unclickable_tab">Route</div>
           <div id="uipanel_tabs_navigation" class="unclickable_tab">Navigation</div>
         </div>
         <!-- form 처럼 작동하도록 함 (return 입력시 전송), div와 같은 레이아웃 -->
-        <!--
+        
         <form id="uipanel_search" action="javascript:">
           <div id="uipanel_search_grid">
-            <input type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
+            <button class="imageButton" id="uipanel_search_input_setloc"  style="grid-area: setloc;width:2em;height:2em;"><img src="icons/baseline_location_searching_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+
+            
+            <button class="imageButton" id="uipanel_search_input_setmap"  style="grid-area: setmap;width:2em;height:2em;"><img src="icons/baseline_touch_app_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            
+            <button class="imageButton" id="search_input_from_reset"  style="grid-area: fromcheck;width:2em;height:2em;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            
+            <button class="imageButton" id="search_input_to_reset"  style="grid-area: tocheck;width:2em;height:2em;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            
+            <input class="input_invalid" type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
             <div style="grid-area: fromlabel;">부터</div>
             
-            <input type="button" value="자동 설정" id="uipanel_search_button_importtt" style="grid-area: importttbtn;" />
             
-            <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="4" style="grid-area: changebtn;" />
 
-            <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="5" style="grid-area: findbtn;" />
-
-            <input type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
+            <input class="input_invalid" type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
 
             <div style="grid-area: tolabel;">까지</div>
 
             
             <input type="time" id="uipanel_search_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
 
-            <div style="grid-area: timelabel;">까지</div>
+            <div style="grid-area: timelabel;">제한시간</div>
+            
+            <div id="uipanel_search_input_buttons" style="grid-area: buttons;" >
+              <input type="button" value="자동 설정" id="uipanel_search_button_importtt" style="flex-grow: 0;" />
+
+              <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="4" style="flex-grow: 0;" />
+
+              <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="5" style="flex-grow: 2;" />
+            </div>
 
           </div>
         </form>
@@ -407,9 +446,9 @@
             <div style="grid-area: timelabel;">까지</div>
           </div>
         </form>
-        -->
+        
         <datalist id="destinationsData"></datalist>
-
+        <!--
         <div id="uipanel_fromto" style="">
           <div id="uipanel_fromto_grid">
             <form id="uipanel_fromto_from" action="javascript:" style="grid-area: frominput;" class="uipanel_fromto_form">
@@ -452,7 +491,7 @@
             <input type="button" value="바꾸기" id="uipanel_fromto_swap_src_dst" tabindex="4" style="grid-area: changebtn;" />
           </div>
         </div>
-
+        -->
 
         <div id="uipanel_routes" style="display:none">
             <div id="uipanel_route_message" style="text-align: center;"></div>
@@ -624,6 +663,7 @@
             }
           }
         }
+        /*
         Log.debug(JSON.stringify(Geodata.obj.places) || "");
         for (var j in {"uipanel_fromto_from_near": 0, "uipanel_fromto_to_near": 0}) {
           var s = document.getElementById(j);
@@ -640,7 +680,7 @@
               s.appendChild(opt);
             }
           }
-        }
+        }*/
       });
 
       Geodata.load("mapdata.json");
@@ -662,9 +702,9 @@
       route_icon_HTMLImageElement.fly.src=route_icon_path.fly;
 
       //HTML DOM 변수들.
-      //var uipanel_search=document.getElementById("uipanel_search");
-      //var uipanel_near=document.getElementById("uipanel_near");
-      var uipanel_fromto = document.getElementById("uipanel_fromto");
+      var uipanel_search=document.getElementById("uipanel_search");
+      var uipanel_near=document.getElementById("uipanel_near");
+      //var uipanel_fromto = document.getElementById("uipanel_fromto");
       var uipanel_routes=document.getElementById("uipanel_routes");
       var uipanel_navigation=document.getElementById("uipanel_navigation");
       var uipanel_settings=document.getElementById("uipanel_settings");
@@ -673,11 +713,16 @@
       var uipanel_route_list=document.getElementById("uipanel_route_list");
       var uipanel_route_message=document.getElementById("uipanel_route_message");
       
-
-      var fromto_input_time = document.getElementById("uipanel_fromto_input_time");
-      var fromto_button_importTT = document.getElementById("uipanel_fromto_button_importtt");
-      var fromto_button_swap = document.getElementById("uipanel_fromto_swap_src_dst");
-      var fromto_button_find = document.getElementById("uipanel_fromto_button_find");
+      var uipanel_search_input_setloc=document.getElementById("uipanel_search_input_setloc");
+      var uipanel_search_input_setmap=document.getElementById("uipanel_search_input_setmap");
+      var search_input_from=document.getElementById("uipanel_search_input_from");
+      var search_input_from_reset=document.getElementById("search_input_from_reset");
+      var search_input_to_reset=document.getElementById("search_input_to_reset");
+      var search_input_to=document.getElementById("uipanel_search_input_to");
+      var search_input_time = document.getElementById("uipanel_search_input_time");
+      var search_button_importTT = document.getElementById("uipanel_search_button_importtt");
+      var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
+      var search_button_find = document.getElementById("uipanel_search_button_find");
 
       var routeTemplate = document.getElementById("route_template");
 
@@ -693,9 +738,9 @@
 
       
       
-      //var uipanel_tabs_search=document.getElementById("uipanel_tabs_search");
-      //var uipanel_tabs_nearby=document.getElementById("uipanel_tabs_nearby");
-      var uipanel_tabs_fromto = document.getElementById("uipanel_tabs_fromto");
+      var uipanel_tabs_search=document.getElementById("uipanel_tabs_search");
+      var uipanel_tabs_nearby=document.getElementById("uipanel_tabs_nearby");
+      //var uipanel_tabs_fromto = document.getElementById("uipanel_tabs_fromto");
       var uipanel_tabs_settings=document.getElementById("uipanel_tabs_settings");
       var uipanel_tabs_routelist=document.getElementById("uipanel_tabs_routelist");
       var uipanel_tabs_navigation=document.getElementById("uipanel_tabs_navigation");
@@ -764,10 +809,10 @@
       
       
       
-      fromto_input_time.value = nearestNiceTime.toTimeString().split(" ")[0]
+      //fromto_input_time.value = nearestNiceTime.toTimeString().split(" ")[0]
       
       
-      
+      /*
       //FromTo Panel
       var vin_from, vin_to;
       
@@ -917,7 +962,7 @@
       };
       vin_from = new VertexInput("from", from_elements);
       vin_to = new VertexInput("from", to_elements);
-      
+      */
       
       
       //Canvas
@@ -1019,9 +1064,109 @@
         }
         
       }
+
+      var search_from=null;
+      var search_to=null;
       
+      function advancedSearch(str){
+        var vertexSearch=Geodata.graph.findVertexWithName(str);
+        var buildingSearch=Util.getBuilding(str);
+        var buildingSearchPlace=places[buildingSearch];
+        
+        if (vertexSearch){
+          return vertexSearch;
+        }else if (buildingSearchPlace){
+          return buildingSearchPlace;
+        }else{
+          return null;
+        }
+      }
+      function searchFrom(){
+        var searchQuery=search_input_from.value;
+        var searchResult=advancedSearch(searchQuery);
+        if (searchResult){
+          search_input_from.classList.remove("input_invalid");
+          search_input_from.classList.add("input_valid");
+          search_from=searchResult;
+        }else{
+           search_input_from.classList.add("input_invalid");
+          search_input_from.classList.remove("input_valid");
+          search_from=null;
+        }
+        
+      }
+      function searchTo(){
+        var searchQuery=search_input_to.value;
+        var searchResult=advancedSearch(searchQuery);
+        if (searchResult){
+          search_input_to.classList.remove("input_invalid");
+          search_input_to.classList.add("input_valid");
+          search_to=searchResult;
+        }else{
+          search_input_to.classList.add("input_invalid");
+          search_input_to.classList.remove("input_valid");
+          search_to=null;
+        }
+      }
+      
+      search_input_from.addEventListener("input",searchFrom);
+      search_input_to.addEventListener("input",searchTo);
+      
+      search_input_from_reset.addEventListener("click",function(){
+        search_input_from.value="";
+        search_input_from.classList.add("input_invalid");
+        search_input_from.classList.remove("input_valid");
+        search_input_from.classList.remove("input_disabled");
+        search_input_from.removeAttribute("readonly");
+        search_from=null;
+      });
+      
+      uipanel_search_input_setloc.addEventListener("click",function(){
+        search_input_from.value="현재 위치";
+        search_input_from.classList.remove("input_invalid");
+        search_input_from.classList.remove("input_valid");
+        search_input_from.classList.add("input_disabled");
+        search_input_from.setAttribute("readonly",true);
+        search_from=GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false);
+      });
+      
+      search_input_to_reset.addEventListener("click",function(){
+        search_input_to.value="";
+        search_input_to.classList.add("input_invalid");
+        search_input_to.classList.remove("input_valid");
+        search_input_to.classList.remove("input_disabled");
+        search_input_to.removeAttribute("readonly");
+        search_to=null;
+      });
+      
+      uipanel_search_input_setmap.addEventListener("click",function(){
+        
+        search_input_to.value="클릭한 위치";
+        search_input_to.classList.remove("input_invalid");
+        search_input_to.classList.remove("input_valid");
+        search_input_to.classList.add("input_disabled");
+        search_input_to.setAttribute("readonly",true);
+        
+        var clicked=false;
+        
+        document.getElementById("uipanel_grayouter").style.display="block";
+        
+        mymap.on("click",function(e){
+          if (clicked) return;
+          clicked=true;
 
+          e.latlng.alt=0;      
+          var location=Coordinates.fromLatLng(e.latlng);
 
+          document.getElementById("uipanel_grayouter").style.display="none";
+          
+          search_to=GraphCalculations.nearestVertexToPoint(Geodata.graph, location, false);
+          
+        });
+      })
+      
+      
+      
       //UI 이벤트 처리 함수들.
       
       //Called whenever a state change occurs.
@@ -1029,22 +1174,27 @@
       
       function undisplayAll(){
         for(var i=0;i<uiStateChangeListener.length;i++) uiStateChangeListener[i]();
-        //uipanel_search.style.display="none";
+        uipanel_search.style.display="none";
         uipanel_routes.style.display="none";
-        //uipanel_near.style.display="none";
-        uipanel_fromto.style.display = "none";
+        uipanel_near.style.display="none";
+        //uipanel_fromto.style.display = "none";
         uipanel_navigation.style.display="none";
         uipanel_settings.style.display="none";
-        //uipanel_tabs_search.classList.remove("selected_tab");
-        //uipanel_tabs_nearby.classList.remove("selected_tab");
-        uipanel_tabs_fromto.classList.remove("selected_tab");
+        
+        uipanel_tabs_search.classList.remove("selected_tab");
+        uipanel_tabs_nearby.classList.remove("selected_tab");
+        //uipanel_tabs_fromto.classList.remove("selected_tab");
         uipanel_tabs_settings.classList.remove("selected_tab");
         uipanel_tabs_routelist.classList.remove("selected_tab");
         uipanel_tabs_navigation.classList.remove("selected_tab");
+        
+        search_from={"obj":null,"name":"UNDEFINED"};
+        search_to={"obj":null,"name":"UNDEFINED"};
+        
         cleanRouteList();
         mymap.invalidateSize();
       }
-      /*
+
       function displaySearchPanel(){
         undisplayAll();
         uipanel_search.style.display="block";
@@ -1054,12 +1204,12 @@
         uipanel_near.style.display="flex";
         uipanel_tabs_nearby.classList.add("selected_tab");
       }
-      //*/
+      /*
       function displayFromToPanel() {
         undisplayAll();
         uipanel_fromto.style.display = "block";
         uipanel_tabs_fromto.classList.add("selected_tab");
-      }
+      }*/
       function displayRouteListingPanel(){
         undisplayAll();
         uipanel_routes.style.display="block";
@@ -1083,9 +1233,9 @@
       
       
       //Tabs
-      //uipanel_tabs_search.addEventListener("click",displaySearchPanel);
-      //uipanel_tabs_nearby.addEventListener("click",displayNearPanel);
-      uipanel_tabs_fromto.addEventListener("click", displayFromToPanel);
+      uipanel_tabs_search.addEventListener("click",displaySearchPanel);
+      uipanel_tabs_nearby.addEventListener("click",displayNearPanel);
+      //uipanel_tabs_fromto.addEventListener("click", displayFromToPanel);
       uipanel_tabs_settings.addEventListener("click", displaySettingsPanel);
 
       // UI Mode: Search --> RouteListing
@@ -1154,7 +1304,13 @@
 
 
         navigation_routename.innerHTML=path.parray[0].v.name+" -> "+path.parray[path.parray.length - 1].v.name;
-        navigation_targettime.innerHTML="목표도착시각: "+Util.timeStampToFormattedTime(timelimit);
+        //console.log(timelimit);
+        if (timelimit!==Number.MAX_SAFE_INTEGER){
+          navigation_targettime.innerHTML="목표도착시각: "+Util.timeStampToFormattedTime(timelimit);
+        }else{
+          navigation_targettime.innerHTML="";
+        }
+        
         navigation_timeremaining.innerHTML="남은시간: ";
         navigation_eta.innerHTML="예상도착시간: ";
         
@@ -1192,42 +1348,47 @@
         //at first, assume user is in start position.
         navContext.updateLocation(path.parray[0].v.coordinates);
       }
-
-
-
       
-      fromto_button_importTT.addEventListener("click", function () {
+      
+      search_button_importTT.addEventListener("click", function () {
           var nextLecture=timeTableData.nextLecture();
           if (nextLecture === null) {
-            vin_to.setValue(Geodata.graph.vertices[0], "정문");
+            //vin_to.setValue(Geodata.graph.vertices[0], "정문");
+            search_input_to.value="정문";
           }
           else {
+            
             var n = nextLecture.location;
-              vin_to.setValue(places[Util.getBuilding(n)], n);
-              fromto_input_time.value=timeToString(nextLecture.startTime);
+            //vin_to.setValue(places[Util.getBuilding(n)], n);
+            search_input_from.value=n;
+            search_input_to.value=timeToString(nextLecture.startTime);
+            
           }
           
           var lastLecture=timeTableData.lastLecture();
           if (lastLecture===null){
-            vin_from.setValue(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
+            search_input_from.value="정문";
           }
           else {
             var n = lastLecture.location;
-            vin_from.setValue(places[Util.getBuilding(n)], n);
+            search_input_from.value=n;
           }
+        
+        searchFrom();
+        searchTo();
           
       });
 
       var pref_walk_inside = { "time_name": "walk", "factors": [{ "condition": [{ "name": "inside", "value": false }], multiplier: 2 }] };
 
 
-      fromto_button_find.addEventListener("click", function () {
-        var fromName = vin_from.name;;
-        var fromVertex = vin_from.value;
-        var toName = vin_to.name;
-        var toVertex = vin_to.value;
+      search_button_find.addEventListener("click", function () {
+        var fromName = search_from.name; //vin_from.name;
+        var fromVertex = search_from; //vin_from.value;
+        var toName = search_to.name; //vin_to.name;
+        var toVertex = search_to; //vin_to.value;
 
-        var timeLimit = fromto_input_time.value;
+        var timeLimit = search_input_time.value;
 
         var timeLimitTimestamp = Util.colonSeparatedTimeToTimeStamp(timeLimit);
 
@@ -1240,7 +1401,7 @@
           Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
           return;
         }
-
+        //console.log(timeLimitTimestamp);
         search_query(fromVertex, toVertex, timeLimitTimestamp);
       });
 
@@ -1270,10 +1431,19 @@
       }
       
       // 바꾸기 버튼
-      fromto_button_swap.addEventListener("click", function () {
-        var sv = vin_from.value, sn = vin_from.name;
-        vin_from.setValue(vin_to.value, vin_to.name);
-        vin_to.setValue(sv, sn);
+      search_button_swap.addEventListener("click", function () {
+        if (search_input_from.getAttribute("disabled") || search_input_to.getAttribute("disabled")){
+          //pass
+        }else{
+          var origF=search_input_from.value;
+          var origT=search_input_to.value;
+          
+          search_input_from.value=origT;
+          search_input_to.value=origF;
+          
+          searchTo();
+          searchFrom();
+        }
       });
 
       //Debug Panel
