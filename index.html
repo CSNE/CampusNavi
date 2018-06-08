@@ -283,6 +283,7 @@
         <button onclick="debug_button_4_onclick()">Weather: Bad</button>
         <button onclick="debug_button_5_onclick()">Log.error()</button>        
         <button onclick="debug_button_6_onclick()">Override timetable time</button>        
+        <button onclick="debug_button_7_onclick()">Hide debug menus</button>
       </div>
       <div id="logcontainer"></div>
     </div>
@@ -296,7 +297,7 @@
           <div id="uipanel_persistant_left">
             <strong style="font-size:1.3em;">CampusNavi</strong>
           </div>
-          <div id="uipanel_persistant_spacer"></div>
+          <div id="uipanel_persistant_spacer">&nbsp;&nbsp;</div>
           <div id="uipanel_persistant_right">
             <span id="uipanel_persistant_right_texts">
               <sub>날씨 </sub><span id="uipanel_weather_weather_display" class="uitext_unknown">???</span>
@@ -535,7 +536,7 @@
 
 
         <div id="uipanel_routes" style="display:none">
-            <div id="uipanel_route_message"></div>
+            <div id="uipanel_route_message" style="text-align: center;"></div>
           <template id="route_template">
             <div class="route_element">
               <img class="route_icon">
@@ -670,6 +671,11 @@
         }
       });
 
+	  
+	    
+      var timeTableData=new TimeTable();
+      //timeTableData.loadTimeTable();
+	  
 
       var places = {};
       Geodata.addUpdateListener(function () {
@@ -692,6 +698,10 @@
                   places[p] = [];
                 places[p].push(v);
               }
+			  /*if(timeTableData.locationCheck(v.id)==0) { //
+				if(!places[v.id]) places[v.id] = []; //
+				places[v.id].push(v); //
+			  }*/
             }
           }
         }
@@ -716,9 +726,6 @@
 
       Geodata.load("mapdata.json");
         
-        
-      var timeTableData=new TimeTable();
-      timeTableData.loadTimeTable();
             
       //Icons
       var route_icon_path = {
@@ -781,7 +788,7 @@
         
         
       Weather.addCallback(function(){
-        Log.debug("Weather data successfully acquired. Displaying.")
+        Log.debug("Displaying weather data.");
         uipanel_weather_weather_display.innerHTML=Weather.getCurrentWeatherNameKorean();
         uipanel_weather_weather_display.className='';
         uipanel_weather_weather_display.classList.add("uitext_"+Weather.getCurrentWeatherGrade());
@@ -794,7 +801,29 @@
         uipanel_weather_temps_display.className='';
         uipanel_weather_temps_display.classList.add("uitext_"+Weather.getCurrentTemperatureGrade());
       });
-      Weather.fetch();
+      
+      //Try Weather.fetch() 5 times, 5 seconds apart.
+      var weatherFetchTries=5;
+      function tryFetchingUntilSucceeds(){
+        weatherFetchTries--;
+        if (weatherFetchTries<0){
+          Log.error("Weather fetch failed after 5 tries!");
+          return;
+        }
+        
+        if (Weather.getCurrentWeatherInShinchon() !==null &&
+            Weather.getCurrentDustLevelsInShinchon()!==null){
+          //exit
+          Log.debug("Exiting weather data fetching loop.");
+          return;
+        }
+        Weather.fetch();
+        setTimeout(tryFetchingUntilSucceeds,5000);
+      }
+      tryFetchingUntilSucceeds();
+      
+        
+      
       
       //TODO fix dis
       //This code WILL BREAK if:
@@ -1034,7 +1063,7 @@
         GPS.addLocationListener(function(location){
           navContext.updateLocation(location);
           if (!navContext.DEBUG_VARIABLE) Log.error("NULL???");
-          Log.debug("Debug Marker at\n"+navContext.DEBUG_VARIABLE.closestLocation.toString());
+          //Log.debug("Debug Marker at\n"+navContext.DEBUG_VARIABLE.closestLocation.toString());
           debugMarker.setLatLng(navContext.DEBUG_VARIABLE.closestLocation.toLatLng());
         });
         displayNavigationPanel();
@@ -1086,8 +1115,9 @@
         }
         
         uiStateChangeListener.push(exitNavigationMode);
-
-        
+          
+        //at first, assume user is in start position.
+        navContext.updateLocation(path.from.coordinates);
       }
 
 
@@ -1152,8 +1182,11 @@
         var pathlist;
         var msg = "";
         if (Weather.getCompositeGrade() == "bad") {
-          msg = "날씨가 좋지 않아 실내 통로를 우선 탐색합니다.";
+          msg = "날씨 나쁨. 실내 통로 우선 탐색.";
           pathlist = [path3, path1];
+        } else if (Weather.getCompositeGrade() == "okay") {
+          msg = "날씨 좋지 않음. 실내 통로 표시.";
+          pathlist = [path1, path2, path3];
         } else {
           pathlist = [path1, path2];
         }
@@ -1178,8 +1211,6 @@
 
       //debug buttons
       function debug_button_1_onclick(){
-        Log.debug("Button 1 clicked");
-
         Log.info("Entering fake location mode");
         GPS.stopTracking();
         mymap.on("click",function(e){
@@ -1190,26 +1221,21 @@
 
       }
       function debug_button_2_onclick(){
-        Log.debug("Button\n 2 clicked");
         Log.info("Override weather: Good weather");
-        Weather.debug_override_weather("Clear",22,70);
+        Weather.debug_override_weather(800,22,70);
       }
       function debug_button_3_onclick(){
-        Log.debug("Button 3 clicked");
         Log.info("Override weather: Okay weather");
-        Weather.debug_override_weather("Drizzle",27,150);
+        Weather.debug_override_weather(300,27,150);
       }
       function debug_button_4_onclick(){
-        Log.debug("Button 4 clicked");
         Log.info("Override weather: Bad weather");
-        Weather.debug_override_weather("Thunderstorm",33,220);
+        Weather.debug_override_weather(202,33,220);
       }
       function debug_button_5_onclick(){
-        Log.debug("Button 5 clicked");
         Log.error("Test Error");
       }
       function debug_button_6_onclick(){
-        Log.debug("Button 6 clicked");
         var d=new Date();
         d.setFullYear(2018);
         d.setMonth(05);
@@ -1220,6 +1246,16 @@
         timeTableData.debug_override_time=d;
         Log.info("Time overridden: 2018/06/04 12:55:00");
       }
+      function debug_button_7_onclick(){
+        var btn=document.getElementById("debug_panel_toggle");
+        var panel=document.getElementById("debugpanel");
+        
+        btn.style.display="none";
+        panel.style.display="none";
+        
+      }
+      
+      
 
     </script>
   </body>

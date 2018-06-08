@@ -1,334 +1,371 @@
 <!DOCTYPE html>
 <html lang="kr">
-    <head>
-        <meta charset = "utf-8"/>
-        <title>시간표 입력</title>
-        <link rel="stylesheet" type="text/css" href="timetableeditor.css">
+  <head>
+    <meta charset = "utf-8"/>
 
-    </head>
-    <body>
+    <!-- Disable Zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>시간표 입력</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="timetableeditor.css">
 
-        <h1>시간표 입력</h1>
-        <p><a href = "index.html">Go Back</a></p>
-
-        <div id = "frame1">
-            <form>
-                <datalist id="destinationsData"></datalist>
-                <ul>
-                    <li>과목명 : <br/><input id = "className" autofocus type = "text" size = "25"		
-                                          maxlength = "15"/></li>
-                    <li>강의실 : <br/><input  id = "location" type = "text" size = "25" list="destinationsData" 			
-                                          maxlength = "20"/>
-                    </li>
-                    <li>요일 : <select id = "weekDay">
-                        <option selected>월</option>
-                        <option>화</option>
-                        <option>수</option>
-                        <option>목</option>
-                        <option>금</option>
-                        </select>
-                    </li>
-                    <li>수업 시작 시간 :
-                        <select id = "startTimeHour">
-                            <option selected>9</option><option>10</option><option>11</option>
-                            <option>12</option><option>13</option><option>14</option><option>15</option>
-                            <option>16</option><option>17</option><option>18</option><option>19</option>
-                            <option>20</option>
-                        </select> 시&#09;
-                        <select id = "startTimeMinute">
-                            <option selected>0</option><option>5</option><option>10</option>
-                            <option>15</option><option>20</option><option>25</option><option>30</option>
-                            <option>35</option><option>40</option><option>45</option><option>50</option>
-                            <option>55</option>
-                        </select> 분<br/>
-                    </li>
-                    <li>수업 끝 시간 :
-                        <select id = "endTimeHour">
-                            <option>9</option><option selected>10</option><option>11</option>
-                            <option>12</option><option>13</option><option>14</option><option>15</option>
-                            <option>16</option><option>17</option><option>18</option><option>19</option>
-                            <option>20</option>
-                        </select> 시&#09;
-                        <select id = "endTimeMinute">
-                            <option selected>0</option><option>5</option><option>10</option>
-                            <option>15</option><option>20</option><option>25</option><option>30</option>
-                            <option>35</option><option>40</option><option>45</option><option>50</option>
-                            <option>55</option>
-                        </select> 분<br/>
-                    </li>
-                </ul>
-
-            </form>
-        </div>
-
-        <br/>
-        <button id = "insertButton" type = "button">추가</button>
-        <button id = "clearButton" type = "button">전체 시간표 삭제</button>
-        <br/>
-
-        <div id = "frame2">
-            <p id = "paragraph"><br/></p>
-            <br/>
-            <table>
-                <caption>시간표</caption>
-                <thead>
-                    <tr>
-                        <th>과목명</th>
-                        <th>강의실</th>
-                        <th>요일</th>
-                        <th>시작시간</th>
-                        <th>끝시간</th>
-                        <th>----</th>
-                    </tr>
-                </thead>
-                <tbody id = "tbody"></tbody>
-            </table>
-        </div>
-        <script src = "timetable.js"></script>
-        <script src = "userdata.js"></script>
+  </head>
+  <body>
+    <div class="content">
 
 
-        <script src="weather.js"></script>
-        <script src="util.js"></script>
-        <script src="logging.js"></script>
-        <script> Log.init();Log.info("Log framework started");</script>
-        <script src="vector.js"></script>
-        <script src="matrices.js"></script>
-        <script src="coordinates.js"></script>
-        <script src="gps.js"></script>
-        <script src="graphentities.js"></script>
-        <script src="graphcalculations.js"></script>
-        <script src="path.js"></script>
-        <script src="testgeodata.js"></script>
-        <script src="geodata.js"></script>
-        <script src="navigationcontext.js"></script>
+      <div id = "displayFrame">
+
+        <table class="timetableTable">
+          <thead>
+            <tr>
+              <th>과목명</th>
+              <th>강의실</th>
+              <th>요일</th>
+              <th>시작시간</th>
+              <th>끝시간</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id = "tbody"></tbody>
+        </table>
+      </div>
 
 
-        <script>
-            //
-            Geodata.addUpdateListener(function () {
-                //Datalist에 꼭짓점 이름들을 넣음.
-                var destinationsDataList = document.getElementById("destinationsData");
-                while (destinationsDataList.hasChildNodes())
-                    destinationsDataList.removeChild(destinationsDataList.lastChild);
-                for (var i = 0; i < Geodata.graph.vertices.length; i++) {
-                    var v = Geodata.graph.vertices[i];
-                    if (v.shown) {
-                        var opt = document.createElement("option");
-                        opt.setAttribute("value", v.name);
-                        destinationsDataList.appendChild(opt);
-                    }
-            }});
-            
-            
-            Geodata.addUpdateListener(function () {
-                Log.debug(""+Geodata.graph.vertices.length);
-                for(var i=0;i<Geodata.graph.vertices.length;i++){
-                    if (Geodata.graph.vertices[i].shown){
-                        Log.debug(Geodata.graph.vertices[i].name);
-                    }
-                }
 
-            });
-            
-            Geodata.load("mapdata.json");
 
-            var timetable = new TimeTable();
 
-            function registerTTE() { // 수업 한 개 등록
-                var className = document.getElementById("className");
-                var location = document.getElementById("location");
-                var weekDay = document.getElementById("weekDay");
-                var startTimeHour = document.getElementById("startTimeHour");
-                var startTimeMinute = document.getElementById("startTimeMinute");
-                var endTimeHour = document.getElementById("endTimeHour");
-                var endTimeMinute = document.getElementById("endTimeMinute");
-                var weekDayNum;
-                switch(weekDay.value) {
-                    case "일" : weekDayNum = 0; break;
-                    case "월" : weekDayNum = 1; break;
-                    case "화" : weekDayNum = 2; break;
-                    case "수" : weekDayNum = 3; break;
-                    case "목" : weekDayNum = 4; break;
-                    case "금" : weekDayNum = 5; break;
-                    case "토" : weekDayNum = 6; break;
-                        //default : weekDayNum = -1;
-                }
-                var startTimeNum = parseInt(startTimeHour.value)*100 + parseInt(startTimeMinute.value);
-                var endTimeNum = parseInt(endTimeHour.value)*100 + parseInt(endTimeMinute.value);
 
-                var p = document.getElementById("paragraph");
-                var returnNum = timetable.timeCheck(weekDayNum, startTimeNum, endTimeNum);
+      <div id = "inputFrame">
+        <div id = "paragraph"></div>
+        <form>
+          <datalist id="destinationsData"></datalist>
+          <table class="inputTable">
+            <tr>
+              <td>과목명</td>
+              <td>
+                <input id = "className" autofocus type = "text" size = "25" maxlength = "15"/>
+              </td>
+            </tr>
 
-                if(returnNum == 1) {
-                    p.innerHTML = "수업 시작 시간이 끝나는 시간과 같거나 늦을 수 없습니다!<br/>";
-                    p.style.color = "red"; return;
-                }
-                else if(returnNum == 2) {
-                    p.innerHTML = "시간표에 겹치는 시간대의 수업이 있습니다!<br/>";
-                    p.style.color = "red"; return;
-                }
-                else if(classNameValidate() !=0) {
-                    p.innerHTML = "수업 이름은 한자리 이상이어야 합니다!<br/>";
-                    p.style.color = "red"; return;
-                }
-                else if(timetable.locationCheck(location.value)!=0) {
-                    p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
-                        "정식 강의실 약어 혹은 강의동(건물)이름을 입력해주세요<br/>"+
-                        "//유효한 입력 예 : '공D504', 혹은 '과학관'(건물이름) 등.";
-                    p.style.color = "red"; return;
-                }
-                else {
-                    p.innerHTML = "";
-                } 
+            <tr>
+              <td>강의실</td>
+              <td><input  id = "location" type = "text" size = "25" list="destinationsData" maxlength = "20"/></td>
+            </tr>
 
-                timetable.addTimeTableElement(new TimeTableElement(startTimeNum, endTimeNum, weekDayNum, location.value, className.value));
+            <tr>
+              <td>요일</td>
+              <td>
+                <select id = "weekDay">
+                  <option selected>월</option>
+                  <option>화</option>
+                  <option>수</option>
+                  <option>목</option>
+                  <option>금</option>
+                </select>
+              </td>
+            </tr>
 
-                renderTimeTable();
+            <tr>
+              <td>수업 시작 시간</td>
+              <td>
+                <select id = "startTimeHour">
+                  <option selected>9</option><option>10</option><option>11</option>
+                  <option>12</option><option>13</option><option>14</option><option>15</option>
+                  <option>16</option><option>17</option><option>18</option><option>19</option>
+                  <option>20</option>
+                </select>
+                시
+                <select id = "startTimeMinute">
+                  <option selected>0</option><option>5</option><option>10</option>
+                  <option>15</option><option>20</option><option>25</option><option>30</option>
+                  <option>35</option><option>40</option><option>45</option><option>50</option>
+                  <option>55</option>
+                </select>
+                분
+              </td>
+            </tr>
+
+            <tr>
+              <td>수업 끝 시간</td>
+              <td>
+                <select id = "endTimeHour">
+                  <option>9</option><option selected>10</option><option>11</option>
+                  <option>12</option><option>13</option><option>14</option><option>15</option>
+                  <option>16</option><option>17</option><option>18</option><option>19</option>
+                  <option>20</option>
+                </select> 시&#09;
+                <select id = "endTimeMinute">
+                  <option selected>0</option><option>5</option><option>10</option>
+                  <option>15</option><option>20</option><option>25</option><option>30</option>
+                  <option>35</option><option>40</option><option>45</option><option>50</option>
+                  <option>55</option>
+                </select> 분
+              </td>
+            </tr>
+          </table>
+        </form>
+        <button id = "insertButton" type = "button" style="font-size:1.3em;">수업 추가</button>
+      </div>
+
+      <div id="buttonFrame">
+        <button id = "clearButton">전체 시간표 삭제</button>
+        <button id = "clearButton" onclick="location.href='index.html'" >돌아가기</button>
+      </div>
+
+
+    </div>
+
+    <script src = "timetable.js"></script>
+    <script src = "userdata.js"></script>
+
+
+    <script src="weather.js"></script>
+    <script src="util.js"></script>
+    <script src="logging.js"></script>
+    <script>
+      Log.init(document.createElement("div")); //dummy container - hides the logs.
+      Log.info("Log framework started");
+    </script>
+    <script src="vector.js"></script>
+    <script src="matrices.js"></script>
+    <script src="coordinates.js"></script>
+    <script src="gps.js"></script>
+    <script src="graphentities.js"></script>
+    <script src="graphcalculations.js"></script>
+    <script src="path.js"></script>
+    <script src="testgeodata.js"></script>
+    <script src="geodata.js"></script>
+    <script src="navigationcontext.js"></script>
+
+
+    <script>
+      //
+      Geodata.addUpdateListener(function () {
+        //Datalist에 꼭짓점 이름들을 넣음.
+        var destinationsDataList = document.getElementById("destinationsData");
+        while (destinationsDataList.hasChildNodes())
+          destinationsDataList.removeChild(destinationsDataList.lastChild);
+        for (var i = 0; i < Geodata.graph.vertices.length; i++) {
+          var v = Geodata.graph.vertices[i];
+          if (v.shown) {
+            var opt = document.createElement("option");
+            opt.setAttribute("value", v.name);
+            destinationsDataList.appendChild(opt);
+          }
+        }});
+
+
+      Geodata.addUpdateListener(function () {
+        Log.debug(""+Geodata.graph.vertices.length);
+        for(var i=0;i<Geodata.graph.vertices.length;i++){
+          if (Geodata.graph.vertices[i].shown){
+            Log.debug(Geodata.graph.vertices[i].name);
+          }
+        }
+
+      });
+
+      Geodata.load("mapdata.json");
+
+      var timetable = new TimeTable();
+
+      function registerTTE() { // 수업 한 개 등록
+        var className = document.getElementById("className");
+        var location = document.getElementById("location");
+        var weekDay = document.getElementById("weekDay");
+        var startTimeHour = document.getElementById("startTimeHour");
+        var startTimeMinute = document.getElementById("startTimeMinute");
+        var endTimeHour = document.getElementById("endTimeHour");
+        var endTimeMinute = document.getElementById("endTimeMinute");
+        var weekDayNum;
+        switch(weekDay.value) {
+          case "일" : weekDayNum = 0; break;
+          case "월" : weekDayNum = 1; break;
+          case "화" : weekDayNum = 2; break;
+          case "수" : weekDayNum = 3; break;
+          case "목" : weekDayNum = 4; break;
+          case "금" : weekDayNum = 5; break;
+          case "토" : weekDayNum = 6; break;
+            //default : weekDayNum = -1;
+        }
+        var startTimeNum = parseInt(startTimeHour.value)*100 + parseInt(startTimeMinute.value);
+        var endTimeNum = parseInt(endTimeHour.value)*100 + parseInt(endTimeMinute.value);
+
+        var p = document.getElementById("paragraph");
+        var returnNum = timetable.timeCheck(weekDayNum, startTimeNum, endTimeNum);
+
+        if(returnNum == 1) {
+          p.innerHTML = "수업 시작 시간이 끝나는 시간과 같거나 늦을 수 없습니다!<br/>";
+          p.style.color = "red"; return;
+        }
+        else if(returnNum == 2) {
+          p.innerHTML = "시간표에 겹치는 시간대의 수업이 있습니다!<br/>";
+          p.style.color = "red"; return;
+        }
+        else if(classNameValidate() !=0) {
+          p.innerHTML = "수업 이름은 한자리 이상이어야 합니다!<br/>";
+          p.style.color = "red"; return;
+        }
+        else if(false && timetable.locationCheck(location.value)!=0) { //DISABLED
+          p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
+            "정식 강의동 약어(+강의실 호수)혹은<br/>"+
+			"공백문자를 제외한 건물 이름을 입력해주세요<br/>"+
+            "//유효한 입력 예 : '공D504', 혹은 '제1공학관' 등.";
+          p.style.color = "red"; return;
+        }
+        else {
+          p.innerHTML = "";
+        } 
+
+        timetable.addTimeTableElement(new TimeTableElement(startTimeNum, endTimeNum, weekDayNum, location.value, className.value));
+
+        renderTimeTable();
+      }
+
+      function renderTimeTable() { // 시간표 브라우저 상에서 보여주기
+        timetable.sortClasses(); // 시간표 정렬해줌
+        var tbody = document.getElementById("tbody");
+        tbody.innerHTML = "";
+        var classes=null;
+        var wd = "";
+        for(var i=0; i<7; i++){
+          classes = timetable.getWeekDayClasses(i);
+          if(classes.length<=0)continue;
+          for(var j=0; j<classes.length; j++) {
+
+            switch(classes[j].weekDay) {
+              case 0: wd = "일";break;
+              case 1: wd = "월";break;
+              case 2: wd = "화";break;
+              case 3: wd = "수";break;
+              case 4: wd = "목";break;
+              case 5: wd = "금";break;
+              case 6: wd = "토";break;
+              default : wd = "잘못된 요일 입력입니다";
             }
+            tbody.innerHTML += "<tr><td>"+classes[j].className + "</td><td>" +
+              classes[j].location + "</td><td>" + wd + "</td><td>" +
+              timeToString(classes[j].startTime) + "</td><td>" +
+              timeToString(classes[j].endTime) + "</td><td>" + 
+              "<input id='" + i + "," + j + "' type='button' value='삭제'></td></tr>";
+          }
+        }
+        for(var i=0; i<7; i++) {
+          classes = timetable.getWeekDayClasses(i);
+          if(classes.length<=0)continue;
+          for(var j=0; j<classes.length; j++) {
+            document.getElementById(i+","+j).addEventListener("click", deleteTTE2);
+          }
+        }
+      }
 
-            function renderTimeTable() { // 시간표 브라우저 상에서 보여주기
-                timetable.sortClasses(); // 시간표 정렬해줌
-                var tbody = document.getElementById("tbody");
-                tbody.innerHTML = "";
-                var classes=null;
-                var wd = "";
-                for(var i=0; i<7; i++){
-                    classes = timetable.getWeekDayClasses(i);
-                    if(classes.length<=0)continue;
-                    for(var j=0; j<classes.length; j++) {
+      function deleteAll() {
+        timetable.clearCookie();
 
-                        switch(classes[j].weekDay) {
-                            case 0: wd = "일";break;
-                            case 1: wd = "월";break;
-                            case 2: wd = "화";break;
-                            case 3: wd = "수";break;
-                            case 4: wd = "목";break;
-                            case 5: wd = "금";break;
-                            case 6: wd = "토";break;
-                            default : wd = "잘못된 요일 입력입니다";
-                        }
-                        tbody.innerHTML += "<tr><td>"+classes[j].className + "</td><td>" +
-                            classes[j].location + "</td><td>" + wd + "</td><td>" +
-                            timeToString(classes[j].startTime) + "</td><td>" +
-                            timeToString(classes[j].endTime) + "</td><td>" + 
-                            "<input id='" + i + "," + j + "' type='button' value='삭제'></td></tr>";
-                    }
-                }
-                for(var i=0; i<7; i++) {
-                    classes = timetable.getWeekDayClasses(i);
-                    if(classes.length<=0)continue;
-                    for(var j=0; j<classes.length; j++) {
-                        document.getElementById(i+","+j).addEventListener("click", deleteTTE2);
-                    }
-                }
-            }
+        timetable = new TimeTable();
+        renderTimeTable();
+      }
 
-            function deleteAll() {
-                timetable.clearCookie();
+      function deleteTTE2(event) {
+        var classInfo = event.target.id.split(",");
+        var i = parseInt(classInfo[0]);
+        var j = parseInt(classInfo[1]);
 
-                timetable = new TimeTable();
-                renderTimeTable();
-            }
+        timetable.deleteTimeTableElementExactly(i,j);
+        renderTimeTable();
+      }
 
-            function deleteTTE2(event) {
-                var classInfo = event.target.id.split(",");
-                var i = parseInt(classInfo[0]);
-                var j = parseInt(classInfo[1]);
+      function Validate() {
+        if(classNameValidate() ==0) {
+          if(locationValidate() == 0) timeValidate();
+        }
+      }
 
-                timetable.deleteTimeTableElementExactly(i,j);
-                renderTimeTable();
-            }
+      function classNameValidate() {
+        var className = document.getElementById("className").value;
+        var p = document.getElementById("paragraph");
+        if(className.length<=0) {
+          p.innerHTML = "수업 이름은 한자리 이상이어야 합니다!<br/>";
+          p.style.color = "red";
+          return 1;
+        }
+        else return 0;
+      }
 
-            function Validate() {
-                if(classNameValidate() ==0) {
-                    if(locationValidate() == 0) timeValidate();
-                }
-            }
+      function locationValidate() {
+        var location = document.getElementById("location");
+        var loc = location.value;
 
-            function classNameValidate() {
-                var className = document.getElementById("className").value;
-                var p = document.getElementById("paragraph");
-                if(className.length<=0) {
-                    p.innerHTML = "수업 이름은 한자리 이상이어야 합니다!<br/>";
-                    p.style.color = "red";
-                    return 1;
-                }
-                else return 0;
-            }
+        var returnNum = timetable.locationCheck(loc);
+        var p = document.getElementById("paragraph");
+        if(returnNum != 0) {
+          p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
+            "정식 강의동 약어(+강의실 호수)혹은<br/>"+
+			"공백문자를 제외한 건물 이름을 입력해주세요<br/>"+
+            "//유효한 입력 예 : '공D504', 혹은 '제1공학관' 등.";
+          p.style.color = "red";
+          return 1;
+        }
+        else p.innerHTML="";
+        return 0;
+      }
 
-            function locationValidate() {
-                var location = document.getElementById("location");
-                var loc = location.value;
+      function timeValidate() {
+        var weekDay = document.getElementById("weekDay");
+        var startTimeHour = document.getElementById("startTimeHour");
+        var startTimeMinute = document.getElementById("startTimeMinute");
+        var endTimeHour = document.getElementById("endTimeHour");
+        var endTimeMinute = document.getElementById("endTimeMinute");
 
-                var returnNum = timetable.locationCheck(loc);
-                var p = document.getElementById("paragraph");
-                if(returnNum != 0) {
-                    p.innerHTML = "입력한 강의실이 유효하지 않습니다!<br/>" + 
-                        "정식 강의실 약어 혹은 강의동(건물)이름을 입력해주세요<br/>"+
-                        "//유효한 입력 예 : '공D504', 혹은 '과학관'(건물이름) 등.";
-                    p.style.color = "red";
-                    return 1;
-                }
-                else p.innerHTML="";
-                return 0;
-            }
+        var weekDayNum;
+        switch(weekDay.value) {
+          case "일" : weekDayNum = 0; break;
+          case "월" : weekDayNum = 1; break;
+          case "화" : weekDayNum = 2; break;
+          case "수" : weekDayNum = 3; break;
+          case "목" : weekDayNum = 4; break;
+          case "금" : weekDayNum = 5; break;
+          case "토" : weekDayNum = 6; break;
+            //default : weekDayNum = -1;
+        }
 
-            function timeValidate() {
-                var weekDay = document.getElementById("weekDay");
-                var startTimeHour = document.getElementById("startTimeHour");
-                var startTimeMinute = document.getElementById("startTimeMinute");
-                var endTimeHour = document.getElementById("endTimeHour");
-                var endTimeMinute = document.getElementById("endTimeMinute");
+        var startTimeNum = parseInt(startTimeHour.value)*100 + parseInt(startTimeMinute.value);
+        var endTimeNum = parseInt(endTimeHour.value)*100 + parseInt(endTimeMinute.value);
 
-                var weekDayNum;
-                switch(weekDay.value) {
-                    case "일" : weekDayNum = 0; break;
-                    case "월" : weekDayNum = 1; break;
-                    case "화" : weekDayNum = 2; break;
-                    case "수" : weekDayNum = 3; break;
-                    case "목" : weekDayNum = 4; break;
-                    case "금" : weekDayNum = 5; break;
-                    case "토" : weekDayNum = 6; break;
-                        //default : weekDayNum = -1;
-                }
+        var p = document.getElementById("paragraph");
+        var returnNum = timetable.timeCheck(weekDayNum, startTimeNum, endTimeNum);
 
-                var startTimeNum = parseInt(startTimeHour.value)*100 + parseInt(startTimeMinute.value);
-                var endTimeNum = parseInt(endTimeHour.value)*100 + parseInt(endTimeMinute.value);
+        if(returnNum == 1) {
+          p.innerHTML = "수업 시작 시간이 끝나는 시간과 같거나 늦을 수 없습니다!<br/>";
+          p.style.color = "red";
+          return 1;
+        }
+        else if(returnNum == 2) {
+          p.innerHTML = "시간표에 겹치는 시간대의 수업이 있습니다!<br/>";
+          p.style.color = "red";
+          return 2;
+        }
+        else {
+          p.innerHTML = "";
+          return 0;
+        }
+      }
 
-                var p = document.getElementById("paragraph");
-                var returnNum = timetable.timeCheck(weekDayNum, startTimeNum, endTimeNum);
+      function init() {
+        document.getElementById("insertButton").addEventListener("click", registerTTE);
+        document.getElementById("clearButton").addEventListener("click",deleteAll);
+        document.getElementById("className").addEventListener("change",Validate);
+        document.getElementById("location").addEventListener("change",Validate);
+        document.getElementById("weekDay").addEventListener("change",Validate);
+        document.getElementById("startTimeHour").addEventListener("change",Validate);
+        document.getElementById("startTimeMinute").addEventListener("change",Validate);
+        document.getElementById("endTimeHour").addEventListener("change",Validate);
+        document.getElementById("endTimeMinute").addEventListener("change",Validate);
 
-                if(returnNum == 1) {
-                    p.innerHTML = "수업 시작 시간이 끝나는 시간과 같거나 늦을 수 없습니다!<br/>";
-                    p.style.color = "red";
-                    return 1;
-                }
-                else if(returnNum == 2) {
-                    p.innerHTML = "시간표에 겹치는 시간대의 수업이 있습니다!<br/>";
-                    p.style.color = "red";
-                    return 2;
-                }
-                else {
-                    p.innerHTML = "";
-                    return 0;
-                }
-            }
-
-            function init() {
-                document.getElementById("insertButton").addEventListener("click", registerTTE);
-                document.getElementById("clearButton").addEventListener("click",deleteAll);
-                document.getElementById("className").addEventListener("change",Validate);
-                document.getElementById("location").addEventListener("change",Validate);
-                document.getElementById("weekDay").addEventListener("change",Validate);
-                document.getElementById("startTimeHour").addEventListener("change",Validate);
-                document.getElementById("startTimeMinute").addEventListener("change",Validate);
-                document.getElementById("endTimeHour").addEventListener("change",Validate);
-                document.getElementById("endTimeMinute").addEventListener("change",Validate);
-
-                renderTimeTable();
-            }
-            window.addEventListener("load",init);
-        </script>
-    </body>
+        renderTimeTable();
+      }
+      window.addEventListener("load",init);
+    </script>
+  </body>
 </html>

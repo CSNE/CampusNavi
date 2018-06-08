@@ -84,49 +84,76 @@ function TimeTable(){
 	this.lsUsable = (typeof(localStorage)=="undefined")? false : true;
 	
 	this.buildings = ['공학원', '제1공학관', '제2공학관', '제3공학관', '제4공학관', '대강당', 
-						'경영관', '음악관', '체육관', '체육교육관', '백양관', '과학관', '과학원', '대우관',
+						'경영관', '음악관', '체육관', '체육교육관', '백양관', '과학관', '과학원', '대우관', '대우관 별관',
 						'외솔관', '교육과학관', '위당관', '삼성관', '신학관', '빌링슬리관', '연희관',
 						'성암관', '상남경영관', '광복관' ,'스포츠과학관', '아펜젤러관'];
-	/*this.classPrefix = ['외', '신', '백S', '교', '위', '위B', '상본', '상본B', '경영', '경영B',
+	this.classPrefix = ['외', '신', '백S', '교', '위', '위B', '상본', '상본B', '경영', '경영B',
 						'과', '과S', '과B', '공A', '공B', '공C', '공D', '신', '빌', '연', '성',
-						'음(A)', '음(B)', '삼', '삼B', '스포츠', '체', '광', '아'];*/
+						'음(A)', '음(B)', '삼', '삼B', '스포츠', '체', '광', '아'];
+	this.buildingExceptions = {"제2공학관":"공B", "제3공학관":"공c"};
 	this.buildingPrefix = {'외':"외솔관", '신':"신학관", '백S':"백양관", '교':"교육과학관", '위':"위당관", '위B':"위당관",
 						'과':"과학관",  '과B':"과학관", '공A':"제1공학관", '공D':"제4공학관", '신':"신학관", '빌':"빌링슬리관",
 						'연':"연희관", '성':"성암관", '음A':"음악관A", '음B':"음악관B", '경영':"경영관", '경영B':"경영관",
 						'음(A)':"음악관A", '음(B)':"음악관B", '광':"광복관", '아':"아펜젤러관",
-						'삼':"정문", '삼B':"정문", '상본':"정문", '상본B':"정문",   //
-						'공B':"정문", '공C':"정문", //
-						'과S':"과학원", '스포츠':"스포츠과학관", '체':"체육교육관"};					
+						'삼':"정문", '삼B':"정문", '상본':"대우관", '상본B':"대우관 별관", '상별':"대우관 별관",  //
+						'공B':"제2공학관", //
+						'공C':"제3공학관", //
+						'과S':"과학원", '스포츠':"스포츠과학관", '체':"체육교육관"};				
+	
+	this.isBuilding = function(name) {
+	/*
+		전달받은 이름이 미리 정의된 건물 이름이면 true, 아니면 false 반환
+	*/
+		for(var i=0; i<this.buildings.length; i++) {
+			if(name==this.buildings[i]) return true;
+		}
+		return false;
+	}
+	
+	this.isException = function(name) {
+		for(var i=0; this.buildingExceptions.length; i++) {
+			if(this.buildingExcpetions.hasOwnProperty(name)) return true;
+		}
+		return false;
+	}
 	
 	this.locationCheck = function(location) {
 	/*
 		입력받은 강의실 정보가 유효하면 0반환, 아니면 0이 아닌 값 반환
 	*/
 		var loc = location;
-		/*while (loc.charAt(0) == ' ') {
-            loc = loc.substring(1);
-        }*/
+		
+		if(this.isBuilding(loc)) return 0;
+
 		var i;
-		for(i=0; i<this.buildings.length; i++) {
+		/*for(i=0; i<this.buildings.length; i++) {
 			if(loc == this.buildings[i]) return 0;
-		}
+		}*/
 		for(i=0; i<loc.length; i++) {
 			if(loc.charAt(i)>='0' && loc.charAt(i)<='9') break;
 		}
-		var prefix = loc.substring(0,i);
-		var suffix = loc.substring(i,loc.length);
-		if(i>=loc.length || suffix.length!=3) return 1;
+		if(i<=0) return 1; // 아무 prefix가 없으면 1반환
 		
+		var prefix = loc.substring(0,i);
+
+		if(i<loc.length) {
+			var suffix = loc.substring(i,loc.length);
+			if(suffix.length != 3) return 2;
+			for(var j=0; j<suffix.length; j++) {
+				if(suffix.charAt(j)<'0' || suffix.charAt(j)>'9') return 3;
+			}
+		}
 		/*for(var i=0; i<this.classPrefix.length; i++) {
 			if(prefix == this.classPrefix[i]) break;
 		}
 		if(i>=this.classPrefix.length) return 2;*/
-		if(!this.buildingPrefix.hasOwnProperty(prefix)) return 2;
-		
-		for(i=0; i<suffix.length; i++) {
-			if(suffix.charAt(i)<'0' || suffix.charAt(i)>'9') return 3;
+		//if(!this.buildingPrefix.hasOwnProperty(prefix)) return 2;
+		var k;
+		for(k=0; k<this.classPrefix.length; k++) {
+			if(prefix == this.classPrefix[k]) break;
 		}
-		
+		if(k>=this.classPrefix.length) return 4;
+
 		return 0;
 	}
 	
@@ -330,12 +357,12 @@ function TimeTable(){
 
     }
 	
-	this.nextLocation = function() {
+	//this.nextLocation = function() {
 	/*
         곧 시작하는 수업의 강의 건물 문자열 반환함(ex "제1공학관")
 		곧 시작하는 수업이 없으면 "정문"문자열 반환함
     */
-		var soonClass = this.nextLecture();
+		/*var soonClass = this.nextLecture();
 		if(soonClass==null) return "정문";
 		
 		var loc = soonClass.location;
@@ -349,14 +376,14 @@ function TimeTable(){
 		}
 		return this.buildingPrefix[loc.substring(0,i)];
 		
-	}
+	}*/
 	
-	this.lastLocation = function() {
+	//this.lastLocation = function() {
 	/*
         가장 최근에 끝난 수업의 강의 건물 문자열 반환함(ex "제1공학관")
 		가장 최근에 끝난 수업이 없으면 "정문"문자열 반환함
     */
-		var justClass = this.lastLecture();
+		/*var justClass = this.lastLecture();
 		if(justClass==null) return "정문";
 		
 		var loc = justClass.location;
@@ -369,13 +396,13 @@ function TimeTable(){
 			if(loc.charAt(i)>='0' && loc.charAt(i)<='9') break;
 		}
 		return this.buildingPrefix[loc.substring(0,i)];
-	}
+	}*/
 	
-	this.saveTimeTable=function() {
+	//this.saveTimeTable=function() {
 	/*
 		이 시간표 객체를 각 TimeTableElement 별로 localStorage 쿠키에 저장함
 	*/
-		this.sortClasses(); // 수업 빠른순으로 정렬해줌
+		/*this.sortClasses(); // 수업 빠른순으로 정렬해줌
 				
 		var classes;
 		
@@ -397,7 +424,7 @@ function TimeTable(){
 			}
 			setCookie("visited","true", 180); // 이 웹 페이지에 방문한 적이 있었음을 나타내는 flag
 		}
-	}
+	}*/
 	
 	this.clearCookie=function() {
 	/*
