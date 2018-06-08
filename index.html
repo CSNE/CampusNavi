@@ -1167,30 +1167,42 @@
       
       var nearby_from_var=new SearchManager(uipanel_near_input_from,uipanel_near_from_reset);
       
+      function generateMarkerPlacerCallback(){
+        var marker=null;
+        function res(val){
+          if (val===null){ //val is NULL
+            if (marker!=null){ //marker is alive - remove it.
+              marker.removeFrom(mymap);
+              marker=null;
+            }
+            return; //nothing more to do
+          }
+
+          var coords=null;
+          if (Array.isArray(val)){ //val is ARRAY OF VERTICES
+            var avgCoordsVector=new Vector(0,0,0);
+            for(var i=0;i<val.length;i++){
+              avgCoordsVector=avgCoordsVector.add(val[i].coordinates.toVector());
+            }
+            avgCoordsVector=avgCoordsVector.div(val.length);
+            coords=Coordinates.fromVector(avgCoordsVector);
+
+          }else{ //val is SINGLE VERTEX
+            coords=val.coordinates;
+          }
+
+          if (marker===null){ //no marker - create it.
+            marker = L.marker(coords.toLatLng()).addTo(mymap);
+          }else{ //use existing marker
+            marker.setLatLng(coords.toLatLng());
+          }
+        }
+        return res;
+      }
       
-      var fromMarker = null;
-      search_from.addValueListener(function(val){
-        if (fromMarker===null && val!=null){
-          Log.debug("Marker on "+val.coordinates.toString() );
-          fromMarker = L.marker(val.coordinates.toLatLng()).addTo(mymap);
-        }
-        if (fromMarker!=null && val===null){
-          fromMarker.removeFrom(mymap);
-          fromMarker=null;
-        }
-      });
-      
-      var toMarker = null;
-      search_to.addValueListener(function(val){
-        if (toMarker===null && val!=null){
-          Log.debug("Marker on "+val.coordinates.toString() );
-          toMarker = L.marker(val.coordinates.toLatLng()).addTo(mymap);
-        }
-        if (toMarker!=null && val===null){
-          toMarker.removeFrom(mymap);
-          toMarker=null;
-        }
-      });
+      search_from.addValueListener(generateMarkerPlacerCallback());
+      search_to.addValueListener(generateMarkerPlacerCallback());
+      nearby_from_var.addValueListener(generateMarkerPlacerCallback());
       
       
       uipanel_near_setloc.addEventListener("click",function(){
@@ -1251,6 +1263,10 @@
         uipanel_tabs_settings.classList.remove("selected_tab");
         uipanel_tabs_routelist.classList.remove("selected_tab");
         uipanel_tabs_navigation.classList.remove("selected_tab");
+        
+        search_from.clear();
+        search_to.clear();
+        nearby_from_var.clear();
         
         cleanRouteList();
         mymap.invalidateSize();
