@@ -163,14 +163,39 @@
                              "timeinput timelabel findbtn" ;
         grid-column-gap: 4px;
       }
-      #uipanel_fromto_grid *{
+      #uipanel_fromto_grid > *{
         place-self: center;
         display:flex;
         flex-direction:row;
         
         width:100%;
       }
-
+      
+      #uipanel_fromto_grid form *{
+        margin:0;
+        margin-right:2px;
+        margin-left:2px;
+      }
+      
+      #uipanel_fromto_grid form *:first-child{
+        margin-left:0;
+      }
+      
+      .uipanel{
+        position:relative;
+      }
+      #uipanel_grayouter{
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+        background: rgba(0,0,0,0.5);
+        margin:0;
+        color:white;
+        text-align: center;
+      }
+      
       #uipanel_navigation_container{
         display: grid;
 
@@ -306,9 +331,12 @@
     <div id="maincontent">
       <!-- 지도 div -->
       <div id="mapid"></div>
-
-      <div class="uipanel" >
-        
+      
+      
+      <div class="uipanel">
+        <div id="uipanel_grayouter" style="display:none;">
+          지도를 클릭하세요.
+        </div>
         <div id="uipanel_persistant">
           <div id="uipanel_persistant_left">
             <strong style="font-size:1.3em;">CampusNavi</strong>
@@ -388,7 +416,7 @@
                 <option value="5">건물</option>
               </select>
               <div style="display: inline-block;" id="uipanel_fromto_from_display" ></div>
-              <input id="uipanel_fromto_from_input1" style="display: none;"/>
+              <input id="uipanel_fromto_from_input1" style="display: none;flex-grow: 1;"/>
               <select id="uipanel_fromto_from_near" style="display: none;"></select>
               <input type="submit" value="선택" id="uipanel_fromto_from_submit" style="display: none;"/>
             </form>
@@ -403,7 +431,7 @@
                 <option value="5">건물</option>
               </select>
               <div style="display: inline-block;" id="uipanel_fromto_to_display" ></div>
-              <input id="uipanel_fromto_to_input1" style="display: none;"/>
+              <input id="uipanel_fromto_to_input1" style="display: none;flex-grow: 1;"/>
               <select id="uipanel_fromto_to_near" style="display: none;"></select>
               <input type="submit" value="선택" id="uipanel_fromto_to_submit" style="display: none;" />
             </form>
@@ -441,10 +469,10 @@
                       this.method = 0;
                       break;
                     case "1":
-                      this.e.inputs[0].style.display = "initial";
+                      this.e.inputs[0].style.display = "flex";
                       this.e.inputs[0].setAttribute("list","destinationsData");
                       this.e.near.style.display = "none";
-                      this.e.submit.style.display = "initial";
+                      this.e.submit.style.display = "flex";
                       this.e.display.style.display = "none";
                       this.method = 1;
                       break;
@@ -454,11 +482,14 @@
                       this.e.submit.style.display = "none";
                       this.e.display.style.display = "none";
                       this.method = 2;
+                      
+                      //document.getElementById("uipanel_grayouter").style.display="block";
+                      
                       break;
                     case "3":
                       this.e.inputs[0].style.display = "none";
-                      this.e.near.style.display = "initial";
-                      this.e.submit.style.display = "initial";
+                      this.e.near.style.display = "flex";
+                      this.e.submit.style.display = "flex";
                       this.e.display.style.display = "none";
                       this.method = 3;
                       break;
@@ -466,15 +497,15 @@
                       this.e.inputs[0].style.display = "none";
                       this.e.near.style.display = "none";
                       this.e.submit.style.display = "none";
-                      this.e.display.style.display = "initial";
+                      this.e.display.style.display = "flex";
                       this.method = 0;
                       this.setValue(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
                       break;
                     case "5":
-                      this.e.inputs[0].style.display = "initial";
+                      this.e.inputs[0].style.display = "flex";
                       this.e.inputs[0].removeAttribute("list");
                       this.e.near.style.display = "none";
-                      this.e.submit.style.display = "initial";
+                      this.e.submit.style.display = "flex";
                       this.e.display.style.display = "none";
                       this.method = 5;
                       break;
@@ -1004,7 +1035,7 @@
       //*/
       function displayFromToPanel() {
         undisplayAll();
-        uipanel_fromto.style.display = "initial";
+        uipanel_fromto.style.display = "block";
         uipanel_tabs_fromto.classList.add("selected_tab");
       }
       function displayRouteListingPanel(){
