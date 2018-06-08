@@ -141,34 +141,26 @@
 
     <script>
       //
+	  
+	  
       Geodata.addUpdateListener(function () {
         //Datalist에 꼭짓점 이름들을 넣음.
+		var tt = new TimeTable();
         var destinationsDataList = document.getElementById("destinationsData");
         while (destinationsDataList.hasChildNodes())
           destinationsDataList.removeChild(destinationsDataList.lastChild);
-        for (var i = 0; i < Geodata.graph.vertices.length; i++) {
-          var v = Geodata.graph.vertices[i];
-          if (v.shown) {
+		  
+        for (var i = 0; i < tt.buildings.length; i++) {
             var opt = document.createElement("option");
-            opt.setAttribute("value", v.name);
+            opt.setAttribute("value", tt.buildings[i]);
             destinationsDataList.appendChild(opt);
-          }
         }});
 
-
-      Geodata.addUpdateListener(function () {
-        Log.debug(""+Geodata.graph.vertices.length);
-        for(var i=0;i<Geodata.graph.vertices.length;i++){
-          if (Geodata.graph.vertices[i].shown){
-            Log.debug(Geodata.graph.vertices[i].name);
-          }
-        }
-
-      });
+	  var timetable = new TimeTable();
 
       Geodata.load("mapdata.json");
 
-      var timetable = new TimeTable();
+      
 
       function registerTTE() { // 수업 한 개 등록
         var className = document.getElementById("className");
@@ -217,8 +209,8 @@
         else {
           p.innerHTML = "";
         } 
-
-        timetable.addTimeTableElement(new TimeTableElement(startTimeNum, endTimeNum, weekDayNum, location.value, className.value));
+		var abbLoc = (timetable.isBuilding(location.value))? timetable.name_prefix_pair[location.value] : location.value;
+        timetable.addTimeTableElement(new TimeTableElement(startTimeNum, endTimeNum, weekDayNum, abbLoc, className.value, location.value));
 
         renderTimeTable();
       }
@@ -245,7 +237,7 @@
               default : wd = "잘못된 요일 입력입니다";
             }
             tbody.innerHTML += "<tr><td>"+classes[j].className + "</td><td>" +
-              classes[j].location + "</td><td>" + wd + "</td><td>" +
+              classes[j].inputLocation + "</td><td>" + wd + "</td><td>" +
               timeToString(classes[j].startTime) + "</td><td>" +
               timeToString(classes[j].endTime) + "</td><td>" + 
               "<input id='" + i + "," + j + "' type='button' value='삭제'></td></tr>";

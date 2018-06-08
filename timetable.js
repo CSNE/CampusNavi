@@ -5,7 +5,7 @@
 // TimeTable 클래스에 TTE추가, 삭제 메소드 call 할 때마다 자동으로 쿠키에 반영됨
 //var localStorage = new window.localStorage();
 
-function TimeTableElement(startTime, endTime, weekDay, location, className){
+function TimeTableElement(startTime, endTime, weekDay, location, className, inputLocation){
     /*
 		startTime, endTime은 시 + 분/60의 형태로 받음
 		weekDay는 일~토 순으로 0~6 숫자로 받음
@@ -18,6 +18,7 @@ function TimeTableElement(startTime, endTime, weekDay, location, className){
     this.weekDay=weekDay; //요일 : 일~토 -> 0~6
     this.location=location; // 수업 위치
 	this.className=className; // 수업 이름
+	this.inputLocation = inputLocation;
 }
 
 	/* TimeTable 클래스에 사용되는 함수들 */
@@ -83,22 +84,28 @@ function TimeTable(){
 	
 	this.lsUsable = (typeof(localStorage)=="undefined")? false : true;
 	
-	this.buildings = ['공학원', '제1공학관', '제2공학관', '제3공학관', '제4공학관', '대강당', 
-						'경영관', '음악관', '체육관', '체육교육관', '백양관', '과학관', '과학원', '대우관', '대우관 별관',
-						'외솔관', '교육과학관', '위당관', '삼성관', '신학관', '빌링슬리관', '연희관',
-						'성암관', '상남경영관', '광복관' ,'스포츠과학관', '아펜젤러관'];
-	this.classPrefix = ['외', '신', '백S', '교', '위', '위B', '상본', '상본B', '경영', '경영B',
+	this.buildings = [  '대강당', '외솔관', '신학관', '백양관', '교육과학관', '위당관',  // 1 '위B',
+						'상경대학본관', '상경대학별관', '대우관', '대우관별관', '경영관',  // 1 '경영B',
+						'과학관', '과학원', '제1공학관', '제2공학관', '제3공학관', // 1 '과B', 
+						'제4공학관', '빌링슬리관', '연희관', '성암관',
+						'음악관', '삼성관', '스포츠과학관', '체육교육관', '광복관', '아펜젤러관'];
+	this.classPrefix = ['외', '백S', '교', '위', '위B', '상본', '상본B', '경영', '경영B',
 						'과', '과S', '과B', '공A', '공B', '공C', '공D', '신', '빌', '연', '성',
-						'음(A)', '음(B)', '삼', '삼B', '스포츠', '체', '광', '아'];
+						'음', '삼', '삼B', '스포츠', '체', '광', '아'];
 	this.buildingExceptions = {"제2공학관":"공B", "제3공학관":"공c"};
-	this.buildingPrefix = {'외':"외솔관", '신':"신학관", '백S':"백양관", '교':"교육과학관", '위':"위당관", '위B':"위당관",
+	this.name_prefix_pair = {'대강당':'대강당', '외솔관':'외', '신학관':'신', '백양관':'백S', '교육과학관':'교', '위당관':'위',  // 1 '위B',
+						'상경대학본관':'상본', '상경대학별관':'상본B', '대우관':'상본', '대우관별관':'상본B', '경영관':'경영',  // 1 '경영B',
+						'과학관':'과', '과학원':'과S', '제1공학관':'공A', '제2공학관':'공B', '제3공학관':'공C', // 1 '과B', 
+						'제4공학관':'공D', '빌링슬리관':'빌', '연희관':'연', '성암관':'성',
+						'음악관':'음', '삼성관':'삼', '스포츠과학관':'스포츠', '체육교육관':'체', '광복관':'광', '아펜젤러관':'아'}; // 1 '삼B', 
+	/*this.buildingPrefix = {'외':"외솔관", '신':"신학관", '백S':"백양관", '교':"교육과학관", '위':"위당관", '위B':"위당관",
 						'과':"과학관",  '과B':"과학관", '공A':"제1공학관", '공D':"제4공학관", '신':"신학관", '빌':"빌링슬리관",
 						'연':"연희관", '성':"성암관", '음A':"음악관A", '음B':"음악관B", '경영':"경영관", '경영B':"경영관",
 						'음(A)':"음악관A", '음(B)':"음악관B", '광':"광복관", '아':"아펜젤러관",
 						'삼':"정문", '삼B':"정문", '상본':"대우관", '상본B':"대우관 별관", '상별':"대우관 별관",  //
 						'공B':"제2공학관", //
 						'공C':"제3공학관", //
-						'과S':"과학원", '스포츠':"스포츠과학관", '체':"체육교육관"};				
+						'과S':"과학원", '스포츠':"스포츠과학관", '체':"체육교육관"};*/				
 	
 	this.isBuilding = function(name) {
 	/*
@@ -138,8 +145,12 @@ function TimeTable(){
 
 		if(i<loc.length) {
 			var suffix = loc.substring(i,loc.length);
-			if(suffix.length != 3) return 2;
+			if(suffix.length != 3 && suffix.length != 5) return 2;
 			for(var j=0; j<suffix.length; j++) {
+				if(j==3) {
+					if(suffix.charAt(j)=='-') continue;
+					else return 3;
+				}
 				if(suffix.charAt(j)<'0' || suffix.charAt(j)>'9') return 3;
 			}
 		}
