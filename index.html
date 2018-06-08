@@ -850,7 +850,7 @@
         }
         function submit()
         {
-          var v, name;
+          var v, name, p;
           switch (this.method)
           {
             case 1:
@@ -865,14 +865,16 @@
             case 5:
               name = Util.getBuilding(this.e.inputs[0].value);
               v = places[name];
-              name = Geodata.obj.places[name].name;
+              p = Geodata.obj.places[name];
+              if (p)
+                name = p.name;
               break;
           }
           this.setValue(v, name);
         }
         function setValue(v, name)
         {
-          if (v) {
+          if (v && (!Array.isArray(v) || v.length)) {//not an empty array
             this.value = v;
             this.name = name;
             this.e.inputs[0].style.display = "none";
@@ -1188,7 +1190,7 @@
         uiStateChangeListener.push(exitNavigationMode);
           
         //at first, assume user is in start position.
-        navContext.updateLocation(path.from.coordinates);
+        navContext.updateLocation(path.parray[0].v.coordinates);
       }
 
 
