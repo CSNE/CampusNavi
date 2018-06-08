@@ -84,11 +84,16 @@
         
         width:100%;
       }
+      
       #uipanel_search_input_buttons{
         display: flex;
         flex-direction: row;
+        height:32px;
       }
-      
+      #uipanel_search_input_buttons *{
+        width:auto;
+        height:100%;
+      }
       
       #uipanel_near_grid{
         display: grid;
@@ -348,6 +353,9 @@
         padding-left: 4px;
         box-sizing: border-box;
       }
+      .uipanel_label{
+        text-align: center;
+      }
 
     </style>
 
@@ -417,23 +425,23 @@
             
             <input class="uipanel_textInput" type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
-            <div style="grid-area: fromlabel;">출발</div>
+            <div class="uipanel_label" style="grid-area: fromlabel;">출발</div>
             
             
 
             <input class="uipanel_textInput" type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
 
-            <div style="grid-area: tolabel;">도착</div>
+            <div class="uipanel_label" style="grid-area: tolabel;">도착</div>
 
             
-            <input type="time" id="uipanel_search_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
+            <input class="uipanel_textInput" type="time" id="uipanel_search_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
 
-            <div style="grid-area: timelabel;">까지</div>
+            <div class="uipanel_label" style="grid-area: timelabel;">까지</div>
             
             <div id="uipanel_search_input_buttons" style="grid-area: buttons;" >
-              <input type="button" value="자동 설정" id="uipanel_search_button_importtt" style="flex-grow: 0;" />
+              <input type="button" value="자동 설정" id="uipanel_search_button_importtt"  />
 
-              <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="4" style="flex-grow: 0;" />
+              <input type="button" value="바꾸기" id="uipanel_search_swap_src_dst" tabindex="4"  />
 
               <input type="submit" value="탐색" id="uipanel_search_button_find" tabindex="5" style="flex-grow: 2;" />
             </div>
@@ -447,17 +455,17 @@
             <input class="uipanel_textInput" type="text" list="destinationsData" id="uipanel_near_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
             
-            <div style="grid-area: fromlabel;">출발</div>
+            <div class="uipanel_label" style="grid-area: fromlabel;">출발</div>
             
             <button class="imageButton uipanel_squareButton" id="uipanel_near_setloc"  style="grid-area: setloc;"><img src="icons/baseline_location_searching_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
             
             <button class="imageButton uipanel_squareButton" id="uipanel_near_from_reset"  style="grid-area: fromclear;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
             
-            <input type="submit" value="탐색" id="uipanel_near_button_find" tabindex="5" style="grid-area: findbtn;" />
+            <input type="submit" value="탐색" id="uipanel_near_button_find" tabindex="5" style="grid-area: findbtn;height:32px;" />
             <select id="uipanel_near_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
             </select>
-            <div style="grid-area: tolabel;">까지</div>
-            <div style="grid-area: tolabel2;">가장 가까운</div>
+            <div class="uipanel_label" style="grid-area: tolabel;">까지</div>
+            <div class="uipanel_label" style="grid-area: tolabel2;">가장 가까운</div>
           </div>
         </form>
         
@@ -1458,11 +1466,11 @@
           
           var lastLecture=timeTableData.lastLecture();
           if (lastLecture===null){
-            search_to.setText("정문");
+            search_from.setText("정문");
           }
           else {
             var n = lastLecture.location;
-            search_to.setText(n);
+            search_from.setText(n);
           }
         
           
