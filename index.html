@@ -967,20 +967,20 @@
 			}
 			fromName = timeTableData.buildingPrefix[fromName.substring(0, i)];
 		}
-		if(fromName == "제2공학관" || fromName == "공B") {
+		if(fromName == "제2공학관") {
 			fromVertex = [];
 			fromVertex[0] = Geodata.graph.findVertexWithName("제2공학관 북문");
 			formVertex[1] = Geodata.graph.findVertexWithName("제2공학관 남문");
 			fromVertex[2] = Geodata.graph.findVertexWithName("제2공학관 동문");
 			fromVertex[3] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
 		}
-		else if(fromName == "제3공학관"  || fromName == "공C") {
+		else if(fromName == "제3공학관") {
 			fromVertex = [];
 			fromVertex[0] = Geodata.graph.findVertexWithName("제3공학관 북문");
 			fromVertex[1] = Geodata.graph.findVertexWithName("제3공학관 남문");
 			fromVertex[2] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
 		}
-		else toVertex = Geodata.graph.findVertexWithName(toName);
+		else fromVertex = Geodata.graph.findVertexWithName(fromName);
 		
         var toName = search_input_to.value;
         var toVertex;
@@ -990,14 +990,14 @@
 			}
 			toName = timeTableData.buildingPrefix[toName.substring(0, i)];
 		}
-		if(toName == "제2공학관" || toName == "공B") {
+		if(toName == "제2공학관") {
 			toVertex = [];
 			toVertex[0] = Geodata.graph.findVertexWithName("제2공학관 북문");
 			toVertex[1] = Geodata.graph.findVertexWithName("제2공학관 남문");
 			toVertex[2] = Geodata.graph.findVertexWithName("제2공학관 동문");
 			toVertex[3] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
 		}
-		else if(toName == "제3공학관" || toName == "공C") {
+		else if(toName == "제3공학관") {
 			toVertex = [];
 			toVertex[0] = Geodata.graph.findVertexWithName("제3공학관 북문");
 			toVertex[1] = Geodata.graph.findVertexWithName("제3공학관 남문");
