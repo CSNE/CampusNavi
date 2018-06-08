@@ -131,8 +131,7 @@ var Util = (function () {
         "humanReadableTime": humanReadableTime,
         "timeStampToFormattedTime": timeStampToFormattedTime,
         "colonSeparatedTimeToTimeStamp": colonSeparatedTimeToTimeStamp,
-        "getBuilding": getBuilding
-        "colonSeparatedTimeToTimeStamp": colonSeparatedTimeToTimeStamp,
+        "getBuilding": getBuilding,
         "fitLine":fitLine
     }
 })();
