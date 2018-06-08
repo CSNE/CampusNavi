@@ -84,20 +84,21 @@ function TimeTable(){
 	
 	this.lsUsable = (typeof(localStorage)=="undefined")? false : true;
 	
-	this.buildings = [  '대강당', '외솔관', '신학관', '백양관', '교육과학관', '위당관',  // 1 '위B',
-						'상경대학본관', '상경대학별관', '대우관', '대우관별관', '경영관',  // 1 '경영B',
-						'과학관', '과학원', '제1공학관', '제2공학관', '제3공학관', // 1 '과B', 
-						'제4공학관', '빌링슬리관', '연희관', '성암관',
-						'음악관', '삼성관', '스포츠과학관', '체육교육관', '광복관', '아펜젤러관'];
-	this.classPrefix = ['외', '백S', '교', '위', '위B', '상본', '상본B', '경영', '경영B',
-						'과', '과S', '과B', '공A', '공B', '공C', '공D', '신', '빌', '연', '성',
-						'음', '삼', '삼B', '스포츠', '체', '광', '아'];
+	this.buildings = [  '공학원', '체육관', '대강당', '외솔관', '신학관', '백양관', '교육과학관', '위당관', 
+						'상경대학본관', '상경대학별관', '대우관', '대우관별관', '경영관',  
+						'과학관', '제1공학관', '제2공학관', '제3공학관',
+						'제4공학관', '빌링슬리관', '연희관', '성암관', 
+						'음악관', '광복관', '광복관별관', '아펜젤러관'];
+	this.classPrefix = ['외', '백S', '교', '위', '위B', '상본', '상본B', '상별', '상별B', '경영',
+						'과', '과B', '공A', '공B', '공C', '공D', '신', '빌', '연', '성',
+						'음', '광', '광별', '아'];
 	this.buildingExceptions = {"제2공학관":"공B", "제3공학관":"공c"};
-	this.name_prefix_pair = {'대강당':'대강당', '외솔관':'외', '신학관':'신', '백양관':'백S', '교육과학관':'교', '위당관':'위',  // 1 '위B',
-						'상경대학본관':'상본', '상경대학별관':'상본B', '대우관':'상본', '대우관별관':'상본B', '경영관':'경영',  // 1 '경영B',
-						'과학관':'과', '과학원':'과S', '제1공학관':'공A', '제2공학관':'공B', '제3공학관':'공C', // 1 '과B', 
-						'제4공학관':'공D', '빌링슬리관':'빌', '연희관':'연', '성암관':'성',
-						'음악관':'음', '삼성관':'삼', '스포츠과학관':'스포츠', '체육교육관':'체', '광복관':'광', '아펜젤러관':'아'}; // 1 '삼B', 
+	this.name_prefix_pair = {'공학원':'공학원', '체육관':'체육관', '대강당':'대강당', '외솔관':'외', '신학관':'신',
+						'백양관':'백S', '교육과학관':'교', '위당관':'위',  
+						'상경대학본관':'상본', '상경대학별관':'상별', '대우관':'상본', '대우관별관':'상별', '경영관':'경영',  
+						'과학관':'과', '제1공학관':'공A', '제2공학관':'공B', '제3공학관':'공C', // 
+						'제4공학관':'공D', '빌링슬리관':'빌', '연희관':'연', '성암관':'성', 
+						'음악관':'음', '광복관':'광', '광복관별관' : '광별', '아펜젤러관':'아'}; // 
 	/*this.buildingPrefix = {'외':"외솔관", '신':"신학관", '백S':"백양관", '교':"교육과학관", '위':"위당관", '위B':"위당관",
 						'과':"과학관",  '과B':"과학관", '공A':"제1공학관", '공D':"제4공학관", '신':"신학관", '빌':"빌링슬리관",
 						'연':"연희관", '성':"성암관", '음A':"음악관A", '음B':"음악관B", '경영':"경영관", '경영B':"경영관",
@@ -324,38 +325,91 @@ function TimeTable(){
 	this.debug_override_time=null;
     this.nextLecture=function(){
     /*
-        곧 시작하는 수업을 반환함; 현재 시각 기준 시작하지 않은 수업 중 가장 일찍 시작하는 수업 반환(tte)
+        곧 시작하는 수업을 반환함; 현재 시각 기준 시작한지 20분 지난 수업까지 허용해서 가장 일찍 시작하는 수업 반환(tte)
 		만약 모든 수업이 끝났거나 오늘 수업이 없는 경우 null 반환
     */
 		var date = new Date(); // 날짜 및 시간
         if (this.debug_override_time) date=this.debug_override_time; //for debug & demo
 		
 		var todayClass = this.elements[date.getDay()];
-		if(todayClass == null) return null; // 오늘 수업 없으면 null 반환
+		if(todayClass == null || todayClass.length==0) return null; // 오늘 수업 없으면 null 반환
 		
-		var soonClass = null; // 현재 시작하지 않은 수업 중 가장 일찍 시작하는 수업
-		var timeNow = date.getHours()*100 + date.getMinutes(); // 현재시각
-		for (var i=0; i<todayClass.length; i++) {
-			if(todayClass[i].startTime >= timeNow) {
-				if(soonClass==null) soonClass = todayClass[i];
-				else if(todayClass[i].startTime < soonClass.startTime) soonClass = todayClass[i];
+		var soonClass = null; // 시작한지 20분 지난 수업까지 포함해서 가장 일찍 시작하는 수업
+		var timeNow = date.getHours()*100 + date.getMinutes();
+		if(timeNow <= todayClass[0].startTime) return todayClass[0];
+		for(var i=0; i<todayClass.length; i++) {
+			if(todayClass[i].endTime <= timeNow) continue;
+			if(todayClass[i].startTime > timeNow) {
+				return todayClass[i];
+			}
+			var permittedTime = (todayClass[i].startTime%100>=40)? (todayClass[i].startTime+100-60+20) : (todayClass[i].startTime+20);
+			if(todayClass[i].endTime < permittedTime) {
+				if(i==todayClass.length-1) return null;
+				else return todayClass[i+1];
+			}
+			else return todayClass[i];
+		}
+		return null;
+		/*if(date.getMinutes()<20) {
+			if(data.getHours()==0) timeNow=0;
+			else {
+				timeNow = (date.getHours()-1)*100 + 60-(20-date.getMinutes());
 			}
 		}
+		else timeNow= date.getHours()*100 + (date.getMinutes()-20);
+		
+		for (var i=0; i<todayClass.length; i++) {
+			if(todayClass[i].startTime >= timeNow) {
+				soonClass = todayClass[i]; break;
+			}
+		}*/
 		
 		return soonClass;
     }
     this.lastLecture=function(){
     /*
-        방금 끝난 수업을 반환함.현재 시각 기준 끝난 수업 가운데 가장 최근에 끝난 수업 반환(tte)
-		아직 끝난 수업이 없거나 오늘 수업이 없는 경우 null 반환
+        다음 수업이 있는 경우 다음 수업 시작 시간과 이전 수업 끝나는 시간의 차가 10분 이내면 그 이전 수업을 반환함
+		그런 이전 수업이 없는 경우 null 반환함
+		다음 수업이 없는 경우 마지막 수업의 끝나는 시간과 현재 시간의 차가 20분 이내면 그 마지막 수업을 반환함
+		마지막 수업이 끝난지 20분이 지났으면 null 반환함
     */
 		var date = new Date(); // 날짜 및 시간
         if (this.debug_override_time) date=this.debug_override_time; //for debug & demo
 		
 		var todayClass = this.elements[date.getDay()];
-		if(todayClass == null) return null; // 오늘 수업 없으면 null 반환
+		if(todayClass == null || todayClass.length == 0) return null; // 오늘 수업 없으면 null 반환
 		
-		var justClass = null; // 현재 끝난 수업 중 가장 최근에 끝난 수업
+		var nextLec = this.nextLecture(); // 다음 수업 가져옴
+		
+		if(nextLec != null) { // 다음 수업이 있는 경우
+			for(var i=0; i<todayClass.length; i++) {
+				if(todayClass[i].startTime == nextLec.startTime) break;
+			}
+			if(i==0) return null; // 다음 수업이 오늘의 첫 수업이면 이전 수업이 없음
+			
+			i--;
+			var hourDiff = (nextLec.startTime/100 - todayClass[i].endTime/100)*100;
+			var minuteDiff = nextLec.startTime%100 - todayClass[i].endTime%100;
+			var timeDiff = (minuteDiff<0)? (hourDiff-100+60+minuteDiff) : (hourDiff + minuteDiff);
+			
+			if(timeDiff<=10) return todayClass[i]; // 다음 수업과 이전 수업의 차이가 10분 이내면 그 이전 수업 반환
+			else return null; // 차이가 10분보다 크면 null 반환
+		}
+		else {
+			var lastLec = todayClass[todayClass.length-1]; // 다음 수업이 없는 경우 오늘의 마지막 수업 가져옴
+			var date = new Date();
+			var timeNow = date.getHours()*100 + date.getMinutes();
+			if(timeNow < lastLec.endTime) return null; // 아직 마지막 수업이 끝나지 않은 경우 null 반환
+			
+			var hourDiff = (timeNow/100 - lastLec.endTime/100)*100;
+			var minuteDiff = timeNow%100 - lastLec.endTime%100;
+			var timeDiff = (minuteDiff<0)? (hourDiff-100+60+minuteDiff) : (hourDiff + minuteDiff);
+			
+			if(timeDiff <= 20) return lastLec; // 마지막 수업이 끝나고 20분 이내면 마지막 수업을 반환
+			else return null; // 마지막 수업이 끝난지 20분이 지났으면 null 반환
+
+		}
+		/*var justClass = null; // 현재 끝난 수업 중 가장 최근에 끝난 수업
 		var timeNow = date.getHours()*100 + date.getMinutes(); // 현재시각
 		for (var i=0; i<todayClass.length; i++) {
 			if(todayClass[i].endTime <= timeNow) {
@@ -364,8 +418,7 @@ function TimeTable(){
 			}
 		}
 		
-		return justClass;
-
+		return justClass;*/
     }
 	
 	//this.nextLocation = function() {
