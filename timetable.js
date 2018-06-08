@@ -84,15 +84,15 @@ function TimeTable(){
 	
 	this.lsUsable = (typeof(localStorage)=="undefined")? false : true;
 	
-	this.buildings = [  '공학원', '체육관', '대강당', '외솔관', '신학관', '백양관', '교육과학관', '위당관', 
+	/*this.buildings = [  '공학원', '체육관', '대강당', '외솔관', '신학관', '백양관', '교육과학관', '위당관', 
 						'상경대학본관', '상경대학별관', '대우관', '대우관별관', '경영관',  
 						'과학관', '제1공학관', '제2공학관', '제3공학관',
 						'제4공학관', '빌링슬리관', '연희관', '성암관', 
-						'음악관', '광복관', '광복관별관', '아펜젤러관'];
+						'음악관', '광복관', '광복관별관', '아펜젤러관'];*/
 	this.classPrefix = ['외', '백S', '교', '위', '위B', '상본', '상본B', '상별', '상별B', '경영',
 						'과', '과B', '공A', '공B', '공C', '공D', '신', '빌', '연', '성',
 						'음', '광', '광별', '아'];
-	this.buildingExceptions = {"제2공학관":"공B", "제3공학관":"공c"};
+	//this.buildingExceptions = {"제2공학관":"공B", "제3공학관":"공c"};
 	this.name_prefix_pair = {'공학원':'공학원', '체육관':'체육관', '대강당':'대강당', '외솔관':'외', '신학관':'신',
 						'백양관':'백S', '교육과학관':'교', '위당관':'위',  
 						'상경대학본관':'상본', '상경대학별관':'상별', '대우관':'상본', '대우관별관':'상별', '경영관':'경영',  
@@ -112,18 +112,15 @@ function TimeTable(){
 	/*
 		전달받은 이름이 미리 정의된 건물 이름이면 true, 아니면 false 반환
 	*/
-		for(var i=0; i<this.buildings.length; i++) {
-			if(name==this.buildings[i]) return true;
-		}
-		return false;
+		return this.name_prefix_pair.hasOwnProperty(name);
 	}
 	
-	this.isException = function(name) {
+	/*this.isException = function(name) {
 		for(var i=0; this.buildingExceptions.length; i++) {
 			if(this.buildingExcpetions.hasOwnProperty(name)) return true;
 		}
 		return false;
-	}
+	}*/
 	
 	this.locationCheck = function(location) {
 	/*
@@ -131,6 +128,7 @@ function TimeTable(){
 	*/
 		var loc = location;
 		
+		if(loc=="외01" || loc=="외02") return 0;
 		if(this.isBuilding(loc)) return 0;
 
 		var i;
@@ -143,8 +141,35 @@ function TimeTable(){
 		if(i<=0) return 1; // 아무 prefix가 없으면 1반환
 		
 		var prefix = loc.substring(0,i);
+		var k;
+		for(k=0; k<this.classPrefix.length; k++) {
+			if(prefix == this.classPrefix[k]) break;
+		}
+		if(k>=this.classPrefix.length) return 2; // prefix가 적절하지 않으면 2반환
+		
+		var j;
+		for(j=i; j<loc.length; j++) {
+			if(loc.charAt(j)=='-') break;
+		}
+		if(j==i) return 0;
+		
+		
+		var num = loc.substring(i,j);
+		if(!(num.length==2 || num.length==3)) return 3; // 강의실 호수 적절한 길이 아니면 3반환
+		for(var l=0; l<num.length; l++) {
+			if(num.charAt(l)<'0' || num.charAt(l)>'9') return 4;
+		}
+		
+		if(j==loc.length) return 0; 
+		
+		var suffix = loc.substring(j,loc.length);
+		if(!(suffix.length == 2)) return 5;
+		if(!(suffix.charAt(0)=='-' &&
+			((suffix.chatAt(1)>='0' && suffix.charAt(1)<='9') || (suffix.chatAt(1)>='A' && suffix.charAt(1)<='Z'))))
+			return 6;
+		
 
-		if(i<loc.length) {
+		/*if(i<loc.length) {
 			var suffix = loc.substring(i,loc.length);
 			if(suffix.length != 3 && suffix.length != 5) return 2;
 			for(var j=0; j<suffix.length; j++) {
@@ -154,18 +179,12 @@ function TimeTable(){
 				}
 				if(suffix.charAt(j)<'0' || suffix.charAt(j)>'9') return 3;
 			}
-		}
+		}*/
 		/*for(var i=0; i<this.classPrefix.length; i++) {
 			if(prefix == this.classPrefix[i]) break;
 		}
 		if(i>=this.classPrefix.length) return 2;*/
 		//if(!this.buildingPrefix.hasOwnProperty(prefix)) return 2;
-		var k;
-		for(k=0; k<this.classPrefix.length; k++) {
-			if(prefix == this.classPrefix[k]) break;
-		}
-		if(k>=this.classPrefix.length) return 4;
-
 		return 0;
 	}
 	
