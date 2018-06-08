@@ -93,10 +93,10 @@
       #uipanel_near_grid{
         display: grid;
         grid-template-rows: auto auto auto;
-        grid-template-columns: auto 1fr auto auto auto;
-        grid-template-areas: "frominput frominput fromlabel locsetbtn" 
-                             "tolabel2  toinput   tolabel   changebtn" 
-                             "timeinput timeinput timelabel findbtn" ;
+        grid-template-columns: auto auto 1fr auto auto;
+        grid-template-areas: "setloc    frominput frominput fromclear fromlabel" 
+                             ".         tolabel2  toinput   toinput   tolabel  " 
+                             "findBtn   findBtn   findBtn   findBtn   findBtn";
         grid-column-gap: 4px;
       }
       #uipanel_near_grid *{
@@ -435,15 +435,15 @@
             <input type="text" list="destinationsData" id="uipanel_near_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
             <div style="grid-area: fromlabel;">부터</div>
             
-            <input type="button" value="현재 위치" id="uipanel_near_location_set" style="grid-area: locsetbtn;" />
+            <button class="imageButton" id="uipanel_near_setloc"  style="grid-area: setloc;width:2em;height:2em;"><img src="icons/baseline_location_searching_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            
+            <button class="imageButton" id="uipanel_near_from_reset"  style="grid-area: fromclear;width:2em;height:2em;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            
             <input type="submit" value="탐색" id="uipanel_near_button_find" tabindex="5" style="grid-area: findbtn;" />
             <select id="uipanel_near_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
             </select>
             <div style="grid-area: tolabel;">까지</div>
             <div style="grid-area: tolabel2;">가장 가까운</div>
-
-            <input type="time" id="uipanel_near_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
-            <div style="grid-area: timelabel;">까지</div>
           </div>
         </form>
         
@@ -663,9 +663,9 @@
             }
           }
         }
-        /*
+        
         Log.debug(JSON.stringify(Geodata.obj.places) || "");
-        for (var j in {"uipanel_fromto_from_near": 0, "uipanel_fromto_to_near": 0}) {
+        for (var j in {"uipanel_near_input_to": 0}) {
           var s = document.getElementById(j);
           while (s.hasChildNodes())
             s.removeChild(s.lastChild);
@@ -680,7 +680,7 @@
               s.appendChild(opt);
             }
           }
-        }*/
+        }
       });
 
       Geodata.load("mapdata.json");
@@ -723,7 +723,15 @@
       var search_button_importTT = document.getElementById("uipanel_search_button_importtt");
       var search_button_swap = document.getElementById("uipanel_search_swap_src_dst");
       var search_button_find = document.getElementById("uipanel_search_button_find");
-
+      
+      
+      var uipanel_near_input_from=document.getElementById("uipanel_near_input_from");
+      var uipanel_near_setloc=document.getElementById("uipanel_near_setloc");
+      var uipanel_near_from_reset=document.getElementById("uipanel_near_from_reset");
+      var uipanel_near_input_to=document.getElementById("uipanel_near_input_to");
+      var uipanel_near_button_find=document.getElementById("uipanel_near_button_find");
+      
+      
       var routeTemplate = document.getElementById("route_template");
 
 
@@ -1064,6 +1072,56 @@
         }
         
       }
+      
+      function SearchManager(input,clearBtn){
+        this.value=null;
+        this.inputElement=input;
+        this.clearBtn=clearBtn;
+        this.getValue=function(){return this.value;}
+        this.performSearch=function(){
+          var searchQuery=this.inputElement.value;
+          var searchResult=advancedSearch(searchQuery);
+          if (searchResult){
+            this.inputElement.classList.remove("input_invalid");
+            this.inputElement.classList.add("input_valid");
+            this.value=searchResult;
+          }else{
+            this.inputElement.classList.add("input_invalid");
+            this.inputElement.classList.remove("input_valid");
+            this.value=null;
+          }
+        }
+        
+        this.clear=function(){
+          this.inputElement.value="";
+          this.inputElement.classList.add("input_invalid");
+          this.inputElement.classList.remove("input_valid");
+          this.inputElement.classList.remove("input_disabled");
+          this.inputElement.removeAttribute("readonly");
+          this.value=null;
+        }
+        
+        this.setValueAndLock=function(value,name){
+          this.inputElement.value=name;
+          this.inputElement.classList.remove("input_invalid");
+          this.inputElement.classList.remove("input_valid");
+          this.inputElement.classList.add("input_disabled");
+          this.inputElement.setAttribute("readonly",true);
+          this.value=value;
+
+        }
+        
+        var thiss=this;
+        this.inputElement.addEventListener("input",function(){
+          thiss.performSearch();
+        });
+        
+        this.clearBtn.addEventListener("click",function(){
+          thiss.clear();
+        });
+        
+        this.clear();
+      }
 
       var search_from=null;
       var search_to=null;
@@ -1163,7 +1221,13 @@
           search_to=GraphCalculations.nearestVertexToPoint(Geodata.graph, location, false);
           
         });
-      })
+      });
+      
+      
+      var nearby_from_var=new SearchManager(uipanel_near_input_from,uipanel_near_from_reset);
+      uipanel_near_setloc.addEventListener("click",function(){
+        nearby_from_var.setValueAndLock(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
+      });
       
       
       
@@ -1402,6 +1466,27 @@
           return;
         }
         //console.log(timeLimitTimestamp);
+        search_query(fromVertex, toVertex, timeLimitTimestamp);
+      });
+      
+      
+      uipanel_near_button_find.addEventListener("click", function () {
+        var fromName = nearby_from_var.getValue().name; //vin_from.name;
+        var fromVertex = nearby_from_var.getValue(); //vin_from.value;
+        var toName = uipanel_near_input_to.value; //vin_to.name;
+        var toVertex = places[toName]; //vin_to.value;
+
+        var timeLimitTimestamp = Number.MAX_SAFE_INTEGER;
+
+
+        if (!fromVertex) {
+          Log.error("Invalid vertex name: \"" + fromName + "\" Cannot start navigation.")
+          return;
+        }
+        if (!toVertex) {
+          Log.error("Invalid vertex name: \"" + toName + "\" Cannot start navigation.")
+          return;
+        }
         search_query(fromVertex, toVertex, timeLimitTimestamp);
       });
 
