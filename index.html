@@ -283,6 +283,7 @@
         <button onclick="debug_button_4_onclick()">Weather: Bad</button>
         <button onclick="debug_button_5_onclick()">Log.error()</button>        
         <button onclick="debug_button_6_onclick()">Override timetable time</button>        
+        <button onclick="debug_button_7_onclick()">Hide debug menus</button>
       </div>
       <div id="logcontainer"></div>
     </div>
@@ -1080,6 +1081,16 @@
         timeTableData.debug_override_time=d;
         Log.info("Time overridden: 2018/06/04 12:55:00");
       }
+      function debug_button_7_onclick(){
+        var btn=document.getElementById("debug_panel_toggle");
+        var panel=document.getElementById("debugpanel");
+        
+        btn.style.display="none";
+        panel.style.display="none";
+        
+      }
+      
+      
 
     </script>
   </body>
