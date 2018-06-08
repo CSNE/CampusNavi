@@ -77,7 +77,7 @@
                              "setmap    toinput   tocheck   tolabel  " 
                              ".         timeinput timeinput timelabel"
                              "buttons   buttons   buttons   buttons";
-        grid-column-gap: 4px;
+        /*grid-column-gap: 4px;*/
       }
       #uipanel_search_grid *{
         place-self: center;
@@ -95,9 +95,9 @@
         grid-template-rows: auto auto auto;
         grid-template-columns: auto auto 1fr auto auto;
         grid-template-areas: "setloc    frominput frominput fromclear fromlabel" 
-                             ".         tolabel2  toinput   toinput   tolabel  " 
-                             "findBtn   findBtn   findBtn   findBtn   findBtn";
-        grid-column-gap: 4px;
+                             "tolabel2  tolabel2  toinput   toinput   tolabel  " 
+                             "findbtn   findbtn   findbtn   findbtn   findbtn";
+        /* grid-column-gap: 4px; */
       }
       #uipanel_near_grid *{
         place-self: center;
@@ -337,6 +337,17 @@
         padding:0;
         margin:0;
       }
+      
+      .uipanel_squareButton{
+        width:24px !important;
+        height:24px !important;
+      }
+      .uipanel_textInput{
+        height:24px !important;
+        padding-right:4px;
+        padding-left: 4px;
+        box-sizing: border-box;
+      }
 
     </style>
 
@@ -395,29 +406,29 @@
         
         <form id="uipanel_search" action="javascript:">
           <div id="uipanel_search_grid">
-            <button class="imageButton" id="uipanel_search_input_setloc"  style="grid-area: setloc;width:2em;height:2em;"><img src="icons/baseline_location_searching_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            <button class="imageButton uipanel_squareButton" id="uipanel_search_input_setloc"  style="grid-area: setloc;width:2em;height:2em;"><img src="icons/baseline_location_searching_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
 
             
-            <button class="imageButton" id="uipanel_search_input_setmap"  style="grid-area: setmap;width:2em;height:2em;"><img src="icons/baseline_touch_app_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            <button class="imageButton uipanel_squareButton" id="uipanel_search_input_setmap"  style="grid-area: setmap;width:2em;height:2em;"><img src="icons/baseline_touch_app_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
             
-            <button class="imageButton" id="search_input_from_reset"  style="grid-area: fromcheck;width:2em;height:2em;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            <button class="imageButton uipanel_squareButton" id="search_input_from_reset"  style="grid-area: fromcheck;width:2em;height:2em;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
             
-            <button class="imageButton" id="search_input_to_reset"  style="grid-area: tocheck;width:2em;height:2em;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            <button class="imageButton uipanel_squareButton" id="search_input_to_reset"  style="grid-area: tocheck;width:2em;height:2em;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
             
-            <input class="input_invalid" type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
+            <input class="uipanel_textInput" type="text" list="destinationsData" id="uipanel_search_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
 
-            <div style="grid-area: fromlabel;">부터</div>
+            <div style="grid-area: fromlabel;">출발</div>
             
             
 
-            <input class="input_invalid" type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
+            <input class="uipanel_textInput" type="text" list="destinationsData" id="uipanel_search_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
 
-            <div style="grid-area: tolabel;">까지</div>
+            <div style="grid-area: tolabel;">도착</div>
 
             
             <input type="time" id="uipanel_search_input_time" tabindex="3" style="grid-area: timeinput;width:100%;">
 
-            <div style="grid-area: timelabel;">제한시간</div>
+            <div style="grid-area: timelabel;">까지</div>
             
             <div id="uipanel_search_input_buttons" style="grid-area: buttons;" >
               <input type="button" value="자동 설정" id="uipanel_search_button_importtt" style="flex-grow: 0;" />
@@ -432,12 +443,15 @@
         
         <form id="uipanel_near" action="javascript:" style="display: none;">
           <div id="uipanel_near_grid">
-            <input type="text" list="destinationsData" id="uipanel_near_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
-            <div style="grid-area: fromlabel;">부터</div>
+
+            <input class="uipanel_textInput" type="text" list="destinationsData" id="uipanel_near_input_from" tabindex="1" style="grid-area: frominput;width:100%;">
+
             
-            <button class="imageButton" id="uipanel_near_setloc"  style="grid-area: setloc;width:2em;height:2em;"><img src="icons/baseline_location_searching_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            <div style="grid-area: fromlabel;">출발</div>
             
-            <button class="imageButton" id="uipanel_near_from_reset"  style="grid-area: fromclear;width:2em;height:2em;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            <button class="imageButton uipanel_squareButton" id="uipanel_near_setloc"  style="grid-area: setloc;"><img src="icons/baseline_location_searching_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
+            
+            <button class="imageButton uipanel_squareButton" id="uipanel_near_from_reset"  style="grid-area: fromclear;"><img src="icons/baseline_clear_black_48.png" style="max-height:100%;max-width:100%;object-fit: contain;"></button>
             
             <input type="submit" value="탐색" id="uipanel_near_button_find" tabindex="5" style="grid-area: findbtn;" />
             <select id="uipanel_near_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
