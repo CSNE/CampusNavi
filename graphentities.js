@@ -26,10 +26,12 @@ function Graph() {
         if (v.name===this.vertices[i].name) Log.error("Duplicate vertex. name="+v.name);
       }
       //*/
+        //name은 식별자가 아님, 중복가능
         if (v.shown) {
             if (this.vmap[v.name])
-                Log.error("Duplicate vertex. name=" + v.name);
-            this.vmap[v.name] = v;
+                this.vmap[v.name].push(v);
+            else
+                this.vmap[v.name] = [v];
         }
         v.id = this.vertices.length;
         this.vertices.push(v);

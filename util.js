@@ -38,10 +38,22 @@ var Util = (function () {
         return ret;
     }
 
+    function getBuilding(cr)
+    {
+        for (var i = 0; i < cr.length; i++)
+        {
+            var c = cr.charAt(i);
+            if (c >= '0' && c <= '9')
+                return cr.substring(0, i);
+        }
+        return cr;
+    }
+
     return {
         "humanReadableTime": humanReadableTime,
         "timeStampToFormattedTime": timeStampToFormattedTime,
-        "colonSeparatedTimeToTimeStamp": colonSeparatedTimeToTimeStamp
+        "colonSeparatedTimeToTimeStamp": colonSeparatedTimeToTimeStamp,
+        "getBuilding": getBuilding
     }
 })();
 
