@@ -31,7 +31,8 @@ var Log = (function () {
     var levelToCharacter = ["", "V", "D", "I", "W", "E"];
 
     var levelElements = [[], [], [], [], [], []];
-
+  
+    var maxLogEntries=1000;
 
     function init(container){
 
@@ -151,6 +152,10 @@ var Log = (function () {
             display.insertBefore(elem,display.firstChild);
         }else{
             throw "No display element! Make sure init() was called."
+        }
+        
+        while (maxLogEntries!==0 && display.children.length>maxLogEntries){
+            display.removeChild(display.lastChild);
         }
     }
 
