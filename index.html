@@ -283,7 +283,6 @@
         <button onclick="debug_button_4_onclick()">Weather: Bad</button>
         <button onclick="debug_button_5_onclick()">Log.error()</button>        
         <button onclick="debug_button_6_onclick()">Override timetable time</button>        
-        <button onclick="debug_button_7_onclick()">Hide debug menus</button>
       </div>
       <div id="logcontainer"></div>
     </div>
@@ -967,20 +966,20 @@
 			}
 			fromName = timeTableData.buildingPrefix[fromName.substring(0, i)];
 		}
-		if(fromName == "제2공학관" || fromName == "공B") {
+		if(fromName == "제2공학관") {
 			fromVertex = [];
 			fromVertex[0] = Geodata.graph.findVertexWithName("제2공학관 북문");
 			formVertex[1] = Geodata.graph.findVertexWithName("제2공학관 남문");
 			fromVertex[2] = Geodata.graph.findVertexWithName("제2공학관 동문");
 			fromVertex[3] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
 		}
-		else if(fromName == "제3공학관"  || fromName == "공C") {
+		else if(fromName == "제3공학관") {
 			fromVertex = [];
 			fromVertex[0] = Geodata.graph.findVertexWithName("제3공학관 북문");
 			fromVertex[1] = Geodata.graph.findVertexWithName("제3공학관 남문");
 			fromVertex[2] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
 		}
-		else toVertex = Geodata.graph.findVertexWithName(toName);
+		else fromVertex = Geodata.graph.findVertexWithName(fromName);
 		
         var toName = search_input_to.value;
         var toVertex;
@@ -990,14 +989,14 @@
 			}
 			toName = timeTableData.buildingPrefix[toName.substring(0, i)];
 		}
-		if(toName == "제2공학관" || toName == "공B") {
+		if(toName == "제2공학관") {
 			toVertex = [];
 			toVertex[0] = Geodata.graph.findVertexWithName("제2공학관 북문");
 			toVertex[1] = Geodata.graph.findVertexWithName("제2공학관 남문");
 			toVertex[2] = Geodata.graph.findVertexWithName("제2공학관 동문");
 			toVertex[3] = Geodata.graph.findVertexWithName("제2공학관, 제3공학관");
 		}
-		else if(toName == "제3공학관" || toName == "공C") {
+		else if(toName == "제3공학관") {
 			toVertex = [];
 			toVertex[0] = Geodata.graph.findVertexWithName("제3공학관 북문");
 			toVertex[1] = Geodata.graph.findVertexWithName("제3공학관 남문");
@@ -1128,16 +1127,6 @@
         timeTableData.debug_override_time=d;
         Log.info("Time overridden: 2018/06/04 12:55:00");
       }
-      function debug_button_7_onclick(){
-        var btn=document.getElementById("debug_panel_toggle");
-        var panel=document.getElementById("debugpanel");
-        
-        btn.style.display="none";
-        panel.style.display="none";
-        
-      }
-      
-      
 
     </script>
   </body>
