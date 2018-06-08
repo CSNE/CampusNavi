@@ -764,142 +764,153 @@
       
       //FromTo Panel
       var vin_from, vin_to;
-      (function () {
-        function VertexInput(id, e) {
-          this.id = id;
-          this.e = e;
-          //alert(e);
-          this.value = null;
-          this.name = "";
-          this.method = 0;
-          function method_change() {
-            var m = this.e.method.value;
-            //alert(m);
-            switch (m) {
-              case "0":
-                this.e.inputs[0].style.display = "none";
-                this.e.near.style.display = "none";
-                this.e.submit.style.display = "none";
-                this.e.display.style.display = "none";
-                this.value = null;
-                this.name = "";
-                this.method = 0;
-                break;
-              case "1":
-                this.e.inputs[0].style.display = "flex";
-                this.e.inputs[0].setAttribute("list","destinationsData");
-                this.e.near.style.display = "none";
-                this.e.submit.style.display = "flex";
-                this.e.display.style.display = "none";
-                this.method = 1;
-                break;
-              case "2":
-                this.e.inputs[0].style.display = "none";
-                this.e.near.style.display = "none";
-                this.e.submit.style.display = "none";
-                this.e.display.style.display = "none";
-                this.method = 2;
-
-                //document.getElementById("uipanel_grayouter").style.display="block";
-
-                break;
-              case "3":
-                this.e.inputs[0].style.display = "none";
-                this.e.near.style.display = "flex";
-                this.e.submit.style.display = "flex";
-                this.e.display.style.display = "none";
-                this.method = 3;
-                break;
-              case "4":
-                this.e.inputs[0].style.display = "none";
-                this.e.near.style.display = "none";
-                this.e.submit.style.display = "none";
-                this.e.display.style.display = "flex";
-                this.method = 0;
-                this.setValue(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
-                break;
-              case "5":
-                this.e.inputs[0].style.display = "flex";
-                this.e.inputs[0].removeAttribute("list");
-                this.e.near.style.display = "none";
-                this.e.submit.style.display = "flex";
-                this.e.display.style.display = "none";
-                this.method = 5;
-                break;
-              default:
-                Log.error("unknown method: " + m);
-                return;
-            }
-          }
-          function submit()
-          {
-            var v, name;
-            switch (this.method)
-            {
-              case 1:
-                name = this.e.inputs[0].value;
-                v = Geodata.graph.findVertexWithName(name);
-                break;
-              case 3:
-                name = this.e.near.value;
-                v = places[name];
-                name = "가장 가까운 " + name;
-                //TODO: name("convenient") -> "편의점"
-                break;
-              case 5:
-                name = this.e.inputs[0].value;
-                v = places[name];
-                name = Geodata.obj.places[name].name;
-                break;
-            }
-            this.setValue(v, name);
-          }
-          function setValue(v, name)
-          {
-            if (v) {
-              this.value = v;
-              this.name = name;
+      
+      function VertexInput(id, e) {
+        this.id = id;
+        this.e = e;
+        this.value = null;
+        this.name = "";
+        this.method = 0;
+        function method_change() {
+          var m = this.e.method.value;
+          switch (m) {
+            case "0":
               this.e.inputs[0].style.display = "none";
               this.e.near.style.display = "none";
               this.e.submit.style.display = "none";
-              this.e.display.style.display = "initial";
+              this.e.display.style.display = "none";
+              this.value = null;
+              this.name = "";
               this.method = 0;
-              this.e.display.innerHTML = name;
-              this.e.method.value = "0";
-            }
+              break;
+            case "1":
+              this.e.inputs[0].style.display = "flex";
+              this.e.inputs[0].setAttribute("list","destinationsData");
+              this.e.near.style.display = "none";
+              this.e.submit.style.display = "flex";
+              this.e.display.style.display = "none";
+              this.method = 1;
+              break;
+            case "2":
+              this.e.inputs[0].style.display = "none";
+              this.e.near.style.display = "none";
+              this.e.submit.style.display = "none";
+              this.e.display.style.display = "none";
+              this.method = 2;
+
+              var clicked=false;
+
+              var thissss=this;
+              mymap.on("click",function(e){
+                if (clicked) return;
+                clicked=true;
+
+                e.latlng.alt=0;      
+                var location=Coordinates.fromLatLng(e.latlng);
+
+                document.getElementById("uipanel_grayouter").style.display="none";
+                thissss.setValue(GraphCalculations.nearestVertexToPoint(Geodata.graph, location, false), "클릭한 위치");
+              });
+              document.getElementById("uipanel_grayouter").style.display="block";
+
+              break;
+            case "3":
+              this.e.inputs[0].style.display = "none";
+              this.e.near.style.display = "flex";
+              this.e.submit.style.display = "flex";
+              this.e.display.style.display = "none";
+              this.method = 3;
+              break;
+            case "4":
+              this.e.inputs[0].style.display = "none";
+              this.e.near.style.display = "none";
+              this.e.submit.style.display = "none";
+              this.e.display.style.display = "flex";
+              this.method = 0;
+              this.setValue(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
+              break;
+            case "5":
+              this.e.inputs[0].style.display = "flex";
+              this.e.inputs[0].removeAttribute("list");
+              this.e.near.style.display = "none";
+              this.e.submit.style.display = "flex";
+              this.e.display.style.display = "none";
+              this.method = 5;
+              break;
+            default:
+              Log.error("unknown method: " + m);
+              return;
           }
-          this.method_change = method_change;
-          this.submit = submit;
-          this.setValue = setValue;
-          var thiss = this;
-          e.method.addEventListener("change", function () {
-            thiss.method_change();
-
-          });
-          e.root.addEventListener("submit", function () {
-            thiss.submit();
-          });
         }
-        var from_elements = {
-          "root": document.getElementById("uipanel_fromto_from"),
-          "method": document.getElementById("uipanel_fromto_from_method"),
-          "inputs": [document.getElementById("uipanel_fromto_from_input1")],
-          "near": document.getElementById("uipanel_fromto_from_near"),
-          "submit": document.getElementById("uipanel_fromto_from_submit"),
-          "display": document.getElementById("uipanel_fromto_from_display")
-        };
+        function submit()
+        {
+          var v, name;
+          switch (this.method)
+          {
+            case 1:
+              name = this.e.inputs[0].value;
+              v = Geodata.graph.findVertexWithName(name);
+              break;
+            case 3:
+              name = this.e.near.value;
+              v = places[name];
+              name = "가장 가까운 " + name;
+              //TODO: name("convenient") -> "편의점"
+              break;
+            case 5:
+              name = this.e.inputs[0].value;
+              v = places[name];
+              name = Geodata.obj.places[name].name;
+              break;
+          }
+          this.setValue(v, name);
+        }
+        function setValue(v, name)
+        {
+          if (v) {
+            this.value = v;
+            this.name = name;
+            this.e.inputs[0].style.display = "none";
+            this.e.near.style.display = "none";
+            this.e.submit.style.display = "none";
+            this.e.display.style.display = "initial";
+            this.method = 0;
+            this.e.display.innerHTML = name;
+            this.e.method.value = "0";
+          }
+        }
+        this.method_change = method_change;
+        this.submit = submit;
+        this.setValue = setValue;
+        var thiss = this;
+        e.method.addEventListener("change", function () {
+          thiss.method_change();
 
-        var to_elements = {
-          "root": document.getElementById("uipanel_fromto_to"),
-          "method": document.getElementById("uipanel_fromto_to_method"),
-          "inputs": [document.getElementById("uipanel_fromto_to_input1")],
-          "near": document.getElementById("uipanel_fromto_to_near"),
-          "submit": document.getElementById("uipanel_fromto_to_submit"),
-          "display": document.getElementById("uipanel_fromto_to_display")
-        };
-        vin_from = new VertexInput("from", from_elements);
-        vin_to = new VertexInput("from", to_elements);
-      })();
+        });
+        e.root.addEventListener("submit", function () {
+          thiss.submit();
+        });
+      }
+      var from_elements = {
+        "root": document.getElementById("uipanel_fromto_from"),
+        "method": document.getElementById("uipanel_fromto_from_method"),
+        "inputs": [document.getElementById("uipanel_fromto_from_input1")],
+        "near": document.getElementById("uipanel_fromto_from_near"),
+        "submit": document.getElementById("uipanel_fromto_from_submit"),
+        "display": document.getElementById("uipanel_fromto_from_display")
+      };
+
+      var to_elements = {
+        "root": document.getElementById("uipanel_fromto_to"),
+        "method": document.getElementById("uipanel_fromto_to_method"),
+        "inputs": [document.getElementById("uipanel_fromto_to_input1")],
+        "near": document.getElementById("uipanel_fromto_to_near"),
+        "submit": document.getElementById("uipanel_fromto_to_submit"),
+        "display": document.getElementById("uipanel_fromto_to_display")
+      };
+      vin_from = new VertexInput("from", from_elements);
+      vin_to = new VertexInput("from", to_elements);
+      
       
       
       //Canvas
