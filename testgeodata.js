@@ -886,7 +886,10 @@
           "name": "New Edge",
           "vs": "v2",
           "ve": "v4",
-          "w": { "walk": 10 },
+          "w": {
+              "walk": 10,
+              "run": 5
+          },
           "f": {},
           "undir": true
       },
@@ -894,7 +897,10 @@
           "name": "New Edge",
           "vs": "v0",
           "ve": "v4",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -902,7 +908,10 @@
           "name": "New Edge",
           "vs": "v5",
           "ve": "v4",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": {},
           "undir": true
       },
@@ -910,7 +919,10 @@
           "name": "New Edge",
           "vs": "v8",
           "ve": "v9",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -918,7 +930,10 @@
           "name": "New Edge",
           "vs": "v11",
           "ve": "v8",
-          "w": { "walk": 28 },
+          "w": {
+              "walk": 28,
+              "run": 14
+          },
           "f": {},
           "undir": true
       },
@@ -926,7 +941,10 @@
           "name": "New Edge",
           "vs": "v15",
           "ve": "v6",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -934,7 +952,10 @@
           "name": "New Edge",
           "vs": "v16",
           "ve": "v11",
-          "w": { "walk": 30 },
+          "w": {
+              "walk": 30,
+              "run": 15
+          },
           "f": {},
           "undir": true
       },
@@ -942,7 +963,10 @@
           "name": "New Edge",
           "vs": "v17",
           "ve": "v14",
-          "w": { "walk": 42 },
+          "w": {
+              "walk": 42,
+              "run": 21
+          },
           "f": {},
           "undir": true
       },
@@ -950,7 +974,10 @@
           "name": "New Edge",
           "vs": "v19",
           "ve": "v20",
-          "w": { "walk": 31 },
+          "w": {
+              "walk": 31,
+              "run": 15.5
+          },
           "f": {},
           "undir": true
       },
@@ -958,7 +985,10 @@
           "name": "New Edge",
           "vs": "v19",
           "ve": "v21",
-          "w": { "walk": 15 },
+          "w": {
+              "walk": 15,
+              "run": 7.5
+          },
           "f": {},
           "undir": true
       },
@@ -966,7 +996,10 @@
           "name": "New Edge",
           "vs": "v22",
           "ve": "v18",
-          "w": { "walk": 15 },
+          "w": {
+              "walk": 15,
+              "run": 7.5
+          },
           "f": {},
           "undir": true
       },
@@ -974,7 +1007,10 @@
           "name": "New Edge",
           "vs": "v20",
           "ve": "v23",
-          "w": { "walk": 55 },
+          "w": {
+              "walk": 55,
+              "run": 27.5
+          },
           "f": {},
           "undir": true
       },
@@ -982,7 +1018,10 @@
           "name": "New Edge",
           "vs": "v25",
           "ve": "v20",
-          "w": { "walk": 35 },
+          "w": {
+              "walk": 35,
+              "run": 17.5
+          },
           "f": {},
           "undir": true
       },
@@ -990,7 +1029,10 @@
           "name": "New Edge",
           "vs": "v25",
           "ve": "v26",
-          "w": { "walk": 15 },
+          "w": {
+              "walk": 15,
+              "run": 7.5
+          },
           "f": {},
           "undir": true
       },
@@ -998,7 +1040,10 @@
           "name": "New Edge",
           "vs": "v25",
           "ve": "v27",
-          "w": { "walk": 30 },
+          "w": {
+              "walk": 30,
+              "run": 15
+          },
           "f": {},
           "undir": true
       },
@@ -1006,7 +1051,10 @@
           "name": "New Edge",
           "vs": "v28",
           "ve": "v29",
-          "w": { "walk": 40 },
+          "w": {
+              "walk": 40,
+              "run": 20
+          },
           "f": {},
           "undir": true
       },
@@ -1014,7 +1062,10 @@
           "name": "New Edge",
           "vs": "v29",
           "ve": "v18",
-          "w": { "walk": 9 },
+          "w": {
+              "walk": 9,
+              "run": 4.5
+          },
           "f": {},
           "undir": true
       },
@@ -1022,7 +1073,10 @@
           "name": "New Edge",
           "vs": "v19",
           "ve": "v29",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1030,7 +1084,10 @@
           "name": "New Edge",
           "vs": "v30",
           "ve": "v14",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -1038,7 +1095,10 @@
           "name": "New Edge",
           "vs": "v31",
           "ve": "v8",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -1046,7 +1106,10 @@
           "name": "New Edge",
           "vs": "v32",
           "ve": "v31",
-          "w": { "walk": 90 },
+          "w": {
+              "walk": 90,
+              "run": 45
+          },
           "f": {},
           "undir": true
       },
@@ -1054,7 +1117,10 @@
           "name": "New Edge",
           "vs": "v33",
           "ve": "v5",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -1062,7 +1128,10 @@
           "name": "New Edge",
           "vs": "v34",
           "ve": "v33",
-          "w": { "walk": 122 },
+          "w": {
+              "walk": 122,
+              "run": 61
+          },
           "f": {},
           "undir": true
       },
@@ -1070,7 +1139,10 @@
           "name": "New Edge",
           "vs": "v2",
           "ve": "v35",
-          "w": { "walk": 53 },
+          "w": {
+              "walk": 53,
+              "run": 26.5
+          },
           "f": {},
           "undir": true
       },
@@ -1078,7 +1150,10 @@
           "name": "New Edge",
           "vs": "v2",
           "ve": "v33",
-          "w": { "walk": 40 },
+          "w": {
+              "walk": 40,
+              "run": 20
+          },
           "f": {},
           "undir": true
       },
@@ -1086,7 +1161,10 @@
           "name": "New Edge",
           "vs": "v37",
           "ve": "v36",
-          "w": { "walk": 23 },
+          "w": {
+              "walk": 23,
+              "run": 11.5
+          },
           "f": {},
           "undir": true
       },
@@ -1094,7 +1172,10 @@
           "name": "New Edge",
           "vs": "v38",
           "ve": "v32",
-          "w": { "walk": 10 },
+          "w": {
+              "walk": 10,
+              "run": 5
+          },
           "f": {},
           "undir": true
       },
@@ -1102,7 +1183,10 @@
           "name": "New Edge",
           "vs": "v39",
           "ve": "v34",
-          "w": { "walk": 57 },
+          "w": {
+              "walk": 57,
+              "run": 28.5
+          },
           "f": {},
           "undir": true
       },
@@ -1110,7 +1194,10 @@
           "name": "New Edge",
           "vs": "v43",
           "ve": "v46",
-          "w": { "walk": 28 },
+          "w": {
+              "walk": 28,
+              "run": 14
+          },
           "f": {},
           "undir": true
       },
@@ -1118,7 +1205,10 @@
           "name": "New Edge",
           "vs": "v47",
           "ve": "v43",
-          "w": { "walk": 29 },
+          "w": {
+              "walk": 29,
+              "run": 14.5
+          },
           "f": {},
           "undir": true
       },
@@ -1126,7 +1216,10 @@
           "name": "New Edge",
           "vs": "v47",
           "ve": "v45",
-          "w": { "walk": 59 },
+          "w": {
+              "walk": 59,
+              "run": 29.5
+          },
           "f": {},
           "undir": true
       },
@@ -1134,7 +1227,10 @@
           "name": "New Edge",
           "vs": "v44",
           "ve": "v41",
-          "w": { "walk": 24 },
+          "w": {
+              "walk": 24,
+              "run": 12
+          },
           "f": {},
           "undir": true
       },
@@ -1142,7 +1238,10 @@
           "name": "New Edge",
           "vs": "v41",
           "ve": "v48",
-          "w": { "walk": 34 },
+          "w": {
+              "walk": 34,
+              "run": 17
+          },
           "f": {},
           "undir": true
       },
@@ -1150,7 +1249,10 @@
           "name": "New Edge",
           "vs": "v45",
           "ve": "v48",
-          "w": { "walk": 66 },
+          "w": {
+              "walk": 66,
+              "run": 33
+          },
           "f": {},
           "undir": true
       },
@@ -1158,7 +1260,10 @@
           "name": "New Edge",
           "vs": "v49",
           "ve": "v50",
-          "w": { "walk": 39 },
+          "w": {
+              "walk": 39,
+              "run": 19.5
+          },
           "f": {},
           "undir": true
       },
@@ -1166,7 +1271,10 @@
           "name": "New Edge",
           "vs": "v51",
           "ve": "v49",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": {},
           "undir": true
       },
@@ -1174,7 +1282,10 @@
           "name": "New Edge",
           "vs": "v45",
           "ve": "v51",
-          "w": { "walk": 16 },
+          "w": {
+              "walk": 16,
+              "run": 8
+          },
           "f": {},
           "undir": true
       },
@@ -1182,7 +1293,10 @@
           "name": "New Edge",
           "vs": "v54",
           "ve": "v53",
-          "w": { "walk": 27 },
+          "w": {
+              "walk": 27,
+              "run": 13.5
+          },
           "f": {},
           "undir": true
       },
@@ -1190,7 +1304,10 @@
           "name": "New Edge",
           "vs": "v50",
           "ve": "v54",
-          "w": { "walk": 42 },
+          "w": {
+              "walk": 42,
+              "run": 21
+          },
           "f": {},
           "undir": true
       },
@@ -1198,7 +1315,10 @@
           "name": "New Edge",
           "vs": "v51",
           "ve": "v56",
-          "w": { "walk": 49 },
+          "w": {
+              "walk": 49,
+              "run": 24.5
+          },
           "f": {},
           "undir": true
       },
@@ -1206,7 +1326,10 @@
           "name": "New Edge",
           "vs": "v53",
           "ve": "v58",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -1214,7 +1337,10 @@
           "name": "New Edge",
           "vs": "v58",
           "ve": "v52",
-          "w": { "walk": 49 },
+          "w": {
+              "walk": 49,
+              "run": 24.5
+          },
           "f": {},
           "undir": true
       },
@@ -1222,7 +1348,10 @@
           "name": "New Edge",
           "vs": "v59",
           "ve": "v56",
-          "w": { "walk": 26 },
+          "w": {
+              "walk": 26,
+              "run": 13
+          },
           "f": {},
           "undir": true
       },
@@ -1230,7 +1359,10 @@
           "name": "New Edge",
           "vs": "v60",
           "ve": "v59",
-          "w": { "walk": 49 },
+          "w": {
+              "walk": 49,
+              "run": 24.5
+          },
           "f": {},
           "undir": true
       },
@@ -1238,7 +1370,10 @@
           "name": "New Edge",
           "vs": "v60",
           "ve": "v52",
-          "w": { "walk": 55 },
+          "w": {
+              "walk": 55,
+              "run": 27.5
+          },
           "f": {},
           "undir": true
       },
@@ -1246,7 +1381,10 @@
           "name": "New Edge",
           "vs": "v72",
           "ve": "v71",
-          "w": { "walk": 63 },
+          "w": {
+              "walk": 63,
+              "run": 31.5
+          },
           "f": {},
           "undir": true
       },
@@ -1254,7 +1392,10 @@
           "name": "New Edge",
           "vs": "v71",
           "ve": "v56",
-          "w": { "walk": 47 },
+          "w": {
+              "walk": 47,
+              "run": 23.5
+          },
           "f": {},
           "undir": true
       },
@@ -1262,7 +1403,10 @@
           "name": "New Edge",
           "vs": "v75",
           "ve": "v32",
-          "w": { "walk": 31 },
+          "w": {
+              "walk": 31,
+              "run": 15.5
+          },
           "f": {},
           "undir": true
       },
@@ -1270,7 +1414,10 @@
           "name": "New Edge",
           "vs": "v54",
           "ve": "v75",
-          "w": { "walk": 10 },
+          "w": {
+              "walk": 10,
+              "run": 5
+          },
           "f": {},
           "undir": true
       },
@@ -1278,7 +1425,10 @@
           "name": "New Edge",
           "vs": "v58",
           "ve": "v75",
-          "w": { "walk": 30 },
+          "w": {
+              "walk": 30,
+              "run": 15
+          },
           "f": {},
           "undir": true
       },
@@ -1286,7 +1436,10 @@
           "name": "New Edge",
           "vs": "v51",
           "ve": "v74",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": {},
           "undir": true
       },
@@ -1294,7 +1447,10 @@
           "name": "New Edge",
           "vs": "v74",
           "ve": "v45",
-          "w": { "walk": 44 },
+          "w": {
+              "walk": 44,
+              "run": 22
+          },
           "f": {},
           "undir": true
       },
@@ -1302,7 +1458,10 @@
           "name": "New Edge",
           "vs": "v73",
           "ve": "v74",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1310,7 +1469,10 @@
           "name": "New Edge",
           "vs": "v76",
           "ve": "v74",
-          "w": { "walk": 52 },
+          "w": {
+              "walk": 52,
+              "run": 26
+          },
           "f": {},
           "undir": true
       },
@@ -1318,7 +1480,10 @@
           "name": "New Edge",
           "vs": "v77",
           "ve": "v78",
-          "w": { "walk": 56 },
+          "w": {
+              "walk": 56,
+              "run": 28
+          },
           "f": {},
           "undir": true
       },
@@ -1326,7 +1491,10 @@
           "name": "New Edge",
           "vs": "v78",
           "ve": "v79",
-          "w": { "walk": 35 },
+          "w": {
+              "walk": 35,
+              "run": 17.5
+          },
           "f": {},
           "undir": true
       },
@@ -1334,7 +1502,10 @@
           "name": "New Edge",
           "vs": "v80",
           "ve": "v79",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1342,7 +1513,10 @@
           "name": "New Edge",
           "vs": "v80",
           "ve": "v24",
-          "w": { "walk": 34 },
+          "w": {
+              "walk": 34,
+              "run": 17
+          },
           "f": {},
           "undir": true
       },
@@ -1350,7 +1524,10 @@
           "name": "New Edge",
           "vs": "v81",
           "ve": "v77",
-          "w": { "walk": 37 },
+          "w": {
+              "walk": 37,
+              "run": 18.5
+          },
           "f": {},
           "undir": true
       },
@@ -1358,7 +1535,10 @@
           "name": "New Edge",
           "vs": "v82",
           "ve": "v78",
-          "w": { "walk": 31 },
+          "w": {
+              "walk": 31,
+              "run": 15.5
+          },
           "f": {},
           "undir": true
       },
@@ -1366,7 +1546,10 @@
           "name": "New Edge",
           "vs": "v83",
           "ve": "v77",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1374,7 +1557,10 @@
           "name": "New Edge",
           "vs": "v84",
           "ve": "v72",
-          "w": { "walk": 15 },
+          "w": {
+              "walk": 15,
+              "run": 7.5
+          },
           "f": {},
           "undir": true
       },
@@ -1382,7 +1568,10 @@
           "name": "New Edge",
           "vs": "v85",
           "ve": "v84",
-          "w": { "walk": 77 },
+          "w": {
+              "walk": 77,
+              "run": 38.5
+          },
           "f": {},
           "undir": true
       },
@@ -1390,7 +1579,10 @@
           "name": "New Edge",
           "vs": "v85",
           "ve": "v81",
-          "w": { "walk": 61 },
+          "w": {
+              "walk": 61,
+              "run": 30.5
+          },
           "f": {},
           "undir": true
       },
@@ -1398,7 +1590,10 @@
           "name": "New Edge",
           "vs": "v73",
           "ve": "v85",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1406,7 +1601,10 @@
           "name": "New Edge",
           "vs": "v86",
           "ve": "v84",
-          "w": { "walk": 28 },
+          "w": {
+              "walk": 28,
+              "run": 14
+          },
           "f": {},
           "undir": true
       },
@@ -1414,7 +1612,10 @@
           "name": "New Edge",
           "vs": "v86",
           "ve": "v83",
-          "w": { "walk": 73 },
+          "w": {
+              "walk": 73,
+              "run": 36.5
+          },
           "f": {},
           "undir": true
       },
@@ -1422,7 +1623,10 @@
           "name": "New Edge",
           "vs": "v83",
           "ve": "v87",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1430,7 +1634,10 @@
           "name": "New Edge",
           "vs": "v87",
           "ve": "v82",
-          "w": { "walk": 30 },
+          "w": {
+              "walk": 30,
+              "run": 15
+          },
           "f": {},
           "undir": true
       },
@@ -1438,7 +1645,10 @@
           "name": "New Edge",
           "vs": "v88",
           "ve": "v77",
-          "w": { "walk": 43 },
+          "w": {
+              "walk": 43,
+              "run": 21.5
+          },
           "f": {},
           "undir": true
       },
@@ -1446,7 +1656,10 @@
           "name": "New Edge",
           "vs": "v89",
           "ve": "v59",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -1454,7 +1667,10 @@
           "name": "New Edge",
           "vs": "v58",
           "ve": "v89",
-          "w": { "walk": 24 },
+          "w": {
+              "walk": 24,
+              "run": 12
+          },
           "f": {},
           "undir": true
       },
@@ -1462,7 +1678,10 @@
           "name": "New Edge",
           "vs": "v52",
           "ve": "v90",
-          "w": { "walk": 10 },
+          "w": {
+              "walk": 10,
+              "run": 5
+          },
           "f": {},
           "undir": true
       },
@@ -1470,7 +1689,10 @@
           "name": "New Edge",
           "vs": "v92",
           "ve": "v28",
-          "w": { "walk": 42 },
+          "w": {
+              "walk": 42,
+              "run": 21
+          },
           "f": {},
           "undir": true
       },
@@ -1478,7 +1700,10 @@
           "name": "New Edge",
           "vs": "v92",
           "ve": "v91",
-          "w": { "walk": 80 },
+          "w": {
+              "walk": 80,
+              "run": 40
+          },
           "f": {},
           "undir": true
       },
@@ -1486,7 +1711,10 @@
           "name": "New Edge",
           "vs": "v96",
           "ve": "v24",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": {},
           "undir": true
       },
@@ -1494,7 +1722,10 @@
           "name": "New Edge",
           "vs": "v82",
           "ve": "v96",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1502,7 +1733,10 @@
           "name": "New Edge",
           "vs": "v97",
           "ve": "v98",
-          "w": { "walk": 26 },
+          "w": {
+              "walk": 26,
+              "run": 13
+          },
           "f": {},
           "undir": true
       },
@@ -1510,7 +1744,10 @@
           "name": "New Edge",
           "vs": "v97",
           "ve": "v24",
-          "w": { "walk": 40 },
+          "w": {
+              "walk": 40,
+              "run": 20
+          },
           "f": {},
           "undir": true
       },
@@ -1518,7 +1755,10 @@
           "name": "New Edge",
           "vs": "v99",
           "ve": "v98",
-          "w": { "walk": 27 },
+          "w": {
+              "walk": 27,
+              "run": 13.5
+          },
           "f": {},
           "undir": true
       },
@@ -1526,7 +1766,10 @@
           "name": "New Edge",
           "vs": "v100",
           "ve": "v99",
-          "w": { "walk": 31 },
+          "w": {
+              "walk": 31,
+              "run": 15.5
+          },
           "f": {},
           "undir": true
       },
@@ -1534,7 +1777,10 @@
           "name": "New Edge",
           "vs": "v101",
           "ve": "v100",
-          "w": { "walk": 16 },
+          "w": {
+              "walk": 16,
+              "run": 8
+          },
           "f": {},
           "undir": true
       },
@@ -1542,7 +1788,10 @@
           "name": "New Edge",
           "vs": "v106",
           "ve": "v100",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1550,7 +1799,10 @@
           "name": "New Edge",
           "vs": "v107",
           "ve": "v103",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1558,7 +1810,10 @@
           "name": "New Edge",
           "vs": "v107",
           "ve": "v106",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1566,7 +1821,10 @@
           "name": "New Edge",
           "vs": "v105",
           "ve": "v107",
-          "w": { "walk": 27 },
+          "w": {
+              "walk": 27,
+              "run": 13.5
+          },
           "f": {},
           "undir": true
       },
@@ -1574,7 +1832,10 @@
           "name": "New Edge",
           "vs": "v107",
           "ve": "v99",
-          "w": { "walk": 60 },
+          "w": {
+              "walk": 60,
+              "run": 30
+          },
           "f": {},
           "undir": true
       },
@@ -1582,7 +1843,10 @@
           "name": "New Edge",
           "vs": "v108",
           "ve": "v105",
-          "w": { "walk": 27 },
+          "w": {
+              "walk": 27,
+              "run": 13.5
+          },
           "f": {},
           "undir": true
       },
@@ -1590,7 +1854,10 @@
           "name": "New Edge",
           "vs": "v104",
           "ve": "v108",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1598,7 +1865,10 @@
           "name": "New Edge",
           "vs": "v109",
           "ve": "v72",
-          "w": { "walk": 122 },
+          "w": {
+              "walk": 122,
+              "run": 61
+          },
           "f": {},
           "undir": true
       },
@@ -1606,7 +1876,10 @@
           "name": "New Edge",
           "vs": "v109",
           "ve": "v18",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": {},
           "undir": true
       },
@@ -1614,7 +1887,10 @@
           "name": "New Edge",
           "vs": "v109",
           "ve": "v14",
-          "w": { "walk": 45 },
+          "w": {
+              "walk": 45,
+              "run": 22.5
+          },
           "f": {},
           "undir": true
       },
@@ -1622,7 +1898,10 @@
           "name": "New Edge",
           "vs": "v111",
           "ve": "v43",
-          "w": { "walk": 66 },
+          "w": {
+              "walk": 66,
+              "run": 33
+          },
           "f": {},
           "undir": true
       },
@@ -1630,7 +1909,10 @@
           "name": "New Edge",
           "vs": "v115",
           "ve": "v111",
-          "w": { "walk": 50 },
+          "w": {
+              "walk": 50,
+              "run": 25
+          },
           "f": {},
           "undir": true
       },
@@ -1638,7 +1920,10 @@
           "name": "New Edge",
           "vs": "v41",
           "ve": "v115",
-          "w": { "walk": 10 },
+          "w": {
+              "walk": 10,
+              "run": 5
+          },
           "f": {},
           "undir": true
       },
@@ -1646,7 +1931,10 @@
           "name": "New Edge",
           "vs": "v117",
           "ve": "v120",
-          "w": { "walk": 45 },
+          "w": {
+              "walk": 45,
+              "run": 22.5
+          },
           "f": {},
           "undir": true
       },
@@ -1654,7 +1942,10 @@
           "name": "New Edge",
           "vs": "v121",
           "ve": "v91",
-          "w": { "walk": 85 },
+          "w": {
+              "walk": 85,
+              "run": 42.5
+          },
           "f": {},
           "undir": true
       },
@@ -1662,7 +1953,10 @@
           "name": "New Edge",
           "vs": "v122",
           "ve": "v121",
-          "w": { "walk": 50 },
+          "w": {
+              "walk": 50,
+              "run": 25
+          },
           "f": {},
           "undir": true
       },
@@ -1670,7 +1964,10 @@
           "name": "New Edge",
           "vs": "v122",
           "ve": "v123",
-          "w": { "walk": 10 },
+          "w": {
+              "walk": 10,
+              "run": 5
+          },
           "f": {},
           "undir": true
       },
@@ -1678,7 +1975,10 @@
           "name": "New Edge",
           "vs": "v128",
           "ve": "v130",
-          "w": { "walk": 18 },
+          "w": {
+              "walk": 18,
+              "run": 9
+          },
           "f": {},
           "undir": true
       },
@@ -1686,7 +1986,10 @@
           "name": "New Edge",
           "vs": "v130",
           "ve": "v131",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1694,7 +1997,10 @@
           "name": "New Edge",
           "vs": "v131",
           "ve": "v27",
-          "w": { "walk": 5 },
+          "w": {
+              "walk": 5,
+              "run": 2.5
+          },
           "f": {},
           "undir": true
       },
@@ -1702,7 +2008,10 @@
           "name": "New Edge",
           "vs": "v128",
           "ve": "v23",
-          "w": { "walk": 8 },
+          "w": {
+              "walk": 8,
+              "run": 4
+          },
           "f": {},
           "undir": true
       },
@@ -1710,7 +2019,10 @@
           "name": "New Edge",
           "vs": "v130",
           "ve": "v20",
-          "w": { "walk": 43 },
+          "w": {
+              "walk": 43,
+              "run": 21.5
+          },
           "f": {},
           "undir": true
       },
@@ -1718,7 +2030,10 @@
           "name": "New Edge",
           "vs": "v130",
           "ve": "v129",
-          "w": { "walk": 81 },
+          "w": {
+              "walk": 81,
+              "run": 40.5
+          },
           "f": {},
           "undir": true
       },
@@ -1726,7 +2041,10 @@
           "name": "New Edge",
           "vs": "v126",
           "ve": "v129",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1734,7 +2052,10 @@
           "name": "New Edge",
           "vs": "v129",
           "ve": "v124",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1742,7 +2063,10 @@
           "name": "New Edge",
           "vs": "v129",
           "ve": "v125",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1750,7 +2074,10 @@
           "name": "New Edge",
           "vs": "v125",
           "ve": "v131",
-          "w": { "walk": 69 },
+          "w": {
+              "walk": 69,
+              "run": 34.5
+          },
           "f": {},
           "undir": true
       },
@@ -1758,7 +2085,10 @@
           "name": "New Edge",
           "vs": "v132",
           "ve": "v96",
-          "w": { "walk": 19 },
+          "w": {
+              "walk": 19,
+              "run": 9.5
+          },
           "f": {},
           "undir": true
       },
@@ -1766,7 +2096,10 @@
           "name": "New Edge",
           "vs": "v132",
           "ve": "v24",
-          "w": { "walk": 30 },
+          "w": {
+              "walk": 30,
+              "run": 15
+          },
           "f": {},
           "undir": true
       },
@@ -1774,7 +2107,10 @@
           "name": "New Edge",
           "vs": "v132",
           "ve": "v23",
-          "w": { "walk": 35 },
+          "w": {
+              "walk": 35,
+              "run": 17.5
+          },
           "f": {},
           "undir": true
       },
@@ -1782,7 +2118,10 @@
           "name": "New Edge",
           "vs": "v124",
           "ve": "v133",
-          "w": { "walk": 22 },
+          "w": {
+              "walk": 22,
+              "run": 11
+          },
           "f": {},
           "undir": true
       },
@@ -1790,7 +2129,10 @@
           "name": "New Edge",
           "vs": "v133",
           "ve": "v128",
-          "w": { "walk": 38 },
+          "w": {
+              "walk": 38,
+              "run": 19
+          },
           "f": {},
           "undir": true
       },
@@ -1798,7 +2140,10 @@
           "name": "New Edge",
           "vs": "v132",
           "ve": "v133",
-          "w": { "walk": 38 },
+          "w": {
+              "walk": 38,
+              "run": 19
+          },
           "f": {},
           "undir": true
       },
@@ -1806,7 +2151,10 @@
           "name": "New Edge",
           "vs": "v103",
           "ve": "v134",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1814,7 +2162,10 @@
           "name": "New Edge",
           "vs": "v134",
           "ve": "v98",
-          "w": { "walk": 30 },
+          "w": {
+              "walk": 30,
+              "run": 15
+          },
           "f": {},
           "undir": true
       },
@@ -1822,7 +2173,10 @@
           "name": "New Edge",
           "vs": "v135",
           "ve": "v134",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1830,7 +2184,10 @@
           "name": "New Edge",
           "vs": "v138",
           "ve": "v104",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1838,7 +2195,10 @@
           "name": "New Edge",
           "vs": "v135",
           "ve": "v138",
-          "w": { "walk": 27 },
+          "w": {
+              "walk": 27,
+              "run": 13.5
+          },
           "f": {},
           "undir": true
       },
@@ -1846,7 +2206,10 @@
           "name": "New Edge",
           "vs": "v138",
           "ve": "v137",
-          "w": { "walk": 26 },
+          "w": {
+              "walk": 26,
+              "run": 13
+          },
           "f": {},
           "undir": true
       },
@@ -1854,7 +2217,10 @@
           "name": "New Edge",
           "vs": "v139",
           "ve": "v125",
-          "w": { "walk": 30 },
+          "w": {
+              "walk": 30,
+              "run": 15
+          },
           "f": {},
           "undir": true
       },
@@ -1862,7 +2228,10 @@
           "name": "New Edge",
           "vs": "v139",
           "ve": "v137",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": {},
           "undir": true
       },
@@ -1870,7 +2239,10 @@
           "name": "New Edge",
           "vs": "v126",
           "ve": "v139",
-          "w": { "walk": 24 },
+          "w": {
+              "walk": 24,
+              "run": 12
+          },
           "f": {},
           "undir": true
       },
@@ -1878,7 +2250,10 @@
           "name": "New Edge",
           "vs": "v140",
           "ve": "v135",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -1886,7 +2261,10 @@
           "name": "New Edge",
           "vs": "v140",
           "ve": "v103",
-          "w": { "walk": 26 },
+          "w": {
+              "walk": 26,
+              "run": 13
+          },
           "f": {},
           "undir": true
       },
@@ -1894,7 +2272,10 @@
           "name": "New Edge",
           "vs": "v140",
           "ve": "v104",
-          "w": { "walk": 27 },
+          "w": {
+              "walk": 27,
+              "run": 13.5
+          },
           "f": {},
           "undir": true
       },
@@ -1902,7 +2283,10 @@
           "name": "New Edge",
           "vs": "v140",
           "ve": "v105",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -1910,7 +2294,10 @@
           "name": "New Edge",
           "vs": "v142",
           "ve": "v100",
-          "w": { "walk": 24 },
+          "w": {
+              "walk": 24,
+              "run": 12
+          },
           "f": {},
           "undir": true
       },
@@ -1918,7 +2305,10 @@
           "name": "New Edge",
           "vs": "v143",
           "ve": "v108",
-          "w": { "walk": 38 },
+          "w": {
+              "walk": 38,
+              "run": 19
+          },
           "f": {},
           "undir": true
       },
@@ -1926,7 +2316,10 @@
           "name": "New Edge",
           "vs": "v141",
           "ve": "v143",
-          "w": { "walk": 38 },
+          "w": {
+              "walk": 38,
+              "run": 19
+          },
           "f": {},
           "undir": true
       },
@@ -1934,7 +2327,10 @@
           "name": "New Edge",
           "vs": "v144",
           "ve": "v106",
-          "w": { "walk": 17 },
+          "w": {
+              "walk": 17,
+              "run": 8.5
+          },
           "f": {},
           "undir": true
       },
@@ -1942,7 +2338,10 @@
           "name": "New Edge",
           "vs": "v144",
           "ve": "v143",
-          "w": { "walk": 58 },
+          "w": {
+              "walk": 58,
+              "run": 29
+          },
           "f": {},
           "undir": true
       },
@@ -1950,7 +2349,10 @@
           "name": "New Edge",
           "vs": "v145",
           "ve": "v141",
-          "w": { "walk": 23 },
+          "w": {
+              "walk": 23,
+              "run": 11.5
+          },
           "f": {},
           "undir": true
       },
@@ -1958,7 +2360,10 @@
           "name": "New Edge",
           "vs": "v146",
           "ve": "v145",
-          "w": { "walk": 34 },
+          "w": {
+              "walk": 34,
+              "run": 17
+          },
           "f": {},
           "undir": true
       },
@@ -1966,7 +2371,10 @@
           "name": "New Edge",
           "vs": "v147",
           "ve": "v146",
-          "w": { "walk": 37 },
+          "w": {
+              "walk": 37,
+              "run": 18.5
+          },
           "f": {},
           "undir": true
       },
@@ -1974,7 +2382,10 @@
           "name": "New Edge",
           "vs": "v148",
           "ve": "v147",
-          "w": { "walk": 38 },
+          "w": {
+              "walk": 38,
+              "run": 19
+          },
           "f": {},
           "undir": true
       },
@@ -1982,7 +2393,10 @@
           "name": "New Edge",
           "vs": "v149",
           "ve": "v146",
-          "w": { "walk": 23 },
+          "w": {
+              "walk": 23,
+              "run": 11.5
+          },
           "f": {},
           "undir": true
       },
@@ -1990,7 +2404,10 @@
           "name": "New Edge",
           "vs": "v149",
           "ve": "v141",
-          "w": { "walk": 34 },
+          "w": {
+              "walk": 34,
+              "run": 17
+          },
           "f": {},
           "undir": true
       },
@@ -1998,7 +2415,10 @@
           "name": "New Edge",
           "vs": "v149",
           "ve": "v148",
-          "w": { "walk": 34 },
+          "w": {
+              "walk": 34,
+              "run": 17
+          },
           "f": {},
           "undir": true
       },
@@ -2006,7 +2426,10 @@
           "name": "New Edge",
           "vs": "v16",
           "ve": "v117",
-          "w": { "walk": 57 },
+          "w": {
+              "walk": 57,
+              "run": 28.5
+          },
           "f": {},
           "undir": true
       },
@@ -2014,7 +2437,10 @@
           "name": "New Edge",
           "vs": "v150",
           "ve": "v38",
-          "w": { "walk": 34 },
+          "w": {
+              "walk": 34,
+              "run": 17
+          },
           "f": {},
           "undir": true
       },
@@ -2022,7 +2448,10 @@
           "name": "New Edge",
           "vs": "v150",
           "ve": "v39",
-          "w": { "walk": 21 },
+          "w": {
+              "walk": 21,
+              "run": 10.5
+          },
           "f": {},
           "undir": true
       },
@@ -2030,7 +2459,10 @@
           "name": "New Edge",
           "vs": "v33",
           "ve": "v152",
-          "w": { "walk": 15 },
+          "w": {
+              "walk": 15,
+              "run": 7.5
+          },
           "f": {},
           "undir": true
       },
@@ -2038,7 +2470,10 @@
           "name": "New Edge",
           "vs": "v152",
           "ve": "v6",
-          "w": { "walk": 40 },
+          "w": {
+              "walk": 40,
+              "run": 20
+          },
           "f": {},
           "undir": true
       },
@@ -2046,7 +2481,10 @@
           "name": "New Edge",
           "vs": "v6",
           "ve": "v151",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -2054,7 +2492,10 @@
           "name": "New Edge",
           "vs": "v151",
           "ve": "v31",
-          "w": { "walk": 27 },
+          "w": {
+              "walk": 27,
+              "run": 13.5
+          },
           "f": {},
           "undir": true
       },
@@ -2062,7 +2503,10 @@
           "name": "New Edge",
           "vs": "v5",
           "ve": "v153",
-          "w": { "walk": 15 },
+          "w": {
+              "walk": 15,
+              "run": 7.5
+          },
           "f": {},
           "undir": true
       },
@@ -2070,7 +2514,10 @@
           "name": "New Edge",
           "vs": "v153",
           "ve": "v15",
-          "w": { "walk": 40 },
+          "w": {
+              "walk": 40,
+              "run": 20
+          },
           "f": {},
           "undir": true
       },
@@ -2078,7 +2525,10 @@
           "name": "New Edge",
           "vs": "v15",
           "ve": "v154",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -2086,7 +2536,10 @@
           "name": "New Edge",
           "vs": "v154",
           "ve": "v8",
-          "w": { "walk": 27 },
+          "w": {
+              "walk": 27,
+              "run": 13.5
+          },
           "f": {},
           "undir": true
       },
@@ -2094,7 +2547,10 @@
           "name": "New Edge",
           "vs": "v89",
           "ve": "v155",
-          "w": { "walk": 92 },
+          "w": {
+              "walk": 92,
+              "run": 46
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2102,7 +2558,10 @@
           "name": "New Edge",
           "vs": "v155",
           "ve": "v90",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2110,7 +2569,10 @@
           "name": "New Edge",
           "vs": "v157",
           "ve": "v152",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2118,7 +2580,10 @@
           "name": "New Edge",
           "vs": "v153",
           "ve": "v157",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2126,7 +2591,10 @@
           "name": "New Edge",
           "vs": "v157",
           "ve": "v156",
-          "w": { "walk": 60 },
+          "w": {
+              "walk": 60,
+              "run": 30
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2134,7 +2602,10 @@
           "name": "New Edge",
           "vs": "v151",
           "ve": "v156",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2142,7 +2613,10 @@
           "name": "New Edge",
           "vs": "v156",
           "ve": "v154",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2150,7 +2624,10 @@
           "name": "New Edge",
           "vs": "v156",
           "ve": "v155",
-          "w": { "walk": 105 },
+          "w": {
+              "walk": 105,
+              "run": 52.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2158,7 +2635,10 @@
           "name": "New Edge",
           "vs": "v92",
           "ve": "v161",
-          "w": { "walk": 15 },
+          "w": {
+              "walk": 15,
+              "run": 7.5
+          },
           "f": {},
           "undir": true
       },
@@ -2166,7 +2646,10 @@
           "name": "New Edge",
           "vs": "v161",
           "ve": "v30",
-          "w": { "walk": 35 },
+          "w": {
+              "walk": 35,
+              "run": 17.5
+          },
           "f": {},
           "undir": true
       },
@@ -2174,7 +2657,10 @@
           "name": "New Edge",
           "vs": "v160",
           "ve": "v17",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -2182,7 +2668,10 @@
           "name": "New Edge",
           "vs": "v17",
           "ve": "v159",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -2190,7 +2679,10 @@
           "name": "New Edge",
           "vs": "v159",
           "ve": "v60",
-          "w": { "walk": 25 },
+          "w": {
+              "walk": 25,
+              "run": 12.5
+          },
           "f": {},
           "undir": true
       },
@@ -2198,7 +2690,10 @@
           "name": "New Edge",
           "vs": "v162",
           "ve": "v160",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2206,7 +2701,10 @@
           "name": "New Edge",
           "vs": "v161",
           "ve": "v162",
-          "w": { "walk": 60 },
+          "w": {
+              "walk": 60,
+              "run": 30
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2214,7 +2712,10 @@
           "name": "New Edge",
           "vs": "v162",
           "ve": "v164",
-          "w": { "walk": 73 },
+          "w": {
+              "walk": 73,
+              "run": 36.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2222,7 +2723,10 @@
           "name": "New Edge",
           "vs": "v159",
           "ve": "v164",
-          "w": { "walk": 33 },
+          "w": {
+              "walk": 33,
+              "run": 16.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2230,7 +2734,10 @@
           "name": "New Edge",
           "vs": "v164",
           "ve": "v155",
-          "w": { "walk": 45 },
+          "w": {
+              "walk": 45,
+              "run": 22.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2238,7 +2745,10 @@
           "name": "New Edge",
           "vs": "v155",
           "ve": "v166",
-          "w": { "walk": 60 },
+          "w": {
+              "walk": 60,
+              "run": 30
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2246,7 +2756,10 @@
           "name": "New Edge",
           "vs": "v165",
           "ve": "v155",
-          "w": { "walk": 55 },
+          "w": {
+              "walk": 55,
+              "run": 27.5
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2254,7 +2767,10 @@
           "name": "New Edge",
           "vs": "v166",
           "ve": "v14",
-          "w": { "walk": 41 },
+          "w": {
+              "walk": 41,
+              "run": 20.5
+          },
           "f": {},
           "undir": true
       },
@@ -2262,7 +2778,10 @@
           "name": "New Edge",
           "vs": "v164",
           "ve": "v14",
-          "w": { "walk": 60 },
+          "w": {
+              "walk": 60,
+              "run": 30
+          },
           "f": { "inside": true },
           "undir": true
       },
@@ -2270,7 +2789,10 @@
           "name": "New Edge",
           "vs": "v90",
           "ve": "v165",
-          "w": { "walk": 10 },
+          "w": {
+              "walk": 10,
+              "run": 5
+          },
           "f": {},
           "undir": true
       },
@@ -2278,7 +2800,10 @@
           "name": "New Edge",
           "vs": "v165",
           "ve": "v11",
-          "w": { "walk": 16 },
+          "w": {
+              "walk": 16,
+              "run": 8
+          },
           "f": {},
           "undir": true
       },
@@ -2286,7 +2811,10 @@
           "name": "New Edge",
           "vs": "v56",
           "ve": "v53",
-          "w": { "walk": 39 },
+          "w": {
+              "walk": 39,
+              "run": 19.5
+          },
           "f": {},
           "undir": true
       },
@@ -2294,7 +2822,10 @@
           "name": "New Edge",
           "vs": "v172",
           "ve": "v166",
-          "w": { "walk": 8 },
+          "w": {
+              "walk": 8,
+              "run": 4
+          },
           "f": {},
           "undir": true
       },
@@ -2302,7 +2833,10 @@
           "name": "New Edge",
           "vs": "v165",
           "ve": "v172",
-          "w": { "walk": 34 },
+          "w": {
+              "walk": 34,
+              "run": 17
+          },
           "f": {},
           "undir": true
       },
@@ -2310,7 +2844,10 @@
           "name": "New Edge",
           "vs": "v172",
           "ve": "v117",
-          "w": { "walk": 56 },
+          "w": {
+              "walk": 56,
+              "run": 28
+          },
           "f": {},
           "undir": true
       },
@@ -2318,7 +2855,10 @@
           "name": "New Edge",
           "vs": "v134",
           "ve": "v173",
-          "w": { "walk": 40 },
+          "w": {
+              "walk": 40,
+              "run": 20
+          },
           "f": {},
           "undir": true
       },
@@ -2326,7 +2866,10 @@
           "name": "New Edge",
           "vs": "v173",
           "ve": "v124",
-          "w": { "walk": 22 },
+          "w": {
+              "walk": 22,
+              "run": 11
+          },
           "f": {},
           "undir": true
       },
@@ -2334,7 +2877,10 @@
           "name": "New Edge",
           "vs": "v173",
           "ve": "v126",
-          "w": { "walk": 24 },
+          "w": {
+              "walk": 24,
+              "run": 12
+          },
           "f": {},
           "undir": true
       },
@@ -2342,7 +2888,10 @@
           "name": "New Edge",
           "vs": "v174",
           "ve": "v144",
-          "w": { "walk": 12 },
+          "w": {
+              "walk": 12,
+              "run": 6
+          },
           "f": {},
           "undir": true
       },
@@ -2350,7 +2899,10 @@
           "name": "New Edge",
           "vs": "v148",
           "ve": "v174",
-          "w": { "walk": 30 },
+          "w": {
+              "walk": 30,
+              "run": 15
+          },
           "f": {},
           "undir": true
       },
@@ -2358,7 +2910,10 @@
           "name": "New Edge",
           "vs": "v134",
           "ve": "v24",
-          "w": { "walk": 110 },
+          "w": {
+              "walk": 110,
+              "run": 55
+          },
           "f": {},
           "undir": true
       },
@@ -2366,7 +2921,10 @@
           "name": "New Edge",
           "vs": "v88",
           "ve": "v84",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -2374,7 +2932,10 @@
           "name": "New Edge",
           "vs": "v175",
           "ve": "v115",
-          "w": { "walk": 36 },
+          "w": {
+              "walk": 36,
+              "run": 18
+          },
           "f": {},
           "undir": true
       },
@@ -2382,7 +2943,10 @@
           "name": "New Edge",
           "vs": "v175",
           "ve": "v176",
-          "w": { "walk": 50 },
+          "w": {
+              "walk": 50,
+              "run": 25
+          },
           "f": {},
           "undir": true
       },
@@ -2390,7 +2954,10 @@
           "name": "New Edge",
           "vs": "v176",
           "ve": "v177",
-          "w": { "walk": 12 },
+          "w": {
+              "walk": 12,
+              "run": 6
+          },
           "f": {},
           "undir": true
       },
@@ -2398,7 +2965,10 @@
           "name": "New Edge",
           "vs": "v176",
           "ve": "v178",
-          "w": { "walk": 12 },
+          "w": {
+              "walk": 12,
+              "run": 6
+          },
           "f": {},
           "undir": true
       },
@@ -2406,7 +2976,10 @@
           "name": "New Edge",
           "vs": "v176",
           "ve": "v179",
-          "w": { "walk": 28 },
+          "w": {
+              "walk": 28,
+              "run": 14
+          },
           "f": {},
           "undir": true
       },
@@ -2414,7 +2987,10 @@
           "name": "New Edge",
           "vs": "v179",
           "ve": "v180",
-          "w": { "walk": 60 },
+          "w": {
+              "walk": 60,
+              "run": 30
+          },
           "f": {},
           "undir": true
       },
@@ -2422,7 +2998,10 @@
           "name": "New Edge",
           "vs": "v180",
           "ve": "v36",
-          "w": { "walk": 18 },
+          "w": {
+              "walk": 18,
+              "run": 9
+          },
           "f": {},
           "undir": true
       },
@@ -2430,7 +3009,10 @@
           "name": "New Edge",
           "vs": "v180",
           "ve": "v34",
-          "w": { "walk": 22 },
+          "w": {
+              "walk": 22,
+              "run": 11
+          },
           "f": {},
           "undir": true
       },
@@ -2438,7 +3020,10 @@
           "name": "New Edge",
           "vs": "v184",
           "ve": "v44",
-          "w": { "walk": 20 },
+          "w": {
+              "walk": 20,
+              "run": 10
+          },
           "f": {},
           "undir": true
       },
@@ -2446,7 +3031,10 @@
           "name": "New Edge",
           "vs": "v38",
           "ve": "v184",
-          "w": { "walk": 35 },
+          "w": {
+              "walk": 35,
+              "run": 17.5
+          },
           "f": {},
           "undir": true
       },
@@ -2454,7 +3042,10 @@
           "name": "New Edge",
           "vs": "v181",
           "ve": "v6",
-          "w": { "walk": 60 },
+          "w": {
+              "walk": 60,
+              "run": 30
+          },
           "f": {},
           "undir": true
       },
@@ -2462,7 +3053,10 @@
           "name": "New Edge",
           "vs": "v179",
           "ve": "v181",
-          "w": { "walk": 60 },
+          "w": {
+              "walk": 60,
+              "run": 30
+          },
           "f": {},
           "undir": true
       }

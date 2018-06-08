@@ -28,7 +28,8 @@
       "id": "v6",
       "name": "제1공학관",
       "loc": [ 37.56174527980254, 126.936753988266, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "공A", "공D" ]
     },
     {
       "id": "v8",
@@ -138,7 +139,8 @@
       "id": "v28",
       "name": "대강당",
       "loc": [ 37.56444605563752, 126.93844109773639, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "대강당" ]
     },
     {
       "id": "v29",
@@ -193,7 +195,8 @@
       "id": "v37",
       "name": "제3공학관 남문",
       "loc": [ 37.5616363676916, 126.93503871560098, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "공C" ]
     },
     {
       "id": "v38",
@@ -205,7 +208,8 @@
       "id": "v39",
       "name": "제2공학관, 제3공학관",
       "loc": [ 37.56196640440004, 126.9356891512871, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "공B", "공C" ]
     },
     {
       "id": "v41",
@@ -345,7 +349,7 @@
       "name": "과학관",
       "loc": [ 37.56405696394382, 126.93499714136126, 0 ],
       "shown": true,
-      "place": [ "cafeteria", "coffee" ]
+      "place": [ "cafeteria", "coffee", "과" ]
     },
     {
       "id": "v77",
@@ -369,7 +373,8 @@
       "id": "v80",
       "name": "외솔관",
       "loc": [ 37.56624441277591, 126.93734139204027, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "외" ]
     },
     {
       "id": "v81",
@@ -716,7 +721,7 @@
       "name": "제2공학관 동문",
       "loc": [ 37.56224890403263, 126.93577632308009, 0 ],
       "shown": true,
-      "place": [ "cafeteria", "coffee", "convenient" ]
+      "place": [ "cafeteria", "coffee", "convenient", "공B" ]
     },
     {
       "id": "v151",
@@ -838,13 +843,15 @@
       "id": "v177",
       "name": "제2공학관 남문",
       "loc": [ 37.56217555133005, 126.93523585796358, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "공B" ]
     },
     {
       "id": "v178",
       "name": "제3공학관 북문",
       "loc": [ 37.561960808220334, 126.93515270948413, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "공C" ]
     },
     {
       "id": "v179",
@@ -862,13 +869,15 @@
       "id": "v181",
       "name": "제4공학관",
       "loc": [ 37.5618715089232, 126.93613171577455, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "공A", "공D" ]
     },
     {
       "id": "v184",
       "name": "제2공학관 북문",
       "loc": [ 37.56252211563719, 126.93535655736925, 0 ],
-      "shown": true
+      "shown": true,
+      "place": [ "공B" ]
     }
   ],
   "edges": [
@@ -3052,9 +3061,16 @@
     }
   ],
   "places": {
-    "convenient": "편의점",
-    "cafeteria": "식당",
-    "coffee": "카페",
-    "vending machine": "자판기"
+    "convenient": { "name": "편의점", "searched":  true },
+    "cafeteria": { "name": "식당", "searched":  true },
+    "coffee": { "name": "카페", "searched":  true },
+    "vending machine": { "name": "자판기", "searched":  true },
+    "공A": { "name": "제1공학관" },
+    "공B": { "name": "제2공학관" },
+    "공C": { "name": "제3공학관" },
+    "공D": { "name": "제4공학관" },
+    "과": { "name": "과학관" },
+    "외": { "name": "외솔관" },
+    "대강당": { "name": "대강당" }
   }
 }
