@@ -532,10 +532,10 @@
                     case 5:
                       name = this.e.inputs[0].value;
                       v = places[name];
+                      name = Geodata.obj.places[name].name;
                       break;
                   }
                   this.setValue(v, name);
-                  this.e.method.value=0;
                 }
                 function setValue(v, name)
                 {
@@ -548,6 +548,7 @@
                     this.e.display.style.display = "initial";
                     this.method = 0;
                     this.e.display.innerHTML = name;
+                    this.e.method.value = "0";
                   }
                 }
                 this.method_change = method_change;
@@ -1187,7 +1188,7 @@
           
           var lastLecture=timeTableData.lastLecture();
           if (lastLecture===null){
-            vin_from.setValue(Geodata.graph.vertices[0], "정문");
+            vin_from.setValue(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
           }
           else {
             var n = lastLecture.location;
@@ -1197,6 +1198,7 @@
       });
 
       var pref_walk_inside = { "time_name": "walk", "factors": [{ "condition": [{ "name": "inside", "value": false }], multiplier: 2 }] };
+
 
       fromto_button_find.addEventListener("click", function () {
         var fromName = vin_from.name;;
