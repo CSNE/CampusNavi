@@ -1073,6 +1073,20 @@
         
       }
       
+      function advancedSearch(str){
+        var vertexSearch=Geodata.graph.findVertexWithName(str);
+        var buildingSearch=Util.getBuilding(str);
+        var buildingSearchPlace=places[buildingSearch];
+        
+        if (vertexSearch){
+          return vertexSearch;
+        }else if (buildingSearchPlace){
+          return buildingSearchPlace;
+        }else{
+          return null;
+        }
+      }
+      
       function SearchManager(input,clearBtn){
         this.value=null;
         this.inputElement=input;
@@ -1123,87 +1137,23 @@
         this.clear();
       }
 
-      var search_from=null;
-      var search_to=null;
+      var search_from=new SearchManager(search_input_from,search_input_from_reset);
+      var search_to=new SearchManager(search_input_to,search_input_to_reset);
       
-      function advancedSearch(str){
-        var vertexSearch=Geodata.graph.findVertexWithName(str);
-        var buildingSearch=Util.getBuilding(str);
-        var buildingSearchPlace=places[buildingSearch];
-        
-        if (vertexSearch){
-          return vertexSearch;
-        }else if (buildingSearchPlace){
-          return buildingSearchPlace;
-        }else{
-          return null;
-        }
-      }
-      function searchFrom(){
-        var searchQuery=search_input_from.value;
-        var searchResult=advancedSearch(searchQuery);
-        if (searchResult){
-          search_input_from.classList.remove("input_invalid");
-          search_input_from.classList.add("input_valid");
-          search_from=searchResult;
-        }else{
-           search_input_from.classList.add("input_invalid");
-          search_input_from.classList.remove("input_valid");
-          search_from=null;
-        }
-        
-      }
-      function searchTo(){
-        var searchQuery=search_input_to.value;
-        var searchResult=advancedSearch(searchQuery);
-        if (searchResult){
-          search_input_to.classList.remove("input_invalid");
-          search_input_to.classList.add("input_valid");
-          search_to=searchResult;
-        }else{
-          search_input_to.classList.add("input_invalid");
-          search_input_to.classList.remove("input_valid");
-          search_to=null;
-        }
-      }
-      
-      search_input_from.addEventListener("input",searchFrom);
-      search_input_to.addEventListener("input",searchTo);
-      
-      search_input_from_reset.addEventListener("click",function(){
-        search_input_from.value="";
-        search_input_from.classList.add("input_invalid");
-        search_input_from.classList.remove("input_valid");
-        search_input_from.classList.remove("input_disabled");
-        search_input_from.removeAttribute("readonly");
-        search_from=null;
+      var nearby_from_var=new SearchManager(uipanel_near_input_from,uipanel_near_from_reset);
+      uipanel_near_setloc.addEventListener("click",function(){
+        nearby_from_var.setValueAndLock(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
       });
+      
       
       uipanel_search_input_setloc.addEventListener("click",function(){
-        search_input_from.value="현재 위치";
-        search_input_from.classList.remove("input_invalid");
-        search_input_from.classList.remove("input_valid");
-        search_input_from.classList.add("input_disabled");
-        search_input_from.setAttribute("readonly",true);
-        search_from=GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false);
+        search_from.setValueAndLock(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
       });
       
-      search_input_to_reset.addEventListener("click",function(){
-        search_input_to.value="";
-        search_input_to.classList.add("input_invalid");
-        search_input_to.classList.remove("input_valid");
-        search_input_to.classList.remove("input_disabled");
-        search_input_to.removeAttribute("readonly");
-        search_to=null;
-      });
+      
       
       uipanel_search_input_setmap.addEventListener("click",function(){
         
-        search_input_to.value="클릭한 위치";
-        search_input_to.classList.remove("input_invalid");
-        search_input_to.classList.remove("input_valid");
-        search_input_to.classList.add("input_disabled");
-        search_input_to.setAttribute("readonly",true);
         
         var clicked=false;
         
@@ -1218,16 +1168,14 @@
 
           document.getElementById("uipanel_grayouter").style.display="none";
           
-          search_to=GraphCalculations.nearestVertexToPoint(Geodata.graph, location, false);
+          search_to.setValueAndLock(
+          GraphCalculations.nearestVertexToPoint(Geodata.graph, location, false),"클릭한 위치");
           
         });
       });
       
       
-      var nearby_from_var=new SearchManager(uipanel_near_input_from,uipanel_near_from_reset);
-      uipanel_near_setloc.addEventListener("click",function(){
-        nearby_from_var.setValueAndLock(GraphCalculations.nearestVertexToPoint(Geodata.graph, GPS.getCurrentLocation(), false), "현재 위치");
-      });
+      
       
       
       
@@ -1251,9 +1199,6 @@
         uipanel_tabs_settings.classList.remove("selected_tab");
         uipanel_tabs_routelist.classList.remove("selected_tab");
         uipanel_tabs_navigation.classList.remove("selected_tab");
-        
-        search_from={"obj":null,"name":"UNDEFINED"};
-        search_to={"obj":null,"name":"UNDEFINED"};
         
         cleanRouteList();
         mymap.invalidateSize();
@@ -1447,10 +1392,10 @@
 
 
       search_button_find.addEventListener("click", function () {
-        var fromName = search_from.name; //vin_from.name;
-        var fromVertex = search_from; //vin_from.value;
-        var toName = search_to.name; //vin_to.name;
-        var toVertex = search_to; //vin_to.value;
+        var fromName = search_from.getValue().name; //vin_from.name;
+        var fromVertex = search_from.getValue(); //vin_from.value;
+        var toName = search_to.getValue().name; //vin_to.name;
+        var toVertex = search_to.getValue(); //vin_to.value;
 
         var timeLimit = search_input_time.value;
 
