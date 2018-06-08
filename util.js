@@ -1,8 +1,11 @@
 ﻿var Util = (function () {
+    function humanReadableTimeMillisec(millisecs) {
+      return humanReadableTime(Math.round(millisecs/1000));
+    }
     function humanReadableTime(seconds) {
         var min = Math.floor(seconds / 60);
         var sec = Math.round(seconds % 60);
-        return "" + min + "min" + sec + "sec.";
+        return "" + min + "분" + sec + "초";
     }
     function timeStampToFormattedTime(timestamp){
         var d=new Date(timestamp);
@@ -141,7 +144,8 @@
         "timeStampToFormattedTime": timeStampToFormattedTime,
         "colonSeparatedTimeToTimeStamp": colonSeparatedTimeToTimeStamp,
         "getBuilding": getBuilding,
-        "fitLine":fitLine
+        "fitLine":fitLine,
+        "humanReadableTimeMillisec":humanReadableTimeMillisec
     }
 })();
 

@@ -465,7 +465,7 @@
             <input type="submit" value="탐색" id="uipanel_near_button_find" tabindex="5" style="grid-area: findbtn;height:32px;" />
             <select id="uipanel_near_input_to" tabindex="2" style="grid-area: toinput;width:100%;">
             </select>
-            <div class="uipanel_label" style="grid-area: tolabel;">까지</div>
+            <div class="uipanel_label" style="grid-area: tolabel;">도착</div>
             <div class="uipanel_label" style="grid-area: tolabel2;">가장 가까운</div>
           </div>
         </form>
@@ -637,7 +637,7 @@
         "fillOpacity": 1,
         "fillColor": "#FF8080"
       });
-      debugMarker.addTo(mymap);
+      //debugMarker.addTo(mymap);
       
       
       
@@ -665,13 +665,15 @@
         var destinationsDataList = document.getElementById("destinationsData");
         while (destinationsDataList.hasChildNodes())
           destinationsDataList.removeChild(destinationsDataList.lastChild);
+        
+        var toBeAddedToDataList=[];
+        
         for (var i = 0; i < Geodata.graph.vertices.length; i++) {
           var v = Geodata.graph.vertices[i];
           if (v.shown) {
-            var opt = document.createElement("option");
-            opt.setAttribute("value", v.name);
-            destinationsDataList.appendChild(opt);
-
+            
+            toBeAddedToDataList.push(v.name);
+            
             if (v.place) {
               for (var j = 0; j < v.place.length; j++) {
                 var p = v.place[j];
@@ -687,7 +689,16 @@
           }
         }
         
+        toBeAddedToDataList.sort();
+        
+        for(var i=0;i<toBeAddedToDataList.length;i++){
+          var opt = document.createElement("option");
+          opt.setAttribute("value", toBeAddedToDataList[i]);
+          destinationsDataList.appendChild(opt);
+        }
+        
         Log.debug(JSON.stringify(Geodata.obj.places) || "");
+        
         for (var j in {"uipanel_near_input_to": 0}) {
           var s = document.getElementById(j);
           while (s.hasChildNodes())
@@ -1174,6 +1185,9 @@
           this.inputElement.value=txt;
           this.performSearch();
         }
+        this.getText=function(){
+          return this.inputElement.value;
+        }
         
         var thiss=this;
         this.inputElement.addEventListener("input",function(){
@@ -1294,6 +1308,8 @@
         
         search_from.clear();
         search_to.clear();
+        search_input_time.value="";
+        
         nearby_from_var.clear();
         
         cleanRouteList();
@@ -1408,7 +1424,7 @@
         },100);
 
 
-        navigation_routename.innerHTML=path.parray[0].v.name+" -> "+path.parray[path.parray.length - 1].v.name;
+        navigation_routename.innerHTML=path.parray[0].v.name+"➤"+path.parray[path.parray.length - 1].v.name;
         //console.log(timelimit);
         if (timelimit!==Number.MAX_SAFE_INTEGER){
           navigation_targettime.innerHTML="목표도착시각: "+Util.timeStampToFormattedTime(timelimit);
@@ -1420,7 +1436,7 @@
         navigation_eta.innerHTML="예상도착시간: ";
         
         navContext.addContextUpdateListener(function(data){
-          navigation_timeremaining.innerHTML="남은시간: "+(data.timeLeft/1000).toFixed()+"sec.";
+          navigation_timeremaining.innerHTML="남은시간: "+Util.humanReadableTimeMillisec(data.timeLeft);
           navigation_eta.innerHTML="예상도착시간: "+Util.timeStampToFormattedTime(data.arrivalTime);
           displayProgessOnCanvas(data.routeCompletionRatio,
                                  route_icon_HTMLImageElement[path.pref.time_name]);
@@ -1466,7 +1482,8 @@
             var n = nextLecture.location;
             //vin_to.setValue(places[Util.getBuilding(n)], n);
             search_to.setText(n);
-            search_input_to.value=timeToString(nextLecture.startTime);
+            
+            search_input_time.value=timeToString(nextLecture.startTime);
             
           }
           
@@ -1559,11 +1576,11 @@
         if (search_from.isLocked || search_to.isLocked){
           //pass
         }else{
-          var origF=search_from.getValue();
-          var origT=search_to.getValue();
+          var origF=search_from.getText();
+          var origT=search_to.getText();
           
-          search_from.setText(origF);
-          search_to.setText(origT);
+          search_from.setText(origT);
+          search_to.setText(origF);
           
           
         }
