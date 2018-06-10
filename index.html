@@ -372,7 +372,7 @@
         <button onclick="debug_button_2_onclick()">Weather: Good</button>
         <button onclick="debug_button_3_onclick()">Weather: Okay</button>
         <button onclick="debug_button_4_onclick()">Weather: Bad</button>
-        <button onclick="debug_button_5_onclick()">Log.error()</button>        
+        <button onclick="debug_button_5_onclick()">Weather: Rain</button>        
         <button onclick="debug_button_6_onclick()">Override timetable time</button>        
         <button onclick="debug_button_7_onclick()">Hide debug menus</button>
       </div>
@@ -1612,14 +1612,15 @@
       }
       function debug_button_3_onclick(){
         Log.info("Override weather: Okay weather");
-        Weather.debug_override_weather(300,27,150);
+        Weather.debug_override_weather(802,27,150);
       }
       function debug_button_4_onclick(){
         Log.info("Override weather: Bad weather");
         Weather.debug_override_weather(202,33,220);
       }
       function debug_button_5_onclick(){
-        Log.error("Test Error");
+        Log.info("Override weather: Rain");
+        Weather.debug_override_weather(502,27,150);
       }
       function debug_button_6_onclick(){
         var d=new Date();
